@@ -55,18 +55,18 @@ swig_python( rotorc rotor )
 add_executable(
   unit_tests
   test/main.cpp
-#   test/TestArray.cpp
+  test/TestArray.cpp
   test/TestMemory.cpp
-#   test/TestOptions.cpp
-#   test/TestOptionParser.cpp
-#   test/TestVariable.cpp
-#   test/TestString.cpp
-#   test/TestStructure.cpp
-#   test/TestStructureArray.cpp
-#   test/TestStructureParser.cpp
+  test/TestOptions.cpp
+  test/TestOptionParser.cpp
+  test/TestVariable.cpp
+  test/TestString.cpp
+  test/TestStructure.cpp
+  test/TestStructureArray.cpp
+  test/TestStructureParser.cpp
   test/TestRegistry.cpp
-#   test/TestQueue.cpp
-#   test/TestBroadcastSerialization.cpp
+  test/TestQueue.cpp
+  test/TestBroadcastSerialization.cpp
 ) 
 
 target_link_libraries( unit_tests rotor BroadcastRegistry unittest++ )
