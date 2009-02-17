@@ -5,6 +5,7 @@
 #include <rotor/BaseRegistry.h>
 #include <rotor/Mutex.h>
 #include <rotor/Condition.h>
+#include <rotor/Queue.h>
 
 
 namespace Rotor {
@@ -41,22 +42,25 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 
-  virtual Message sendReceiveMessage( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual Message query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  
+  virtual Message reply( const Message & message );
 
   std::string formatString( const std::string & typeName ) const;
 
   void setMessage( Message & message );
   int operator()();
+  Queue<Message> & responseQueue();
   
 private:
-  
-  BaseRegistry  _registry;
-  Message       _message;
-  bool          _hasMessage;
-  Condition     _messageAvailable;
-  Mutex         _mutex;
-  Mutex         _ipcMutex;
-  Thread *      _dispatchThread;
+  BaseRegistry   _registry;
+  Message        _message;
+  bool           _hasMessage;
+  Condition      _messageAvailable;
+  Mutex          _mutex;
+  Mutex          _ipcMutex;
+  Thread *       _dispatchThread;
+  Queue<Message> _responseQueue;
 };
 
 

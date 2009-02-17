@@ -91,6 +91,7 @@ add_library(
 )
 
 target_link_libraries( BroadcastRegistry rotor PocoNet )
+sm_cpp_install_binaries( BroadcastRegistry )
 
 #-------------------------------------------------------------------------------
 

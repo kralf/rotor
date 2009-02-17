@@ -36,6 +36,24 @@ handle( MSG_INSTANCE msgInstance, void * data, void * registryPtr )
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   IPC_freeData( formatter, data );
 }
+//------------------------------------------------------------------------------
+
+void 
+queryHandle( MSG_INSTANCE msgInstance, void * data, void * registryPtr )
+{
+  CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( registryPtr );
+  Message message;
+  message.name = IPC_msgInstanceName( msgInstance );
+
+  string typeName    = registry->messageType( message.name ).name();
+  Structure tmp( typeName, data, *registry );
+  
+  message.data = new Structure( typeName, 0, *registry );
+  *(message.data) = tmp;
+  registry->responseQueue().push( message );
+  FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
+  IPC_freeData( formatter, data );
+}
 
 //------------------------------------------------------------------------------
 
@@ -49,16 +67,17 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   tmpName << setprecision( 10 );
   tmpName << name << "_" << seconds();
 
-  if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
-    fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
-    exit( 1 );
-  }
-  
   if ( IPC_connectModule( tmpName.str().c_str(), options.getString( name, "serverName" ).c_str() ) == IPC_Error ) {
     fprintf( stderr, "Could not connect IPC\n" );
     exit( 1 );
   }
   
+  if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
+    fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
+    exit( 1 );
+  }
+  
+
   IPC_setCapacity( 4 );
   
   _dispatchThread = typedThread( *this );
@@ -167,10 +186,42 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 Message 
-CarmenRegistry::sendReceiveMessage( const Message & message, double timeout ) 
+CarmenRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
-  throw MessagingTimeout( "Not implemented" );
+  if (  IPC_queryNotify( 
+          message.name.c_str(), 
+          message.data->size(),
+          message.data->buffer(),
+          queryHandle,
+          this ) == IPC_Error ) 
+  {
+    fprintf( stderr, "Problem sending message\n" );
+    exit( 1 );
+  }
+  Message result = _responseQueue.next( timeout );
+  _responseQueue.pop( timeout );
+  return result;
+}
+
+//------------------------------------------------------------------------------
+
+void
+CarmenRegistry::reply( const Message & message ) 
+{
+  if (  IPC_respond( 
+          message.name.c_str(), 
+          message.data->size(),
+          message.data->buffer(),
+          queryHandle,
+          this ) == IPC_Error ) 
+  {
+    fprintf( stderr, "Problem sending message\n" );
+    exit( 1 );
+  }
+  Message result = _responseQueue.next( timeout );
+  _responseQueue.pop( timeout );
+  return result;
 }
 
 //------------------------------------------------------------------------------
