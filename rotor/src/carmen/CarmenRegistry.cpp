@@ -4,6 +4,7 @@
 #include <rotor/Options.h>
 #include <rotor/Rotor.h>
 #include <rotor/Structure.h>
+#include <rotor/Conversion.h>
 #include <rotor/Time.h>
 #include <rotor/TypedThread.h>
 #include <carmen/ipc.h>
@@ -29,9 +30,9 @@ handle( MSG_INSTANCE msgInstance, void * data, void * registryPtr )
 
   string typeName    = registry->messageType( message.name ).name();
   Structure tmp( typeName, data, *registry );
-  
   message.data = new Structure( typeName, 0, *registry );
   *(message.data) = tmp;
+
   registry->setMessage( message );
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   IPC_freeData( formatter, data );
@@ -209,7 +210,7 @@ throw( MessagingTimeout )
 void
 CarmenRegistry::reply( const Message & message ) 
 {
-  if (  IPC_respond( 
+/*  if (  IPC_respond( 
           message.name.c_str(), 
           message.data->size(),
           message.data->buffer(),
@@ -221,7 +222,7 @@ CarmenRegistry::reply( const Message & message )
   }
   Message result = _responseQueue.next( timeout );
   _responseQueue.pop( timeout );
-  return result;
+  return result;*/
 }
 
 //------------------------------------------------------------------------------
@@ -240,12 +241,21 @@ CarmenRegistry::setMessage( Message & message )
 }
 
 //------------------------------------------------------------------------------
+  
+Queue<Message> &
+CarmenRegistry::responseQueue()
+{
+  return _responseQueue;
+}
+
+//------------------------------------------------------------------------------
 
 string 
 CarmenRegistry::formatString( const string & typeName  ) const
 {
   const MemberDefinitions & definitions = operator[]( typeName ).members();
   string result = "{ ";
+  int lastIntIndex = -1;
   for ( int i = 0; i < definitions.size(); i++ ) {
     const MemberDefinition & definition = definitions[i];
     if ( i > 0 ) {
@@ -254,16 +264,22 @@ CarmenRegistry::formatString( const string & typeName  ) const
     if ( definition.cardinality == ONE ) {
       if ( definition.type == "int8_t" ) {
         result += "byte";
+        lastIntIndex = i;
       } else if ( definition.type == "uint8_t" ) {
         result += "ubyte";
+        lastIntIndex = i;
       } else if ( definition.type == "int16_t" ) {
         result += "short";
+        lastIntIndex = i;
       } else if ( definition.type == "uint16_t" ) {
         result += "ushort";
+        lastIntIndex = i;
       } else if ( definition.type == "int32_t" ) {
         result += "int";
+        lastIntIndex = i;
       } else if ( definition.type == "uint32_t" ) {
         result += "uint";
+        lastIntIndex = i;
       } else if ( definition.type == "float" ) {
         result += "float";
       } else if ( definition.type == "double" ) {
@@ -273,21 +289,21 @@ CarmenRegistry::formatString( const string & typeName  ) const
       }
     } else if ( definition.cardinality == VARIABLE ) {
       if ( definition.type == "int8_t" ) {
-        result += "byte *";
+        result += "<byte: " + toString( lastIntIndex + 1) + ">";
       } else if ( definition.type == "uint8_t" ) {
-        result += "ubyte *";
+        result += "<ubyte: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "int16_t" ) {
-        result += "short *";
+        result += "<short: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "uint16_t" ) {
-        result += "ushort *";
+        result += "<ushort: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "int32_t" ) {
-        result += "int *";
+        result += "<int: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "uint32_t" ) {
-        result += "uint *";
+        result += "<uint: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "float" ) {
-        result += "float *";
+        result += "<float: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "double" ) {
-        result += "double *";
+        result += "<double: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "char" ) {
         result += "string";
       }      

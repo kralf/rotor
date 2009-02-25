@@ -44,7 +44,7 @@ public:
 
   virtual Message query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
   
-  virtual Message reply( const Message & message );
+  virtual void reply( const Message & message );
 
   std::string formatString( const std::string & typeName ) const;
 
