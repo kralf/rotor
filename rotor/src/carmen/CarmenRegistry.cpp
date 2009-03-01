@@ -320,7 +320,7 @@ CarmenRegistry::operator ()()
 {
   while ( true ) {
     Lock lock( _ipcMutex ); 
-    IPC_listenClear( 1 );
+    IPC_listenClear( 10 );
     Thread::sleep( 1 );
   }
   return 0;

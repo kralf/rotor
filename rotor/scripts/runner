@@ -1,0 +1,51 @@
+#!/usr/bin/python
+
+import sys
+import os
+
+filedir = os.path.dirname( __file__ )
+
+sys.path.append( os.path.join( filedir, "..", "build", "lib" ) )
+sys.path.append( os.path.join( filedir, "..", "build", "src" ) )
+sys.path.append( os.path.join( filedir, "..", "python" ) )
+sys.path.append( os.environ["HOME"] + "/.rotor/python" )
+sys.path.append( os.environ["HOME"] + "/.rotor/lib" )
+
+from runner import *
+
+
+
+def read_commands( filename ):
+  f = file( filename )
+  result = []
+  for line in f.readlines():
+    line = line.strip()
+    if line[0] != "#":
+      args = line.split( "\"" )
+      args = [x for x in args if x != ""]
+      if len( args ) > 0:
+        command  = args[0]
+        host     = None
+        username = None
+        password = None
+        if len( args ) > 1:
+          extra = args[1].split()
+          host  = extra[0]
+          if len( extra ) > 1:
+            username = extra[1]
+          if len( extra ) > 2:
+            password = extra[2]
+        result.append( Command( command, host = host, username = username, password = password ) )
+  f.close()
+  return result
+
+
+if len( sys.argv ) != 2 or not os.path.exists( sys.argv[1] ):
+  sys.stderr.write( "USAGE: runner configuration\n" )
+  exit( -1 )
+commands = read_commands( sys.argv[1] )
+
+for c in commands:
+  c.start()
+  
+ConsoleFrontend( commands )

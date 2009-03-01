@@ -3,66 +3,61 @@ import subprocess
 import threading
 import os
 from   Queue import *
-import cmd
-import snack
+import time
+
+
+#-------------------------------------------------------------------------------
 
 class Command( object ):
-  def __init__( self, command, host = None, username = None, password = None ):
+  def __init__( self, command, host = None, username = None, password = None, output_lines = 300 ):
     object.__init__( self )
-    self.host        = host
-    self.remote      = host
-    self.username    = username
-    self.password    = password
-    self.command     = command
-    self.running     = False
-    self.pid         = None
-    self.return_code = None
-    self.out         = Queue()
-    self.err         = Queue()
-    self._stdout     = []
-    self._stderr     = []
+    self.host         = host
+    self.remote       = host
+    self.username     = username
+    self.password     = password
+    self.command      = command
+    self.running      = False
+    self.pid          = None
+    self.return_code  = 0
+    self.out          = Queue()
+    self.err          = Queue()
+    self._output      = []
+    self.output_lines = output_lines
         
   #-----
   
   def check_running( self, stream ):
-    if not self.running:
-      return False
+    #if not self.running:
+      #return False
+    self.running = False
     if not self.remote:
       poll = self.popen.poll()
-      if poll != -1 and poll != None:
-        self.running = False
-        self.return_code = self.popen.returncode
+      self.return_code = self.popen.returncode
     else:
       if stream.channel.exit_status_ready():
-        self.running     = False
-        self.return_code = stream.channel.exit_status()
+        self.return_code = stream.channel.exit_status
+        self.ssh.close()
   
   #-----
   
   def update( self ):
     while not self.out.empty():
       line = self.out.get()
-      self._stdout.append( line )
+      self._output.append( ( 0, time.time(), line ) )
     while not self.err.empty():
       line = self.err.get()
-      self._stderr.append( line )
+      self._output.append( ( 1, time.time(), line ) )
+    if self.output_lines != None:
+      self._output = self._output[-self.output_lines:]
   
   #-----
   
-  def getStdOut( self ):
+  def getOutput( self ):
     self.update()
-    return self._stdout
+    return self._output
     
-  stdout = property( getStdOut )
+  output = property( getOutput )
     
-  #-----
-  
-  def getStdErr( self ):
-    self.update()
-    return self._stderr
-
-  stderr = property( getStdErr )
-
   #-----
   
   def append_string( self, stream, queue ):
@@ -79,7 +74,10 @@ class Command( object ):
   #-----
   
   def start( self ):
-    if not self.host:
+    if self.running:
+      return
+    self._output = []
+    if not self.remote:
       self.popen = subprocess.Popen( 
         self.command.split(), 
         shell  = False, 
@@ -115,20 +113,17 @@ class Command( object ):
     if self.running:
       self.thread1.join()
       self.thread2.join()
-    self.close()
+    self.stop()
   
-  #-----
-  
-  def close( self ):
-    if self.remote:
-      self.ssh.close()
-
   #-----
   
   def stop( self ):
     if self.running:
+      if not self.remote:
+        os.kill( self.pid, 15 )
+      else:
+        self.ssh.close()
       self.running = False
-      os.kill( self.pid, 15 )
   
   #-----
   
@@ -140,111 +135,8 @@ class Command( object ):
   
   def kill( self ):
     if self.running:
+      if not self.remote:
+        os.kill( self.pid, 9 )
+      else:
+        self.stop()
       self.running = False
-      os.kill( self.pid, 9 )
-      
-class Application( cmd.Cmd ):
-  def __init__( self ):
-    cmd.Cmd.__init__( self )
-    self.commands = []
-    self.local = True
-    self.host  = "local"
-    
-    
-  def do_host( self, info ):
-    if info == "":
-      print "Host set to %s" % self.host
-    elif info == "local" or info == "localhost":
-      self.local = True
-      self.host  = "local"
-      print "Set host to local"
-    else:
-      info = info.split()
-      self.local = False
-      self.host     = info[0]
-      self.username = info[1]
-      self.password = info[2]
-      print "Set host to %s" % self.host
-    
-  def do_exec( self, command_string ):
-    command = None
-    if self.local:
-      command       = Command( command_string )
-    else:
-      command       = Command( command_string, self.host, self.username, self.password )
-    self.commands.append( command )
-    command.start()
-    print "ok"
-      
-  def do_list( self, args ):
-    print "-" * 80
-    print "No.\tRunning\tCommand"
-    print "-" * 80
-    for i in xrange( len( self.commands ) ):
-      c = self.commands[i]
-      print i, "\t", c.running, "\t", c.command
-      
-  def do_out( self, args ):
-    print "-" * 80
-    for line in self.commands[int( args )].stdout:
-      print line[:-1]
-    print "-" * 80
-
-  def do_err( self, args ):
-    '''
-      err command
-    '''
-    print "-" * 80
-    for line in self.commands[int( args )].stderr:
-      print line[:-1]
-    print "-" * 80
-
-  def do_exit( self, args ):
-    for c in self.commands:
-      c.join()
-    exit()
-
-
-
-class TextGui:
-  def __init__( self ):
-    self.screen = snack.SnackScreen()
-    self.initWindow1()
-    
-  def initWindow1( self ):
-    self.window1 = snack.EntryWindow(
-      self.screen, 
-      'Host Info', 
-      'Remote host data',
-      ['Name', 'user', 'password*'] )
-    
-  def __del__( self ):
-    self.screen.finish()
-    print self.window1
-
-
-
-
-gui = TextGui()
-
-#application = Application()
-#application.cmdloop()
-      
-
-
-
-##command = Command( "ls %s/Desktop" % os.environ["HOME"], host = "192.168.0.173", username = "vasquezg", password = "watusi" )
-##command = Command( "DISPLAY=:0.0 firefox", host = "192.168.0.173", username = "vasquezg", password = "watusi" )
-##command = Command( "ls %s/Desktop" % os.environ["HOME"] )
-#command.start()
-#command.join()
-##command.restart()
-##command.join()
-#for line in command.stdout:
-  #print line[:-1]
-#for line in command.stderr:
-  #print line[:-1]
-
-
-
-  

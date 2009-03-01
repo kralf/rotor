@@ -7,6 +7,7 @@
 #include <rotor/Exceptions.h>
 #include <rotor/Time.h>
 #include <rotor/Serialization.h>
+#include <rotor/Thread.h>
 %}
 
 
@@ -58,6 +59,7 @@
 %include <rotor/AbstractVariable.h>
 %include <rotor/Structure.h>
 %include <rotor/StructureArray.h>
+%include <rotor/Thread.h>
 
 //------------------------------------------------------------------------------
 
