@@ -16,10 +16,11 @@ name = sys.argv[1]
 options  = rotorc.BaseOptions()
 options.setString( name, "serverName", "localhost" )
 registry = rotorc.Registry.load( "CarmenRegistry", name, options, "/usr/lib" )
+
 registry.registerType( joystickDefinition )
 registry.registerMessage( "JOYSTICK", "Joystick" )
 registry.subscribeToMessage( "JOYSTICK" )
 
 while True:
   message = registry.receiveMessage()
-  sys.stdout.write( ( "\r%s" % rotorc.marshall( message ) ).ljust( 150 ) )
+  print rotorc.marshall( message )
