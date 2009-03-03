@@ -1,6 +1,14 @@
-add_library( <LIBRARY_NAME> SHARED <SOURCE_LIST> )
+#-------------------------------------------------------------------------------
+# Carmen
+#-------------------------------------------------------------------------------
 
-add_executable( <EXECUTABLE_NAME> <SOURCE_LIST> )
-target_link_libraries( <TARGET_NAME> <LINKED_LIBRARY> )
+find_library( ROTOR_LIB rotor )
+find_library( IPC_LIB ipc )
 
-sm_cpp_install( <TARGET_LIST> )
+file( GLOB CARMEN_SRC carmen/*.cpp )
+file( GLOB _CARMEN_SRC _carmen/*.cpp )
+
+add_library( CarmenRegistry SHARED ${CARMEN_SRC} ${_CARMEN_SRC} )
+
+target_link_libraries( CarmenRegistry ${ROTOR_LIB} ${IPC_LIB} )
+sm_cpp_install_binaries( CarmenRegistry )
