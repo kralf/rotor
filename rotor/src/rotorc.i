@@ -46,6 +46,20 @@
 
 //------------------------------------------------------------------------------
 
+%exception Rotor::Registry::receiveQuery {
+  try {
+    $action
+  } catch( Rotor::MessagingTimeout & e ) {
+    SWIG_exception( SWIG_RuntimeError, e.what() );
+  } 
+  SWIG_CATCH_STDEXCEPT
+  catch (...) {
+    SWIG_exception( SWIG_UnknownError, "Unknown exception" );
+  }
+}
+
+//------------------------------------------------------------------------------
+
 %include <rotor/Time.h>
 %include <rotor/Options.h>
 %include <rotor/BaseOptions.h>

@@ -30,12 +30,12 @@ public:
 
   virtual void subscribeToMessage( const std::string & messageName );  
   
+  virtual void subscribeToQuery( const std::string & messageName );
+
   virtual const Type & 
   messageType( const std::string & messageName ) const;
   
   virtual void sendMessage( const Message & message );
-
-//   virtual void sendMessage( const std::string & messageName, Structure & structure );
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 

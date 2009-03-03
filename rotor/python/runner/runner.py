@@ -27,8 +27,6 @@ class Command( object ):
   #-----
   
   def check_running( self, stream ):
-    #if not self.running:
-      #return False
     self.running = False
     if not self.remote:
       poll = self.popen.poll()
@@ -41,12 +39,15 @@ class Command( object ):
   #-----
   
   def update( self ):
-    while not self.out.empty():
-      line = self.out.get()
-      self._output.append( ( 0, time.time(), line ) )
-    while not self.err.empty():
-      line = self.err.get()
-      self._output.append( ( 1, time.time(), line ) )
+    while True:
+      if not self.out.empty():
+        line = self.out.get()
+        self._output.append( ( 0, time.time(), line ) )
+      elif not self.err.empty():
+        line = self.err.get()
+        self._output.append( ( 1, time.time(), line ) )
+      else:
+        break
     if self.output_lines != None:
       self._output = self._output[-self.output_lines:]
   

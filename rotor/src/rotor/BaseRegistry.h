@@ -40,6 +40,8 @@ public:
   virtual const Type & 
   messageType( const std::string & messageName ) const;
 
+  virtual void subscribeToQuery( const std::string & messageName );  
+
   virtual void sendMessage( const Message & message );
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );

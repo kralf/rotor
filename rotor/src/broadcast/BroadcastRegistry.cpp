@@ -34,7 +34,6 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
   } else {
     _socket.bind( SocketAddress( "127.0.0.1", "0" ) );
   }
-  _socket.setReceiveTimeout( options.getInt( name, "receiveTimeout", 100 ) );
 }
 
 //------------------------------------------------------------------------------
@@ -94,6 +93,13 @@ BroadcastRegistry::subscribeToMessage( const string & messageName )
 
 //------------------------------------------------------------------------------
 
+void 
+BroadcastRegistry::subscribeToQuery( const std::string & messageName )
+{
+}
+
+//------------------------------------------------------------------------------
+
 const Type & 
 BroadcastRegistry::messageType( const string & messageName ) const
 {
@@ -121,7 +127,7 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   SocketAddress address;
   char buffer[2048];
   if ( timeout ) {
-    _socket.setReceiveTimeout( timeout * 1000 );
+    _socket.setReceiveTimeout( timeout * 1000000 );
   } else {
     _socket.setReceiveTimeout( 0 );
   }
@@ -144,7 +150,7 @@ BroadcastRegistry::query( const Message & message, double timeout )
 throw( MessagingTimeout )
 {
   sendMessage( message );
-  for ( int i = 0; i < 10; i++ ) {
+  for ( size_t i = 0; i < 3; ++i ) {
     return receiveMessage( timeout ).data;
   }
 }
@@ -154,23 +160,7 @@ throw( MessagingTimeout )
 Message 
 BroadcastRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
-  SocketAddress address;
-  char buffer[2048];
-  if ( timeout ) {
-    _socket.setReceiveTimeout( timeout * 1000 );
-  } else {
-    _socket.setReceiveTimeout( 0 );
-  }
-  while ( true ) {
-    try {
-      _socket.receiveFrom( buffer, 2048, address );
-      _destination = address;
-      //NOTE: Here is necessary to check for subscribed messages.
-      return unmarshall( _registry, buffer );
-    } catch ( Poco::TimeoutException ) {
-      throw MessagingTimeout( "No message was received" );
-    }
-  }
+  return receiveMessage( timeout );
 }
 
 //------------------------------------------------------------------------------

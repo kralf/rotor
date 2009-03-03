@@ -31,6 +31,17 @@ Registry::subscribeToMessageType(
 }
 
 //------------------------------------------------------------------------------
+
+void 
+Registry::subscribeToQueryType( 
+  const std::string & messageName, 
+  const std::string & definitionString )
+{
+  registerMessageType( messageName, definitionString );
+  subscribeToQuery( messageName );
+}
+
+//------------------------------------------------------------------------------
   
 void 
 Registry::sendStructure( 

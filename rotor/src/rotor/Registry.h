@@ -45,6 +45,12 @@ public:
     const std::string & messageName, 
     const std::string & definitionString );  
 
+  virtual void subscribeToQuery( const std::string & messageName ) = 0;  
+  
+  virtual void subscribeToQueryType( 
+    const std::string & messageName, 
+    const std::string & definitionString );  
+
   virtual const Type & 
   messageType( const std::string & messageName ) const = 0;
   

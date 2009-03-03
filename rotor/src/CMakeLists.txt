@@ -29,17 +29,6 @@ target_link_libraries( unit_tests rotor BroadcastRegistry unittest++ )
 add_test( unit_tests ${EXECUTABLE_OUTPUT_PATH}/unit_tests xml )
 
 #-------------------------------------------------------------------------------
-# Carmen
-#-------------------------------------------------------------------------------
-
-file( GLOB CARMEN_SRC carmen/*.cpp )
-
-add_library( CarmenRegistry SHARED ${CARMEN_SRC} )
-
-target_link_libraries( CarmenRegistry rotor ipc )
-sm_cpp_install_binaries( CarmenRegistry )
-
-#-------------------------------------------------------------------------------
 # Broadcast
 #-------------------------------------------------------------------------------
 

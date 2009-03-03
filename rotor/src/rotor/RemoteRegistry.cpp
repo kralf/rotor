@@ -34,9 +34,9 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   Structure request1 = _registry->newStructure( "RemoteCommand" );
   request1["command"]   = "GET_OPTIONS";
   request1["arguments"] = "*";
+  
   Structure * reply1 = _registry->queryStructure( "SERVER_COMMAND", request1, 3 );
-
-  sReply << reply;
+  sReply << reply1;
   
   options.fromString( sReply.value );
 }
@@ -89,6 +89,14 @@ void
 RemoteRegistry::subscribeToMessage( const std::string & messageName )
 {
   _registry->subscribeToMessage( messageName );
+}
+
+//------------------------------------------------------------------------------
+
+void
+RemoteRegistry::subscribeToQuery( const string & messageName )
+{
+  _registry->subscribeToQuery( messageName );
 }
 
 //------------------------------------------------------------------------------

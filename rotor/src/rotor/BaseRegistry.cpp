@@ -115,6 +115,13 @@ BaseRegistry::subscribeToMessage( const std::string & messageName )
 
 //------------------------------------------------------------------------------
 
+void 
+BaseRegistry::subscribeToQuery( const std::string & messageName )
+{
+}
+
+//------------------------------------------------------------------------------
+
 const Type & 
 BaseRegistry::messageType( const string & messageName ) const
 {

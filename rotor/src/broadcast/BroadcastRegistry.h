@@ -37,6 +37,8 @@ public:
 
   virtual void subscribeToMessage( const std::string & messageName );
 
+  virtual void subscribeToQuery( const std::string & messageName );  
+
   virtual const Type & 
   messageType( const std::string & messageName ) const;
   

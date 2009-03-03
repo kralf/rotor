@@ -25,6 +25,12 @@ messages = [
 
 #-------------------------------------------------------------------------------
 
+def out( string ):
+  sys.stdout.write( string )
+  sys.stdout.flush()
+
+#-------------------------------------------------------------------------------
+
 def getHostName():
   s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
   s.connect( ( '1.2.3.4', 56 ) )
@@ -56,7 +62,9 @@ class Server:
   def commandHandler( self, registry, name ):
     while not self.terminated:
       try:
-        message = registry.receiveMessage( 0.1 )
+        out( "receiving: %s\n" % name )
+        message = registry.receiveQuery( 0.2 )
+        out( "%s ok\n" % name )
         if message.name == "SERVER_COMMAND":
           print "%s>%s %s" % ( name, message.data.command, message.data.arguments )
           if message.data.command == "GET_OPTIONS":
@@ -70,34 +78,34 @@ class Server:
         sys.stdout.flush()
       except Exception, e:
         if e.message != "No message was received":
+          print e.message
           raise
-        #print name, "timeout"
-        #sys.stdout.flush()
-          
     print "Handler has been terminated"
     
 #-------------------------------------------------------------------------------
 
   def setupBroadcastServer( self ):
-    self.broadcastRegistry = Registry.load( "BroadcastRegistry", "rotor", self.options, "/home/vasquezg/dev/c++/robotics/rotor/build/lib" )
+    self.broadcastRegistry = Registry.load( "BroadcastRegistry", "rotor", self.options, "" )
     for typeDefinitions in types:
       self.broadcastRegistry.registerType( typeDefinitions )
     for message in messages:
       self.broadcastRegistry.registerMessage( message[0], message[1] )
+    self.broadcastRegistry.subscribeToQuery( "SERVER_COMMAND" )
     self.terminated = False
-    self.broadcastThread = Thread( target = self.commandHandler, args = ( self.broadcastRegistry, "bc" ) ) 
+    self.broadcastThread = Thread( target = self.commandHandler, args = ( self.broadcastRegistry, "broadcast" ) ) 
     self.broadcastThread.start()
 
 #-------------------------------------------------------------------------------
 
   def setupDefaultServer( self ):
-    self.defaultRegistry = Registry.load( self.defaultRegistryClass, "rotor", self.options, "/home/vasquezg/dev/c++/robotics/rotor/build/lib" )
+    self.defaultRegistry = Registry.load( self.defaultRegistryClass, "rotor", self.options, "" )
     for typeDefinitions in types:
       self.defaultRegistry.registerType( typeDefinitions )
     for message in messages:
       self.defaultRegistry.registerMessage( message[0], message[1] )
+    self.defaultRegistry.subscribeToQuery( "SERVER_COMMAND" )
     self.terminated = False
-    self.defaultThread = Thread( target = self.commandHandler, args = ( self.defaultRegistry, "df" ) ) 
+    self.defaultThread = Thread( target = self.commandHandler, args = ( self.defaultRegistry, "default" ) ) 
     self.defaultThread.start()
 
 #-------------------------------------------------------------------------------

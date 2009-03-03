@@ -236,7 +236,7 @@ SUITE( Structure ) {
     //Check what happens when we change string size
     structure["stringValue"] = "Era la arzavesperia y los flexilimosos toves giroscopiaban taledrando en el vade";
 //TODO: Correct valgrind error here
-//     CHECK( std::string( realStruct.stringValue ) != std::string( "fistandantilus" ) );
+    CHECK( std::string( realStruct.stringValue ) != std::string( "fistandantilus" ) );
     std::string s1( structure["stringValue"] );
     CHECK( s1 == std::string( realStruct.stringValue )  );
     CHECK( s1 == std::string( "Era la arzavesperia y los flexilimosos toves giroscopiaban taledrando en el vade" )  );
