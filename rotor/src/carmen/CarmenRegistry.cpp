@@ -7,7 +7,6 @@
 #include <rotor/Conversion.h>
 #include <rotor/Time.h>
 #include <rotor/TypedThread.h>
-#include <carmen/ipc.h>
 #include <sstream>
 #include <cstdlib>
 #include <iomanip>
@@ -59,7 +58,8 @@ queryHandle( MSG_INSTANCE msgInstance, void * data, void * registryPtr )
 //------------------------------------------------------------------------------
 
 CarmenRegistry::CarmenRegistry( const string & name, Options & options)
-  : Registry( name, options ),
+  : _name( name ), 
+    _options( options ),
     _registry( name, options ),
     _hasMessage( false )
 {
@@ -68,17 +68,26 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   tmpName << setprecision( 10 );
   tmpName << name << "_" << seconds();
 
-  if ( IPC_connectModule( tmpName.str().c_str(), options.getString( name, "serverName" ).c_str() ) == IPC_Error ) {
+  // Temporary connection, needed to call IPC_isModuleConnected
+  if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
     fprintf( stderr, "Could not connect IPC\n" );
     exit( 1 );
   }
-  
+
   if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
     fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
     exit( 1 );
   }
   
-
+  if ( IPC_disconnect() == IPC_Error ) {
+    fprintf( stderr, "Error connecting to IPC\n" );
+    exit( 1 );
+  }
+  
+  if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
+    fprintf( stderr, "Could not connect IPC\n" );
+    exit( 1 );
+  }
   IPC_setCapacity( 4 );
   
   _dispatchThread = typedThread( *this );
@@ -94,6 +103,22 @@ CarmenRegistry::~CarmenRegistry()
     fprintf( stderr, "Could not disconnect IPC\n" );
     exit( 1 );
   }
+}
+
+//------------------------------------------------------------------------------
+  
+const std::string & 
+CarmenRegistry::name() const
+{
+  return _name;
+}
+  
+//------------------------------------------------------------------------------
+  
+Options & 
+CarmenRegistry::options() const
+{
+  return _options;
 }
 
 //------------------------------------------------------------------------------
@@ -186,10 +211,11 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Message 
+Structure *
 CarmenRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
+  fprintf( stderr, "Q: %s\n", message.data->toString().c_str() );
   if (  IPC_queryNotify( 
           message.name.c_str(), 
           message.data->size(),
@@ -202,7 +228,22 @@ throw( MessagingTimeout )
   }
   Message result = _responseQueue.next( timeout );
   _responseQueue.pop( timeout );
-  return result;
+  return result.data;
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
+{
+  Lock lock( _mutex );
+  while ( ! _hasMessage ) {
+    if ( ! _messageAvailable.wait( _mutex, timeout ) ) {
+      throw MessagingTimeout( "No message was received" );
+    }
+  }
+  _hasMessage = false;
+  return _message;
 }
 
 //------------------------------------------------------------------------------
@@ -210,19 +251,14 @@ throw( MessagingTimeout )
 void
 CarmenRegistry::reply( const Message & message ) 
 {
-/*  if (  IPC_respond( 
-          message.name.c_str(), 
-          message.data->size(),
-          message.data->buffer(),
-          queryHandle,
-          this ) == IPC_Error ) 
+  if (  IPC_respondData( 
+          _messageInstances[message.name],
+          message.name.c_str(),
+          message.data->buffer() ) == IPC_Error ) 
   {
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
-  Message result = _responseQueue.next( timeout );
-  _responseQueue.pop( timeout );
-  return result;*/
 }
 
 //------------------------------------------------------------------------------

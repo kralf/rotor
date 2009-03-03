@@ -19,6 +19,10 @@ class BaseRegistry : public Registry
 public:
   BaseRegistry( const std::string & name, Options & options );
   virtual ~BaseRegistry();
+    
+  virtual const std::string & name() const;
+  
+  virtual Options & options() const;
   
   virtual const Type & 
   registerType( const std::string & definitionString );
@@ -40,7 +44,9 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 
-  virtual Message query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  
+  virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
   
   virtual void reply( const Message & message );
 
@@ -50,7 +56,9 @@ private:
   typedef std::map<std::string, Type* > Types;
 
   BaseRegistry( const BaseRegistry & );
-
+  
+  std::string             _name;
+  Options &               _options;
   Registries              _registries;
   StringMap               _definitionStrings;
   Types                   _types;

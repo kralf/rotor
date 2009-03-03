@@ -1,0 +1,121 @@
+from rotorc import *
+from threading import *
+from time import *
+import sys
+import socket
+
+types = [
+  '''
+    struct RemoteCommand {
+      char * command;
+      char * arguments;
+    };
+  ''',
+  '''
+    struct OptionString {
+      char * value;
+    };
+  '''
+]
+
+messages = [
+  ["SERVER_COMMAND", "RemoteCommand"],
+  ["OPTION_STRING", "OptionString"]
+]
+
+#-------------------------------------------------------------------------------
+
+def getHostName():
+  s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
+  s.connect( ( '1.2.3.4', 56 ) )
+  ip = s.getsockname()[0]
+  return ip
+
+#-------------------------------------------------------------------------------
+
+class Server:
+  def __init__( self, parameterFile ):
+    self.options  = BaseOptions()
+    
+    f = open( parameterFile )
+    self.options.fromString( f.read() )
+    f.close()
+    
+    self.options.setString( "BOOTSTRAP", "server", getHostName() )
+    self.options.setInt( "rotor", "listenPort", 60709 )
+    
+    self.defaultRegistryClass = self.options.getString( "BOOTSTRAP", "registry" )
+    self.options.setString( self.defaultRegistryClass, "server", getHostName() )
+    sys.stdout.flush()
+
+    self.setupBroadcastServer()
+    self.setupDefaultServer()
+    
+#-------------------------------------------------------------------------------
+
+  def commandHandler( self, registry, name ):
+    while not self.terminated:
+      try:
+        message = registry.receiveMessage( 0.1 )
+        if message.name == "SERVER_COMMAND":
+          print "%s>%s %s" % ( name, message.data.command, message.data.arguments )
+          if message.data.command == "GET_OPTIONS":
+            reply       = Structure( "OptionString", None, registry )
+            if message.data.arguments == "*":
+              reply.value = self.options.toString()
+            else:
+              reply.value = self.options.toString( message.data.arguments )
+            registry.reply( Message( "OPTION_STRING", reply ) )
+            print "%s" % reply.toString()
+        sys.stdout.flush()
+      except Exception, e:
+        if e.message != "No message was received":
+          raise
+        #print name, "timeout"
+        #sys.stdout.flush()
+          
+    print "Handler has been terminated"
+    
+#-------------------------------------------------------------------------------
+
+  def setupBroadcastServer( self ):
+    self.broadcastRegistry = Registry.load( "BroadcastRegistry", "rotor", self.options, "/home/vasquezg/dev/c++/robotics/rotor/build/lib" )
+    for typeDefinitions in types:
+      self.broadcastRegistry.registerType( typeDefinitions )
+    for message in messages:
+      self.broadcastRegistry.registerMessage( message[0], message[1] )
+    self.terminated = False
+    self.broadcastThread = Thread( target = self.commandHandler, args = ( self.broadcastRegistry, "bc" ) ) 
+    self.broadcastThread.start()
+
+#-------------------------------------------------------------------------------
+
+  def setupDefaultServer( self ):
+    self.defaultRegistry = Registry.load( self.defaultRegistryClass, "rotor", self.options, "/home/vasquezg/dev/c++/robotics/rotor/build/lib" )
+    for typeDefinitions in types:
+      self.defaultRegistry.registerType( typeDefinitions )
+    for message in messages:
+      self.defaultRegistry.registerMessage( message[0], message[1] )
+    self.terminated = False
+    self.defaultThread = Thread( target = self.commandHandler, args = ( self.defaultRegistry, "df" ) ) 
+    self.defaultThread.start()
+
+#-------------------------------------------------------------------------------
+
+  def terminate( self ):
+    self.terminated = True
+    
+#-------------------------------------------------------------------------------
+
+  def join( self ):
+    try:
+      while True:
+        if self.broadcastThread.isAlive:
+          self.broadcastThread.join( 1 )
+        elif self.defaultThread.isAlive:
+          self.defaultThread.join( 1 )
+        else:
+          break
+    except KeyboardInterrupt:
+      self.terminate()
+        

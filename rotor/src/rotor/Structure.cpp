@@ -1,5 +1,6 @@
 #include "Structure.h"
 #include "Debug.h"
+#include <sstream>
 
 using namespace Rotor;
 using namespace std;
@@ -181,6 +182,20 @@ const Registry &
 Structure::registry() const 
 {
   return _registry;
+}  
+
+//------------------------------------------------------------------------------
+
+string
+Structure::toString() const 
+{
+  stringstream result;
+  result << _type.name() << " {\n";
+  for ( size_t i = 0; i < _type.members().size(); ++i ) {
+    result << "  "  << _type.members()[i].name << ": " << (*this)[i] << ";\n";
+  }
+  result << "}\n";
+  return result.str();
 }  
 
 //------------------------------------------------------------------------------

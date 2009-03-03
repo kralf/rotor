@@ -3,6 +3,7 @@
 #include "Exceptions.h"
 #include "Options.h"
 #include "StructureParser.h"
+#include "Structure.h"
 
 using namespace Rotor;
 using namespace std;
@@ -10,7 +11,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 BaseRegistry::BaseRegistry( const std::string & name, Options & options )
-  : Registry( name, options )
+  : _name( name ), 
+    _options( options )
 {
   _registries[ "default" ] = this;
 }
@@ -33,6 +35,22 @@ BaseRegistry::~BaseRegistry()
       delete i->second;
     }
   }
+}
+
+//------------------------------------------------------------------------------
+  
+const std::string & 
+BaseRegistry::name() const
+{
+  return _name;
+}
+  
+//------------------------------------------------------------------------------
+  
+Options & 
+BaseRegistry::options() const
+{
+  return _options;
 }
 
 //------------------------------------------------------------------------------
@@ -124,11 +142,19 @@ BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Message 
+Structure *
 BaseRegistry::query( const Message & message, double timeout )  
 throw( MessagingTimeout )
 {
 }
+
+//------------------------------------------------------------------------------
+
+Message 
+BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
+{
+}
+
 //------------------------------------------------------------------------------
 
 void

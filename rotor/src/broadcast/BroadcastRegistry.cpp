@@ -21,7 +21,8 @@ ROTOR_REGISTRY_FACTORY( BroadcastRegistry )
 //------------------------------------------------------------------------------
 
 BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
-  : Registry( name, options ),
+  : _name( name ), 
+    _options( options ),
     _registry( name, options ),
     _destination( "255.255.255.255:60709" ) 
 {
@@ -40,6 +41,22 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
 
 BroadcastRegistry::~BroadcastRegistry()
 {
+}
+
+//------------------------------------------------------------------------------
+  
+const std::string & 
+BroadcastRegistry::name() const
+{
+  return _name;
+}
+  
+//------------------------------------------------------------------------------
+  
+Options & 
+BroadcastRegistry::options() const
+{
+  return _options;
 }
 
 //------------------------------------------------------------------------------
@@ -105,6 +122,8 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   char buffer[2048];
   if ( timeout ) {
     _socket.setReceiveTimeout( timeout * 1000 );
+  } else {
+    _socket.setReceiveTimeout( 0 );
   }
   while ( true ) {
     try {
@@ -118,16 +137,39 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   }
 }
 
-
 //------------------------------------------------------------------------------
 
-Message 
+Structure *
 BroadcastRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
   sendMessage( message );
   for ( int i = 0; i < 10; i++ ) {
-    return receiveMessage( timeout );
+    return receiveMessage( timeout ).data;
+  }
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+BroadcastRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
+{
+  SocketAddress address;
+  char buffer[2048];
+  if ( timeout ) {
+    _socket.setReceiveTimeout( timeout * 1000 );
+  } else {
+    _socket.setReceiveTimeout( 0 );
+  }
+  while ( true ) {
+    try {
+      _socket.receiveFrom( buffer, 2048, address );
+      _destination = address;
+      //NOTE: Here is necessary to check for subscribed messages.
+      return unmarshall( _registry, buffer );
+    } catch ( Poco::TimeoutException ) {
+      throw MessagingTimeout( "No message was received" );
+    }
   }
 }
 

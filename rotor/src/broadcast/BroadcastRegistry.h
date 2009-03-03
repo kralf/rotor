@@ -20,6 +20,10 @@ public:
   
   virtual ~BroadcastRegistry();
   
+  virtual const std::string & name() const;
+  
+  virtual Options & options() const;
+  
   virtual const Type & 
   registerType( const std::string & definitionString );
   
@@ -40,10 +44,14 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
   
-  virtual Message query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  
+  virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 
   virtual void reply( const Message & message );
 private:
+  std::string                _name;
+  Options &                  _options;
   BaseRegistry               _registry;
   Poco::Net::SocketAddress   _destination;
   Poco::Net::DatagramSocket  _socket;

@@ -2,10 +2,12 @@
 #define ROTOR_CARMEN_REGISTRY_H
 
 
+#include <carmen/ipc.h>
 #include <rotor/BaseRegistry.h>
 #include <rotor/Mutex.h>
 #include <rotor/Condition.h>
 #include <rotor/Queue.h>
+#include <map>
 
 
 namespace Rotor {
@@ -21,6 +23,10 @@ public:
   CarmenRegistry( const std::string & name, Options & options );
   
   virtual ~CarmenRegistry();
+  
+  virtual const std::string & name() const;
+  
+  virtual Options & options() const;
   
   virtual const Type & 
   registerType( const std::string & definitionString );
@@ -42,8 +48,10 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 
-  virtual Message query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
-  
+  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+
+  virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
+
   virtual void reply( const Message & message );
 
   std::string formatString( const std::string & typeName ) const;
@@ -53,14 +61,18 @@ public:
   Queue<Message> & responseQueue();
   
 private:
-  BaseRegistry   _registry;
-  Message        _message;
-  bool           _hasMessage;
-  Condition      _messageAvailable;
-  Mutex          _mutex;
-  Mutex          _ipcMutex;
-  Thread *       _dispatchThread;
-  Queue<Message> _responseQueue;
+  typedef std::map< std::string, MSG_INSTANCE> MessageInstances;
+  std::string      _name;
+  Options &        _options;
+  BaseRegistry     _registry;
+  Message          _message;
+  bool             _hasMessage;
+  Condition        _messageAvailable;
+  Mutex            _mutex;
+  Mutex            _ipcMutex;
+  Thread *         _dispatchThread;
+  Queue<Message>   _responseQueue;
+  MessageInstances _messageInstances;
 };
 
 

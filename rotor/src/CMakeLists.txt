@@ -2,42 +2,10 @@
 # Main library
 #-------------------------------------------------------------------------------
 
-add_library( 
-  rotor SHARED 
-  rotor/AbstractVariable.cpp
-  rotor/BaseOptions.cpp
-  rotor/BaseRegistry.cpp
-  rotor/BasicTypes.cpp
-  rotor/Condition.cpp
-  _rotor/ConditionImpl.cpp
-  rotor/Debug.cpp
-  rotor/DebugModule.cpp
-  rotor/DefaultModule.cpp
-  rotor/FileUtils.cpp
-  rotor/DispatcherModule.cpp
-  rotor/InputDispatcherModule.cpp
-  rotor/Lock.cpp
-  rotor/MemberDefinition.cpp
-  rotor/Memory.cpp
-  rotor/Message.cpp
-  rotor/Module.cpp
-  rotor/ModuleRunner.cpp
-  rotor/Mutex.cpp
-  _rotor/MutexImpl.cpp
-  _rotor/OptionParser.cpp
-  rotor/PeriodicTask.cpp
-  rotor/Registry.cpp  
-  rotor/Serialization.cpp
-  rotor/String.cpp 
-  rotor/Structure.cpp 
-  rotor/StructureArray.cpp 
-  rotor/StructureParser.cpp 
-  _rotor/StructureParserImpl.cpp
-  rotor/Type.cpp
-  rotor/Thread.cpp
-  _rotor/ThreadImpl.cpp
-)
+file( GLOB ROTOR_SRC rotor/*.cpp )
+file( GLOB _ROTOR_SRC _rotor/*.cpp )
 
+add_library( rotor SHARED ${ROTOR_SRC} ${_ROTOR_SRC} )
 
 target_link_libraries( rotor Hapy pthread dl )
 
@@ -52,37 +20,27 @@ swig_python( rotorc rotor )
 # Tests
 #-------------------------------------------------------------------------------
 
-add_executable(
-  unit_tests
-  test/main.cpp
-  test/TestArray.cpp
-  test/TestMemory.cpp
-  test/TestOptions.cpp
-  test/TestOptionParser.cpp
-  test/TestVariable.cpp
-  test/TestString.cpp
-  test/TestStructure.cpp
-  test/TestStructureArray.cpp
-  test/TestStructureParser.cpp
-  test/TestRegistry.cpp
-  test/TestQueue.cpp
-  test/TestBroadcastSerialization.cpp
-) 
+file( GLOB TEST_SRC test/*.cpp )
+
+add_executable( unit_tests ${TEST_SRC} ) 
 
 target_link_libraries( unit_tests rotor BroadcastRegistry unittest++ )
 
 add_test( unit_tests ${EXECUTABLE_OUTPUT_PATH}/unit_tests xml )
 
 #-------------------------------------------------------------------------------
+# Carmen
+#-------------------------------------------------------------------------------
 
-add_library( 
-  CarmenRegistry SHARED 
-  carmen/CarmenRegistry.cpp
-)
+file( GLOB CARMEN_SRC carmen/*.cpp )
+
+add_library( CarmenRegistry SHARED ${CARMEN_SRC} )
 
 target_link_libraries( CarmenRegistry rotor ipc )
 sm_cpp_install_binaries( CarmenRegistry )
 
+#-------------------------------------------------------------------------------
+# Broadcast
 #-------------------------------------------------------------------------------
 
 add_library( 
@@ -93,6 +51,8 @@ add_library(
 target_link_libraries( BroadcastRegistry rotor PocoNet )
 sm_cpp_install_binaries( BroadcastRegistry )
 
+#-------------------------------------------------------------------------------
+# Sandbox
 #-------------------------------------------------------------------------------
 
 add_executable(

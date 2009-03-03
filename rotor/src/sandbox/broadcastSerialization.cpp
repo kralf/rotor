@@ -37,15 +37,14 @@ int main( int argc, char * argv[] ) {
 
   Message request( "REGISTRY_REQUEST", new Structure( "RegistryRequest", 0, registry ) );
   try {
-    Message response  = registry.query( request );
-    Structure & s = *(response.data);
+    Structure * response  = registry.query( request );
     RegistryResponse rep;
-    rep << response.data;
+    rep << response;
     
     printf( "nameOk          = %i\n", rep.nameOk );
     printf( "registryClass = %s\n", rep.registryClass );
   
-    delete response.data;
+    delete response;
   } catch ( MessagingTimeout ) {
     fprintf( stderr, "Failed to contact central registry\n" );
   }
