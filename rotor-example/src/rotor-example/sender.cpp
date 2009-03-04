@@ -1,4 +1,5 @@
 #include "Point.h"
+#include <rotor/Logger.h>
 #include <rotor/RemoteRegistry.h>
 #include <rotor/Thread.h>
 #include <rotor/Time.h>
@@ -24,20 +25,23 @@ int main( int argc, char * argv[] ) {
   {
     // Second way
     elrob_smart_pos_message p;
-    p.host = "forolifo";
+    p.host = "fotoinforsic";
     
     // Structure pose is an 'alias' of p
     Structure pose = registry.newStructure( "elrob_smart_pos_message", &p ); 
     
+    
     int value = 0;
     while ( true ) {
-      Thread::sleep( 20 );
+      Logger::spam( pose.toString() );
+      Thread::sleep( 0.1 );
       value += 1;
       p.pose.x = value;
       p.pose.y = value * 2;
       p.velocity = value * 1;
       p.steering_angle = value * 2;
       p.timestamp = seconds();
+      Logger::debug( pose.toString() );
       registry.sendStructure( "elrob_smart_pos_message", pose );
     }
   }

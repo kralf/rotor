@@ -1,4 +1,4 @@
 "central"
-"/home/vasquezg/dev/robotics/rotor/scripts/rotor server testcfg/swissranger.parameters"
-"/home/vasquezg/dev/robotics/hardware/swissranger/build/bin/test_receiver receiver"
-"/home/vasquezg/dev/robotics/hardware/swissranger/build/bin/test_sender sender"
+"rotor server cfg/test.ini"
+"build/bin/sender sender"
+"build/bin/receiver receiver"

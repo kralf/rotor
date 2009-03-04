@@ -16,6 +16,6 @@ int main( int argc, char * argv[] ) {
   while ( true ) {
     Message m = registry.receiveMessage();
     cout << m.data->toString() << endl;
-    delete m.data;
+//     delete m.data;
   }
 }
