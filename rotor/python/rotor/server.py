@@ -64,7 +64,7 @@ class Server:
     while not self.terminated:
       try:
         Logger.spam( "receiving: %s" % name )
-        message = registry.receiveQuery( 0.2 )
+        message = registry.receiveQuery( 0.5 )
         if message.name == "SERVER_COMMAND":
           Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
           if message.data.command == "GET_OPTIONS":

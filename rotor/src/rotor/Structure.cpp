@@ -1,5 +1,7 @@
 #include "Structure.h"
 #include "Debug.h"
+#include "Logger.h"
+#include "Serialization.h"
 #include <sstream>
 
 using namespace Rotor;
@@ -192,7 +194,8 @@ Structure::toString() const
   stringstream result;
   result << _type.name() << " {\n";
   for ( size_t i = 0; i < _type.members().size(); ++i ) {
-    result << "  "  << _type.members()[i].name << ": " << (*this)[i] << ";\n";
+    result << "  "  << _type.members()[i].name << ": ";
+    result << marshall( (*this)[i] ) <<";\n";
   }
   result << "}\n";
   return result.str();
