@@ -6,6 +6,7 @@
 #include <rotor/StructureArray.h>
 #include <rotor/Exceptions.h>
 #include <rotor/Time.h>
+#include <rotor/Logger.h>
 #include <rotor/Serialization.h>
 #include <rotor/Thread.h>
 %}
@@ -15,6 +16,7 @@
 %include std_vector.i
 %include exception.i
 %include <rotor/Exceptions.h>
+
 
 //------------------------------------------------------------------------------
 
@@ -61,6 +63,7 @@
 //------------------------------------------------------------------------------
 
 %include <rotor/Time.h>
+%include <rotor/Logger.h>
 %include <rotor/Options.h>
 %include <rotor/BaseOptions.h>
 %include <rotor/Message.h>

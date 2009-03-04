@@ -18,6 +18,7 @@ public:
   void start( FunctionPointer function, void * arguments );
   void * join();
   static void sleep( double seconds );
+  static void yield();
   
 private:
   ThreadImpl( const ThreadImpl & );

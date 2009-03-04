@@ -1,0 +1,22 @@
+install(
+  DIRECTORY rotor
+  DESTINATION share/${PROJECT_NAME}/python/
+  COMPONENT default
+  PATTERN .* EXCLUDE
+  PATTERN *.pyc EXCLUDE
+)
+
+install(
+  DIRECTORY runner
+  DESTINATION share/${PROJECT_NAME}/python/
+  COMPONENT default
+  PATTERN .* EXCLUDE
+  PATTERN *.pyc EXCLUDE
+)
+
+find_path( PYTHON_SITE_PACKAGES_PATH site-packages ${CMAKE_INSTALL_PREFIX}/lib )
+install(
+  FILES rotor.pth
+  DESTINATION ${CMAKE_INSTALL_ROOT}/${PYTHON_SITE_PACKAGES_PATH}
+  COMPONENT default
+)

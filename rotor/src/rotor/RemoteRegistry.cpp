@@ -1,7 +1,7 @@
 #include "RemoteRegistry.h"
 #include "BaseOptions.h"
 #include "CoreMessages.h"
-
+#include "Logger.h"
 
 using namespace Rotor;
 using namespace std;
@@ -10,8 +10,7 @@ using namespace std;
 
 RemoteRegistry::RemoteRegistry( const std::string & name )
 {
-  BaseOptions options;
-  Registry * _registry = Registry::load( "BroadcastRegistry", "bootstrap", options, "" );
+  _registry = Registry::load( "BroadcastRegistry", "bootstrap", _options, "" );
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
 
@@ -19,28 +18,38 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   request["command"]   = "GET_OPTIONS";
   request["arguments"] = "BOOTSTRAP";
   Structure * reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
-  OptionString sReply;
-  sReply << reply;
+  Logger::info( "Main server found" );
   
-  options.fromString( sReply.value );
+  OptionString sReply;
+  sReply << reply;  
+  _options.fromString( sReply.value );
   
   delete _registry;
   delete reply;
 
-  _registry = Registry::load( options.getString( "BOOTSTRAP", "registry" ), name, options, "" );
+  _registry = Registry::load( _options.getString( "BOOTSTRAP", "registry" ), name, _options, "" );
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
+  Logger::debug( "Retrieving options" );
   
-  Structure request1 = _registry->newStructure( "RemoteCommand" );
-  request1["command"]   = "GET_OPTIONS";
-  request1["arguments"] = "*";
+  request["command"]   = "GET_OPTIONS";
+  request["arguments"] = "*";
   
-  Structure * reply1 = _registry->queryStructure( "SERVER_COMMAND", request1, 3 );
-  sReply << reply1;
+  reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
+  Logger::info( string( "Connected to server with transport: " ) + _options.getString( "BOOTSTRAP", "registry" ) );
   
-  options.fromString( sReply.value );
+  sReply << reply;
+  _options.fromString( sReply.value );
+  
+  delete reply;
 }
 
+//------------------------------------------------------------------------------
+
+RemoteRegistry::~RemoteRegistry()
+{
+  delete _registry;
+}
 //------------------------------------------------------------------------------
 
 const std::string & 

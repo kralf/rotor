@@ -1,4 +1,5 @@
 from rotorc import *
+import rotorc
 from threading import *
 from time import *
 import sys
@@ -62,11 +63,10 @@ class Server:
   def commandHandler( self, registry, name ):
     while not self.terminated:
       try:
-        out( "receiving: %s\n" % name )
+        Logger.spam( "receiving: %s" % name )
         message = registry.receiveQuery( 0.2 )
-        out( "%s ok\n" % name )
         if message.name == "SERVER_COMMAND":
-          print "%s>%s %s" % ( name, message.data.command, message.data.arguments )
+          Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
           if message.data.command == "GET_OPTIONS":
             reply       = Structure( "OptionString", None, registry )
             if message.data.arguments == "*":
@@ -74,8 +74,7 @@ class Server:
             else:
               reply.value = self.options.toString( message.data.arguments )
             registry.reply( Message( "OPTION_STRING", reply ) )
-            print "%s" % reply.toString()
-        sys.stdout.flush()
+            Logger.debug( "%s" % reply.toString() )
       except Exception, e:
         if e.message != "No message was received":
           print e.message

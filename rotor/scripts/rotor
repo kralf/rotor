@@ -4,9 +4,6 @@ import os
 
 filedir = os.path.dirname( __file__ )
 
-sys.path.append( os.path.join( filedir, "..", "build", "lib" ) )
-sys.path.append( os.path.join( filedir, "..", "build", "src" ) )
-sys.path.append( os.path.join( filedir, "..", "python" ) )
 sys.path.append( os.environ["HOME"] + "/.rotor/python" )
 sys.path.append( os.environ["HOME"] + "/.rotor/lib" )
 sys.path.append( "/usr/share/rotor/python" )

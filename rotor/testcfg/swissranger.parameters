@@ -1,3 +1,4 @@
 [BOOTSTRAP]
 
-registry = CarmenRegistry
+registry     = CarmenRegistry
+loggingLevel = 5

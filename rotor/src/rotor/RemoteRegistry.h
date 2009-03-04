@@ -2,8 +2,8 @@
 #define ROTOR_REMOTE_REGISTRY_H
 
 
+#include "BaseOptions.h"
 #include "Registry.h"
-
 
 namespace Rotor {
 
@@ -12,6 +12,8 @@ class RemoteRegistry : public Registry
 {
 public:
   RemoteRegistry( const std::string & name );
+  
+  virtual ~RemoteRegistry();
   
   virtual const std::string & name() const;
   
@@ -46,7 +48,8 @@ public:
   virtual void reply( const Message & message ) ;
   
 private:
-  Registry * _registry;
+  Registry *  _registry;
+  BaseOptions _options;
 };
 
 

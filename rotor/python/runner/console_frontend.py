@@ -4,6 +4,48 @@ import urwid
 import time
 import os
 
+_proc_status = '/proc/%d/status' % os.getpid()
+
+_scale = {'kB': 1024.0, 'mB': 1024.0*1024.0,
+          'KB': 1024.0, 'MB': 1024.0*1024.0}
+
+def _VmB(VmKey):
+    '''Private.
+    '''
+    global _proc_status, _scale
+     # get pseudo file  /proc/<pid>/status
+    try:
+        t = open(_proc_status)
+        v = t.read()
+        t.close()
+    except:
+        return 0.0  # non-Linux?
+     # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
+    i = v.index(VmKey)
+    v = v[i:].split(None, 3)  # whitespace
+    if len(v) < 3:
+        return 0.0  # invalid format?
+     # convert Vm value to bytes
+    return float(v[1]) * _scale[v[2]]
+
+
+def memory(since=0.0):
+    '''Return memory usage in bytes.
+    '''
+    return _VmB('VmSize:') - since
+
+
+def resident(since=0.0):
+    '''Return resident memory usage in bytes.
+    '''
+    return _VmB('VmRSS:') - since
+
+
+def stacksize(since=0.0):
+    '''Return stack size in bytes.
+    '''
+    return _VmB('VmStk:') - since
+
 #-------------------------------------------------------------------------------
 
 class SelectableText( urwid.Text ):
@@ -39,12 +81,15 @@ class CommandList( urwid.WidgetWrap ):
     for c in self.commands:
       if c.running:
         status = "running"
+        text   = status
       elif c.return_code == 0:
         status = "stopped"
+        text   = status
       else:
-        status = "error"
+        status = "error" 
+        text   = status + " %i" % c.return_code
       widget = urwid.Columns( [
-        ( "weight", 1, SelectableText( ( status, status ) ) ), 
+        ( "weight", 1, SelectableText( ( status, text ) ) ), 
         ( "weight", 5, SelectableText( c.command ) )
       ] )
       self.walker.contents.append( urwid.AttrWrap( widget, None, "selected_command" ) )
@@ -176,7 +221,7 @@ class ConsoleFrontend():
     ], dividechars = 1 )
     
     
-    self.header_text = urwid.Text( "Process Runner v1.0 %s" % time.asctime() )
+    self.header_text = urwid.Text( "Process Runner v1.0 %s m:%i" % ( time.asctime(), resident() ) )
     header = urwid.AttrWrap( self.header_text, 'header' )
     
     instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <k: kill> | <a: kill all>" )
@@ -212,7 +257,8 @@ class ConsoleFrontend():
       self.size = self.screen.get_cols_rows()
       pos = self.command_list.get_focus()[1]
       
-      self.header_text.set_text( "Process Runner v1.0 %s" % time.asctime() )
+      #self.header_text.set_text( "Process Runner v1.0 %s" % time.asctime() )
+      self.header_text.set_text( "Process Runner v1.0 %s m:%i" % ( time.asctime(), resident() ) )
       self.command_list.update()
       if pos != None:
         output = self.output_lists[pos]

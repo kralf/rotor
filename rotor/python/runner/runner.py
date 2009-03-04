@@ -30,7 +30,8 @@ class Command( object ):
     self.running = False
     if not self.remote:
       poll = self.popen.poll()
-      self.return_code = self.popen.returncode
+      if type( poll ) == int:
+        self.return_code = poll
     else:
       if stream.channel.exit_status_ready():
         self.return_code = stream.channel.exit_status
@@ -40,14 +41,17 @@ class Command( object ):
   
   def update( self ):
     while True:
+      done = True
       if not self.out.empty():
         line = self.out.get()
         self._output.append( ( 0, time.time(), line ) )
-      elif not self.err.empty():
+        done = False
+      if not self.err.empty():
         line = self.err.get()
         self._output.append( ( 1, time.time(), line ) )
-      else:
-        break
+        done = False
+      if done:
+          break
     if self.output_lines != None:
       self._output = self._output[-self.output_lines:]
   

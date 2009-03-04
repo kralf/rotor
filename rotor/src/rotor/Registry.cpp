@@ -2,11 +2,26 @@
 #include "BasicTypes.h"
 #include "Exceptions.h"
 #include "FileUtils.h"
+#include "Logger.h"
+#include "Options.h"
 #include "Structure.h"
 #include <dlfcn.h>
 
 using namespace Rotor;
 using namespace std;
+
+//------------------------------------------------------------------------------
+
+Registry::Registry()
+{
+}
+
+//------------------------------------------------------------------------------
+
+Registry::Registry( const std::string & name, Options & options )
+{
+  Logger::setLevel( static_cast<Logger::Level>( options.getInt( "BOOTSTRAP", "loggingLevel",  3 ) ) );
+}
 
 //------------------------------------------------------------------------------
 

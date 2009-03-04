@@ -11,7 +11,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 BaseRegistry::BaseRegistry( const std::string & name, Options & options )
-  : _name( name ), 
+  : Registry( name, options ),
+    _name( name ), 
     _options( options )
 {
   _registries[ "default" ] = this;

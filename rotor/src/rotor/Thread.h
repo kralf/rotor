@@ -18,6 +18,7 @@ public:
   virtual void start( FunctionPointer function = 0, void * arguments = 0 );
   void * join();
   static void sleep( double seconds );
+  static void yield();
 
 protected:
   static void * startThread( void * self );

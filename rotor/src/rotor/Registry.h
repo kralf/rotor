@@ -19,6 +19,10 @@ class Registry
 {
 public:
 
+  Registry();
+  
+  Registry( const std::string & name, Options & options );
+
   virtual const std::string & name() const = 0;
   
   virtual Options & options() const = 0;

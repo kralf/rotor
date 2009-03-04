@@ -21,7 +21,8 @@ ROTOR_REGISTRY_FACTORY( BroadcastRegistry )
 //------------------------------------------------------------------------------
 
 BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
-  : _name( name ), 
+  : Registry( name, options ),
+    _name( name ), 
     _options( options ),
     _registry( name, options ),
     _destination( "255.255.255.255:60709" ) 
@@ -149,10 +150,17 @@ Structure *
 BroadcastRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
-  sendMessage( message );
-  for ( size_t i = 0; i < 3; ++i ) {
-    return receiveMessage( timeout ).data;
+  for ( int i = 0; i < 3; ++i ) {
+    sendMessage( message );
+    try {
+      Structure * result = receiveMessage( timeout ).data;
+      if ( result ) {
+        return result;
+      }
+    } catch ( MessagingTimeout ) {
+    }
   }
+  throw MessagingTimeout( "No message was received" );
 }
 
 //------------------------------------------------------------------------------
