@@ -2,6 +2,7 @@
 #include <_carmen/CarmenHandler.h>
 #include <_carmen/FormatString.h>
 #include <rotor/Lock.h>
+#include <rotor/Logger.h>
 #include <rotor/Message.h>
 #include <rotor/Options.h>
 #include <rotor/Rotor.h>
@@ -24,7 +25,8 @@ ROTOR_REGISTRY_FACTORY( CarmenRegistry )
 //------------------------------------------------------------------------------
 
 CarmenRegistry::CarmenRegistry( const string & name, Options & options)
-  : _name( name ), 
+  : Registry( name, options ),
+    _name( name ), 
     _options( options ),
     _registry( name, options )
 {
@@ -32,22 +34,26 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   tmpName << setprecision( 10 );
   tmpName << name << "_" << seconds();
 
+  Logger::spam( "Establishing temporary connection" );
   // Temporary connection, needed to call IPC_isModuleConnected
   if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
     fprintf( stderr, "Could not connect IPC\n" );
     exit( 1 );
   }
 
+  Logger::spam( "Checking with same name is already connected" );
   if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
     fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
     exit( 1 );
   }
   
+  Logger::spam( "Disconnecting temporary connection" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Error connecting to IPC\n" );
     exit( 1 );
   }
   
+  Logger::spam( "Establishing definitive connection" );
   if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
     fprintf( stderr, "Could not connect IPC\n" );
     exit( 1 );
@@ -55,7 +61,9 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   
   IPC_setCapacity( 4 );
   
+  Logger::spam( "Setting up carmen handler" );
   _handler = new CarmenHandler( *this );
+  Logger::debug( "Created CarmenRegistry for " + name );
 }
 
 //------------------------------------------------------------------------------
@@ -162,6 +170,7 @@ CarmenRegistry::messageType( const string & messageName ) const
 void 
 CarmenRegistry::sendMessage( const Message & message )
 {
+  Logger::spam( "Publishing message name:" + message.name );
   if (  IPC_publishData( 
           message.name.c_str(), 
           message.data->buffer() ) == IPC_Error ) 
@@ -169,7 +178,7 @@ CarmenRegistry::sendMessage( const Message & message )
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
-  fprintf( stderr, "%s\n", message.data->toString().c_str() );
+  Logger::spam( "Message published" );
 }
 
 //------------------------------------------------------------------------------
@@ -178,8 +187,10 @@ Message
 CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
+    Logger::spam( "Receiving message" );
     return _handler->dequeueMessage( timeout );
   } catch ( TimeoutException & e ) {
+    Logger::spam( "Receive message timed out" );
     throw MessagingTimeout( "No message was received" );
   }
 }
@@ -201,7 +212,6 @@ throw( MessagingTimeout )
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
-
   try {
     return _handler->dequeueReply( timeout );
   } catch ( TimeoutException & e ) {
@@ -215,9 +225,12 @@ Message
 CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
   try {
+    Logger::spam( "ReceivingQuery" );
     pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
+    Logger::spam( "Received query name: " + result.first.name );
     return result.first;
   } catch ( TimeoutException & e ) {
+    Logger::spam( "Receive query timed out" );
     throw MessagingTimeout( "No message was received" );
   }
 }
@@ -227,12 +240,5 @@ CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 void
 CarmenRegistry::reply( const Message & message ) 
 {
-/*  if (  IPC_respondData( 
-          _messageInstances[message.name],
-          message.name.c_str(),
-          message.data->buffer() ) == IPC_Error ) 
-  {
-    fprintf( stderr, "Problem sending message\n" );
-    exit( 1 );
-  }*/
+  _handler->reply( message );
 }

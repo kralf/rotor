@@ -1,8 +1,10 @@
 #include "CarmenHandler.h"
 #include <carmen/CarmenRegistry.h>
+#include <rotor/Logger.h>
 #include <rotor/Message.h>
 #include <rotor/Structure.h>
 #include <rotor/TypedThread.h>
+#include <cstdlib>
 
 using namespace Rotor;
 using namespace std;
@@ -29,6 +31,23 @@ Registry &
 CarmenHandler::registry()
 {
   return _registry;
+}
+
+//------------------------------------------------------------------------------
+
+void 
+CarmenHandler::reply( const Message & message )
+{
+  MSG_INSTANCE msgInstance = _instanceQueue.front();
+  _instanceQueue.pop();
+  if (  IPC_respondData( 
+          msgInstance,
+          message.name.c_str(),
+          message.data->buffer() ) == IPC_Error ) 
+  {
+    fprintf( stderr, "Problem sending message\n" );
+    exit( 1 );
+  }
 }
   
 //------------------------------------------------------------------------------
@@ -67,10 +86,11 @@ CarmenHandler::dequeueMessage( double timeout )
 
 //------------------------------------------------------------------------------
 
-pair< Message, MSG_INSTANCE >
+CarmenHandler::QueryInfo
 CarmenHandler::dequeueQuery( double timeout )
 {
-  pair< Message, MSG_INSTANCE> result = _queryQueue.next( timeout );
+  QueryInfo result = _queryQueue.next( timeout );
+  _instanceQueue.push( result.second );
   _queryQueue.pop();
   return result;
 }
@@ -80,7 +100,7 @@ CarmenHandler::dequeueQuery( double timeout )
 Structure * 
 CarmenHandler::dequeueReply( double timeout )
 {
-  Message result = _messageQueue.next( timeout );
+  Message result = _replyQueue.next( timeout );
   _replyQueue.pop();
   return result.data;
 }
@@ -93,9 +113,9 @@ CarmenHandler::dispatcher( void * data )
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
     registry->_ipcMutex.lock(); 
-    IPC_listenClear( 100 );
+    IPC_listen( 10 );
     registry->_ipcMutex.unlock(); 
-    Thread::sleep( 0.01 );
+    Thread::yield();
   }
   return 0;
 }
@@ -150,9 +170,15 @@ CarmenHandler::handleQuery(
 void 
 CarmenHandler::handleReply( 
   MSG_INSTANCE msgInstance, 
-  void * data, 
+  BYTE_ARRAY byteArray, 
   void * handlerPtr )
 {
+  void * data;
+  FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
+  
+  IPC_unmarshall( formatter, byteArray, &data );
+  IPC_freeByteArray(byteArray);
+  
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
   Message message;
   message.name = IPC_msgInstanceName( msgInstance );
@@ -162,8 +188,6 @@ CarmenHandler::handleReply(
   message.data = new Structure( typeName, 0, handler->registry() );
   *(message.data) = tmp;
   
-  IPC_delayResponse( msgInstance );
   handler->enqueueReply( message );
-  FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   IPC_freeData( formatter, data );
 }
