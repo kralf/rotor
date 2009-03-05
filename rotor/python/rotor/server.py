@@ -1,9 +1,11 @@
 from rotorc import *
 import rotorc
-from threading import *
-from time import *
+import subprocess
+import threading
 import sys
 import socket
+import signal
+import os
 
 types = [
   '''
@@ -55,31 +57,79 @@ class Server:
     self.options.setString( self.defaultRegistryClass, "server", getHostName() )
     sys.stdout.flush()
 
+    signal.signal( signal.SIGTERM, self.shutdown )
+    
+    self.processes = []
+    self.setupExternalServer()
     self.setupBroadcastServer()
     self.setupDefaultServer()
     
 #-------------------------------------------------------------------------------
 
-  def commandHandler( self, registry, name ):
-    while not self.terminated:
+  def shutdown( self, signal, frame  = None ):
+    self.terminated = True
+    for p in self.processes:
+      os.kill( p[0].pid, 15 )
+    self.join()
+    
+#-------------------------------------------------------------------------------
+
+  def setupExternalServer( self ):
+    if self.defaultRegistryClass == "CarmenRegistry":
+      Logger.info( "Starting central" )
+      self.startProcess( "central" )
+
+#-------------------------------------------------------------------------------
+
+  def startProcess( self, command ):
+    popen = subprocess.Popen( 
+      command.split(), 
+      shell  = False, 
+      stdout = subprocess.PIPE, 
+      stdin  = subprocess.PIPE, 
+      stderr = subprocess.PIPE )
+    pid     = popen.pid
+    thread1 = threading.Thread( target = self.write_string, args = ( popen.stdout, "out" ) )    
+    thread2 = threading.Thread( target = self.write_string, args = ( popen.stderr, "error" ) )
+    thread1.start()
+    thread2.start()
+    self.processes.append( ( popen, thread1, thread2 ) )
+    
+#-------------------------------------------------------------------------------
+
+  def write_string( self, channel, stream ):
+    while True:
       try:
-        Logger.spam( "receiving: %s" % name )
-        message = registry.receiveQuery( 0.5 )
-        if message.name == "SERVER_COMMAND":
-          Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
-          if message.data.command == "GET_OPTIONS":
-            reply       = Structure( "OptionString", None, registry )
-            if message.data.arguments == "*":
-              reply.value = self.options.toString()
-            else:
-              reply.value = self.options.toString( message.data.arguments )
-            registry.reply( Message( "OPTION_STRING", reply ) )
-            Logger.debug( "%s" % reply.toString() )
+        line = channel.readline()
+        if not line or line == "":
+          break
+        if stream == "error":
+          Logger.error( line[:-1] )
+        else:
+          Logger.info( line[:-1] )
       except Exception, e:
-        if e.message != "No message was received":
-          print e.message
-          raise
-    print "Handler has been terminated"
+        print e.message
+
+#-------------------------------------------------------------------------------
+
+  def commandHandler( self, registry, name ):
+    try:
+      Logger.spam( "receiving: %s" % name )
+      message = registry.receiveQuery( 0.1 )
+      if message.name == "SERVER_COMMAND":
+        Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
+        if message.data.command == "GET_OPTIONS":
+          reply       = Structure( "OptionString", None, registry )
+          if message.data.arguments == "*":
+            reply.value = self.options.toString()
+          else:
+            reply.value = self.options.toString( message.data.arguments )
+          registry.reply( Message( "OPTION_STRING", reply ) )
+          Logger.debug( "%s" % reply.toString() )
+    except Exception, e:
+      if e.message != "No message was received":
+        print e.message
+        raise
     
 #-------------------------------------------------------------------------------
 
@@ -91,8 +141,6 @@ class Server:
       self.broadcastRegistry.registerMessage( message[0], message[1] )
     self.broadcastRegistry.subscribeToQuery( "SERVER_COMMAND" )
     self.terminated = False
-    self.broadcastThread = Thread( target = self.commandHandler, args = ( self.broadcastRegistry, "broadcast" ) ) 
-    self.broadcastThread.start()
 
 #-------------------------------------------------------------------------------
 
@@ -104,8 +152,6 @@ class Server:
       self.defaultRegistry.registerMessage( message[0], message[1] )
     self.defaultRegistry.subscribeToQuery( "SERVER_COMMAND" )
     self.terminated = False
-    self.defaultThread = Thread( target = self.commandHandler, args = ( self.defaultRegistry, "default" ) ) 
-    self.defaultThread.start()
 
 #-------------------------------------------------------------------------------
 
@@ -116,13 +162,13 @@ class Server:
 
   def join( self ):
     try:
-      while True:
-        if self.broadcastThread.isAlive:
-          self.broadcastThread.join( 1 )
-        elif self.defaultThread.isAlive:
-          self.defaultThread.join( 1 )
-        else:
+      while not self.terminated:
+        self.commandHandler( self.broadcastRegistry, "broadcast" )
+        if self.terminated:
           break
+        self.commandHandler( self.defaultRegistry, "default" )
+      for p in self.processes:
+        p[1].join()
+        p[2].join()
     except KeyboardInterrupt:
-      self.terminate()
-        
+      self.shutdown( 15 )

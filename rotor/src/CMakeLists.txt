@@ -43,24 +43,3 @@ sm_cpp_install_binaries( BroadcastRegistry )
 #-------------------------------------------------------------------------------
 # Sandbox
 #-------------------------------------------------------------------------------
-
-add_executable(
-  broadcastSerialization
-  sandbox/broadcastSerialization.cpp
-)
-
-target_link_libraries( broadcastSerialization BroadcastRegistry ipc )
-
-add_executable(
-  carmenSender
-  sandbox/carmenSender.cpp
-)
-
-target_link_libraries( carmenSender rotor )
-
-add_executable(
-  carmenReceiver
-  sandbox/carmenReceiver.cpp
-)
-
-target_link_libraries( carmenReceiver rotor )

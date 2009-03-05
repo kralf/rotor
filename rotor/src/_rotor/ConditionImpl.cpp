@@ -2,6 +2,7 @@
 #include "MutexImpl.h" 
 #include <cmath>
 #include <rotor/Time.h>
+#include <cstdio>
 
 using namespace Rotor;
 

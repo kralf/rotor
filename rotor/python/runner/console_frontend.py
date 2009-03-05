@@ -221,10 +221,10 @@ class ConsoleFrontend():
     ], dividechars = 1 )
     
     
-    self.header_text = urwid.Text( "Process Runner v1.0 %s m:%i" % ( time.asctime(), resident() ) )
+    self.header_text = urwid.Text( self.header() )
     header = urwid.AttrWrap( self.header_text, 'header' )
     
-    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <k: kill> | <a: kill all>" )
+    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <tab: next panel>" )
     footer = urwid.AttrWrap( instruction_text, 'header' )
     
     self.new_dialog = urwid.LineBox( CommandDialog( self.commands, self.output_lists ) )
@@ -238,6 +238,11 @@ class ConsoleFrontend():
 
     self.screen.run_wrapper( self.run )
     
+  #-----
+  
+  def header( self ):
+    return "Process Runner v1.0 %s memory:%i K" % ( time.asctime(), resident() / 1024 )   
+  
   #-----
   
   def update_focus( self ):
@@ -257,8 +262,7 @@ class ConsoleFrontend():
       self.size = self.screen.get_cols_rows()
       pos = self.command_list.get_focus()[1]
       
-      #self.header_text.set_text( "Process Runner v1.0 %s" % time.asctime() )
-      self.header_text.set_text( "Process Runner v1.0 %s m:%i" % ( time.asctime(), resident() ) )
+      self.header_text.set_text( self.header() )
       self.command_list.update()
       if pos != None:
         output = self.output_lists[pos]
@@ -278,8 +282,6 @@ class ConsoleFrontend():
         self.selection = ( self.selection + 1 ) % 3
         self.update_focus()
       if self.selection != 2:
-        if "k" in keys:
-          self.commands[pos].kill()
         if "s" in keys:
           self.commands[pos].start()
         if "t" in keys:

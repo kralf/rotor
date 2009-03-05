@@ -96,6 +96,7 @@ Rotor::marshall( const AbstractVariable & variable )
 {
   stringstream stream;
   stream << setprecision( 10 );
+  stream << fixed;
   ::marshall( stream, variable );
   return stream.str();
 }
