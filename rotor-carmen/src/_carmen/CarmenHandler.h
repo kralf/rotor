@@ -13,6 +13,7 @@
 namespace Rotor {
 
 
+class CarmenRegistry;
 class Thread;
 
 
@@ -21,7 +22,7 @@ class CarmenHandler
 public:
   typedef std::pair< Message, MSG_INSTANCE> QueryInfo;
   
-  CarmenHandler( Registry & registry );
+  CarmenHandler( CarmenRegistry & registry );
   virtual ~CarmenHandler();
   
   Registry & registry();
@@ -43,7 +44,7 @@ public:
   
 private:
   typedef std::queue< MSG_INSTANCE > InstanceQueue;
-  Registry &         _registry;
+  CarmenRegistry &   _registry;
   Thread *           _dispatchThread; 
   Queue<Message>     _messageQueue;
   Queue<QueryInfo >  _queryQueue;

@@ -11,7 +11,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-CarmenHandler::CarmenHandler( Registry & registry )
+CarmenHandler::CarmenHandler( CarmenRegistry & registry )
   : _registry( registry )
 {
   _dispatchThread = new Thread();
@@ -40,6 +40,7 @@ CarmenHandler::reply( const Message & message )
 {
   MSG_INSTANCE msgInstance = _instanceQueue.front();
   _instanceQueue.pop();
+  _registry._ipcMutex.lock();
   if (  IPC_respondData( 
           msgInstance,
           message.name.c_str(),
@@ -48,6 +49,7 @@ CarmenHandler::reply( const Message & message )
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
+  _registry._ipcMutex.unlock();
 }
   
 //------------------------------------------------------------------------------
@@ -113,7 +115,7 @@ CarmenHandler::dispatcher( void * data )
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
     registry->_ipcMutex.lock(); 
-    IPC_listen( 10 );
+    IPC_listen( 1 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
   }
