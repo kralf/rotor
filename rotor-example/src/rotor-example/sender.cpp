@@ -10,7 +10,7 @@ using namespace Rotor;
 //------------------------------------------------------------------------------
 
 int main( int argc, char * argv[] ) {
-  RemoteRegistry registry( argv[0] );
+  RemoteRegistry registry( argv[1] );
   registry.registerType( ROTOR_DEFINITION_STRING( elrob_point_6d_t ) );
   registry.registerMessageType( "elrob_smart_pos_message", ROTOR_DEFINITION_STRING( elrob_smart_pos_message ) );
 
