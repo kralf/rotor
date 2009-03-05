@@ -1,14 +1,17 @@
 #include "BroadcastRegistry.h"
-#include <rotor/Serialization.h>
+#include <rotor/Conversion.h>
 #include <rotor/Exceptions.h>
 #include <rotor/Lock.h>
+#include <rotor/Logger.h>
 #include <rotor/Message.h>
 #include <rotor/Rotor.h>
+#include <rotor/Serialization.h>
 #include <rotor/Structure.h>
 #include <rotor/TypedThread.h>
 #include <Poco/Net/NetException.h>
 #include <iostream>
 #include <cstdlib>
+
 
 using namespace Rotor;
 using namespace std;
@@ -29,7 +32,7 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
 {
   _socket.setBroadcast( true );
   int port  = options.getInt( name, "listenPort", 0 );
-  fprintf( stderr, "Bound to port: %i\n", port );
+  Logger::info( "Broadcast registry bount to port " + toString( port ) );
   if ( port ) {
     _socket.bind( SocketAddress( "0", port ) );
   } else {
