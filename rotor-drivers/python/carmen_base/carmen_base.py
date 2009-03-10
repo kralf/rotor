@@ -24,7 +24,8 @@ joystickDefinition = '''
 
 name = sys.argv[1]
 options  = rotorc.BaseOptions()
-options.setString( name, "serverName", "localhost" )
+options.setString( "BOOTSTRAP", "server", "172.16.0.10" )
+#options.setString( "BOOTSTRAP", "server", "localhost" )
 registry = rotorc.Registry.load( "CarmenRegistry", name, options, "/usr/lib" )
 
 registry.registerType( joystickDefinition )
@@ -44,7 +45,7 @@ while True:
   command.rv = -joystick.axes[0] * 1;
   command.timestamp = rotorc.microseconds();
   command.host  = "ventisca"
-  registry.sendMessage( "carmen_base_velocity", command )
+  registry.sendStructure( "carmen_base_velocity", command )
   sys.stdout.write( "\r%f\t%f \t%f" % ( command.tv, command.rv, time - oldTime )  )
   sys.stdout.flush()
   oldTime = time 
