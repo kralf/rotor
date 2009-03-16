@@ -45,17 +45,20 @@ def getHostName():
 class Server:
   def __init__( self, parameterFile ):
     self.options  = BaseOptions()
-    
     f = open( parameterFile )
     self.options.fromString( f.read() )
     f.close()
     
-    self.options.setString( "BOOTSTRAP", "server", getHostName() )
+    server = self.options.getString( "BOOTSTRAP", "server", "" )
+    if server == "":
+      server = getHostName()
+    
+    self.options.setString( "BOOTSTRAP", "server", server )
     self.options.setInt( "rotor", "listenPort", 60709 )
+    out( self.options.toString() )
     
     self.defaultRegistryClass = self.options.getString( "BOOTSTRAP", "registry" )
-    self.options.setString( self.defaultRegistryClass, "server", getHostName() )
-    sys.stdout.flush()
+    self.options.setString( self.defaultRegistryClass, "server", server )
 
     signal.signal( signal.SIGTERM, self.shutdown )
     

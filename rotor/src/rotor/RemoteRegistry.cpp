@@ -36,12 +36,12 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   request["arguments"] = "*";
   
   reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
-  Logger::info( string( "Connected to server with transport: " ) + _options.getString( "BOOTSTRAP", "registry" ) );
   
   sReply << reply;
   _options.fromString( sReply.value );
   
   delete reply;
+  Logger::info( string( "Connected to server with transport: " ) + _options.getString( "BOOTSTRAP", "registry" ) );
 }
 
 //------------------------------------------------------------------------------
@@ -129,7 +129,11 @@ RemoteRegistry::sendMessage( const Message & message )
 Message 
 RemoteRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
-  return _registry->receiveMessage( timeout );
+  try {
+    return _registry->receiveMessage( timeout );
+  } catch ( ... ) {
+    throw MessagingTimeout( "No message was received" );
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -138,7 +142,11 @@ Structure *
 RemoteRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
-  return _registry->query( message, timeout );
+  try {
+    return _registry->query( message, timeout );
+  } catch ( ... ) {
+    throw MessagingTimeout( "No message was received" );
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -147,7 +155,11 @@ Message
 RemoteRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 
 {
-  return _registry->receiveQuery( timeout );
+  try {
+    return _registry->receiveQuery( timeout );
+  } catch ( ... ) {
+    throw MessagingTimeout( "No message was received" );
+  }
 }
 
 //------------------------------------------------------------------------------

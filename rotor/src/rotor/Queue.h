@@ -15,9 +15,16 @@ template < typename T >
 class Queue
 {
 public:
-  Queue();
+  enum Policy {
+    WAIT_WHEN_FULL = 0,
+    DISCARD_NEWEST = 1,
+    DISCARD_OLDEST = 2
+  };
+
   
-  void push( const T & value );
+  Queue( size_t capacity = 0, Policy policy = WAIT_WHEN_FULL );
+  
+  void push( const T & value, double timeout = 0 ) throw ( TimeoutException );
   T & next( double timeout = 0 ) throw ( TimeoutException );
   void pop( double timeout = 0 ) throw ( TimeoutException );
 
@@ -25,8 +32,11 @@ private:
   Queue( const Queue & );
   void operator=( const Queue & );
   
+  size_t        _capacity;
+  Policy        _policy;
   Mutex         _mutex;
   Condition     _notEmpty;
+  Condition     _notFull;
   std::queue<T> _queue;
 };
 

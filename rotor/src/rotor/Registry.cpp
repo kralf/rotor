@@ -95,10 +95,10 @@ Registry::load(
   Options & options,
   const string & searchPath )
 {
-  void * handle = dlopen( findFile( "lib" + className + ".so", searchPath ).c_str() , RTLD_NOW | RTLD_GLOBAL );  
+  void * handle = dlopen( findFile( "lib" + className + ".so", searchPath ).c_str() , RTLD_NOW | RTLD_LOCAL );  
   if( handle == 0 ) {
     fprintf( stderr, "Error: %s\n", dlerror() );
-    handle = dlopen( findFile( className + ".so", searchPath ).c_str() , RTLD_NOW | RTLD_GLOBAL );  
+    handle = dlopen( findFile( className + ".so", searchPath ).c_str() , RTLD_NOW | RTLD_LOCAL );  
     if ( handle == 0 ) {
       throw ClassLoadingError( "Unable to open class lib for registry: " + className + "\nError:" + dlerror() );
     }

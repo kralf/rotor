@@ -2,7 +2,9 @@
 //------------------------------------------------------------------------------
 
 template <typename T>
-Queue<T>::Queue()
+Queue<T>::Queue( size_t capacity, Policy policy )
+  : _capacity( capacity ),
+    _policy( policy )
 {
 }
 
@@ -10,9 +12,26 @@ Queue<T>::Queue()
   
 template <typename T>
 void 
-Queue<T>::push( const T & value )
+Queue<T>::push( const T & value, double timeout ) throw ( TimeoutException)
 {
   _mutex.lock();
+  if ( _capacity > 0 && _queue.size() == _capacity ) {
+    if ( _policy == WAIT_WHEN_FULL ) {
+      while ( _queue.size() == _capacity ) {
+        if ( ! _notFull.wait( _mutex, timeout ) ) {
+          throw TimeoutException( "Timeout in queue" );
+        }
+      }
+    } else if ( _policy == DISCARD_OLDEST ) {
+      _queue.pop();
+      _queue.push( value );
+      _mutex.unlock();
+      return;
+    } else {
+      _mutex.unlock();
+      return;
+    }
+  }
   _queue.push( value );
   _mutex.unlock();
   _notEmpty.notify();
@@ -46,4 +65,5 @@ Queue<T>::pop( double timeout ) throw ( TimeoutException )
     }
   }
   _queue.pop();
+  _notFull.notify();
 }

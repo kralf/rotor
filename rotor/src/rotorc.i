@@ -1,6 +1,7 @@
 %module rotorc
 %{
 #include <rotor/BaseRegistry.h>
+#include <rotor/RemoteRegistry.h>
 #include <rotor/BaseOptions.h>
 #include <rotor/Structure.h>
 #include <rotor/StructureArray.h>
@@ -11,53 +12,19 @@
 #include <rotor/Thread.h>
 %}
 
+//------------------------------------------------------------------------------
 
 %include std_string.i
 %include std_vector.i
-%include exception.i
 %include <rotor/Exceptions.h>
 
-
 //------------------------------------------------------------------------------
 
-%exception Rotor::Registry::receiveMessage {
+%include exception.i
+%exception {
   try {
     $action
-  } catch( Rotor::MessagingTimeout & e ) {
-    SWIG_exception( SWIG_RuntimeError, e.what() );
-  } 
-  SWIG_CATCH_STDEXCEPT
-  catch (...) {
-    SWIG_exception( SWIG_UnknownError, "Unknown exception" );
-  }
-}
-
-//------------------------------------------------------------------------------
-
-%exception Rotor::Registry::sendReceiveMessage {
-  try {
-    $action
-  } catch( Rotor::MessagingTimeout & e ) {
-    SWIG_exception( SWIG_RuntimeError, e.what() );
-  } 
-  SWIG_CATCH_STDEXCEPT
-  catch (...) {
-    SWIG_exception( SWIG_UnknownError, "Unknown exception" );
-  }
-}
-
-//------------------------------------------------------------------------------
-
-%exception Rotor::Registry::receiveQuery {
-  try {
-    $action
-  } catch( Rotor::MessagingTimeout & e ) {
-    SWIG_exception( SWIG_RuntimeError, e.what() );
-  } 
-  SWIG_CATCH_STDEXCEPT
-  catch (...) {
-    SWIG_exception( SWIG_UnknownError, "Unknown exception" );
-  }
+  } SWIG_CATCH_STDEXCEPT
 }
 
 //------------------------------------------------------------------------------
@@ -71,6 +38,7 @@
 %include <rotor/Type.h>
 %include <rotor/BasicTypes.h>
 %include <rotor/Registry.h>
+%include <rotor/RemoteRegistry.h>
 %include <rotor/Serialization.h>
 %include <rotor/BaseRegistry.h>
 %include <rotor/AbstractVariable.h>

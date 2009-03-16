@@ -3,63 +3,61 @@
 
 
 #include <stdexcept>
-#include <string>
-
 
 namespace Rotor {
   class MemoryAllocationError : public std::logic_error {
   public:
-    MemoryAllocationError( const std::string & message ) : logic_error( message ) {}
+    MemoryAllocationError( const std::string & message );
   };
   
   class InvalidAssignmentError: public std::logic_error {
   public:
-    InvalidAssignmentError( const std::string & message ) : logic_error( message ) {}
+    InvalidAssignmentError( const std::string & message );
   };
   
   class InvalidCastError: public std::logic_error {
   public:
-    InvalidCastError( const std::string & message ) : logic_error( message ) {}
+    InvalidCastError( const std::string & message );
   };
 
   class InvalidOperatorError: public std::logic_error {
   public:
-    InvalidOperatorError( const std::string & message ) : logic_error( message ) {}
+    InvalidOperatorError( const std::string & message );
   };
 
   class TypeError: public std::logic_error {
   public:
-    TypeError( const std::string & message ) : logic_error( message ) {}
+    TypeError( const std::string & message );
   };
   
   class ParsingError: public std::runtime_error {
   public:
-    ParsingError( const std::string & message ) : runtime_error( message ) {}
+    ParsingError( const std::string & message );
   };
   
   class MessagingError : public std::logic_error {
   public:
-    MessagingError( const std::string & message ) : logic_error( message ) {}
+    MessagingError( const std::string & message );
   };
 
-  class MessagingTimeout : public std::runtime_error {
+  class MessagingTimeout : public std::logic_error {
   public:
-    MessagingTimeout( const std::string & message ) : runtime_error( message ) {}
+    MessagingTimeout( const std::string & message );
   };
 
   class ClassLoadingError : public std::logic_error {
   public:
-    ClassLoadingError( const std::string & message ) : logic_error( message ) {}
+    ClassLoadingError( const std::string & message );
   };
   
   class OptionError : public std::runtime_error {
   public:
-    OptionError( const std::string & message ) : runtime_error( message ) {}
+    OptionError( const std::string & message );
   };
   
   class TimeoutException : public std::runtime_error {
   public:
-    TimeoutException( const std::string & message ) : runtime_error( message ) {}
+    TimeoutException( const std::string & message );
   };
 }
 

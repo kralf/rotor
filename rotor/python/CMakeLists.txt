@@ -14,9 +14,8 @@ install(
   PATTERN *.pyc EXCLUDE
 )
 
-find_path( PYTHON_SITE_PACKAGES_PATH site-packages ${CMAKE_INSTALL_PREFIX}/lib )
 install(
   FILES rotor.pth
-  DESTINATION ${CMAKE_INSTALL_ROOT}/${PYTHON_SITE_PACKAGES_PATH}
+  DESTINATION ${CMAKE_INSTALL_ROOT}/usr/lib/python2.5/site-packages/
   COMPONENT default
 )

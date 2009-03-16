@@ -32,12 +32,22 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
 {
   _socket.setBroadcast( true );
   int port  = options.getInt( name, "listenPort", 0 );
-  Logger::info( "Broadcast registry bount to port " + toString( port ) );
+  
   if ( port ) {
     _socket.bind( SocketAddress( "0", port ) );
   } else {
-    _socket.bind( SocketAddress( "127.0.0.1", "0" ) );
+    DatagramSocket s;
+    string ip;
+    try {
+      s.connect( SocketAddress( "1.2.3.4", "56" ) );
+      ip = s.address().host().toString();
+      s.close();
+    } catch ( ... ) {
+      ip = "127.0.0.1";
+    }
+    _socket.bind( SocketAddress( ip, "0" ) );
   }
+  Logger::info( "Broadcast registry bound to:" + _socket.address().toString() );
 }
 
 //------------------------------------------------------------------------------
