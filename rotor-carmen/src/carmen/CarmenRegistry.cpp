@@ -141,7 +141,7 @@ CarmenRegistry::subscribeToMessage( const string & messageName )
     fprintf( stderr, "Could not define message\n" );
     exit( 1 );
   }
-  IPC_setMsgQueueLength( messageName.c_str(), 1 );
+  IPC_setMsgQueueLength( messageName.c_str(), 10 );
 }
 
 //------------------------------------------------------------------------------

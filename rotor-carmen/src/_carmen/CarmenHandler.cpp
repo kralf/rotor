@@ -12,7 +12,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 CarmenHandler::CarmenHandler( CarmenRegistry & registry )
-  : _registry( registry )
+  : _registry( registry ),
+    _messageQueue( 1, Queue<Message>::DISCARD_OLDEST )
 {
   _dispatchThread = new Thread();
   _dispatchThread->start( CarmenHandler::dispatcher, &registry );
@@ -115,7 +116,7 @@ CarmenHandler::dispatcher( void * data )
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
     registry->_ipcMutex.lock(); 
-    IPC_listen( 1 );
+    IPC_listenClear( 0.1 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
   }
