@@ -14,10 +14,9 @@ joystickDefinition = '''
 '''
 
 name = sys.argv[1]
-options  = rotorc.BaseOptions()
-options.setString( "BOOTSTRAP", "server", "172.16.0.10" )
-#options.setString( "BOOTSTRAP", "server", "localhost" )
-registry = rotorc.Registry.load( "CarmenRegistry", name, options, "/usr/lib" )
+registry = rotorc.RemoteRegistry( name )
+options  = registry.options()
+
 
 registry.registerMessageType( "JOYSTICK", joystickDefinition )
 frequency = options.getDouble( name, "frequency", 10 )
@@ -34,8 +33,6 @@ time = rotorc.seconds()
 
 while True:
   delta   = rotorc.seconds()
-  sys.stdout.write( "\r[%f]          " % ( rotorc.seconds() - time ) )
-  sys.stdout.flush()
   time = delta
   pygame.event.pump()
   joystickInfo.axesCount = joystick.get_numaxes()
