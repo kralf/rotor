@@ -116,7 +116,7 @@ CarmenHandler::dispatcher( void * data )
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
     registry->_ipcMutex.lock(); 
-    IPC_listenClear( 0.1 );
+    IPC_listenClear( 10 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
   }

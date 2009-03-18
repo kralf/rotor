@@ -171,7 +171,7 @@ void
 CarmenRegistry::sendMessage( const Message & message )
 {
   Logger::spam( "Publishing message name:" + message.name );
-  _ipcMutex.lock();
+//   _ipcMutex.lock();
   if (  IPC_publishData( 
           message.name.c_str(), 
           message.data->buffer() ) == IPC_Error ) 
@@ -179,7 +179,7 @@ CarmenRegistry::sendMessage( const Message & message )
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
-  _ipcMutex.unlock();
+//   _ipcMutex.unlock();
   Logger::spam( "Message published" );
 }
 
