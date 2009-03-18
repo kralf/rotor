@@ -117,8 +117,8 @@ class Server:
 
   def commandHandler( self, registry, name ):
     try:
-      Logger.spam( "receiving: %s" % name )
-      message = registry.receiveQuery( 0.1 )
+      Logger.spam( "receiving: %s %d" % ( name, seconds() ) )
+      message = registry.receiveQuery( 1 )
       if message.name == "SERVER_COMMAND":
         Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
         if message.data.command == "GET_OPTIONS":
