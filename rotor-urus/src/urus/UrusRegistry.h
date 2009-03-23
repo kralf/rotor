@@ -4,6 +4,8 @@
 
 #include <rotor/BaseRegistry.h>
 #include <rotor/Mutex.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/Port.h>
 
 
 namespace Rotor {
@@ -56,7 +58,7 @@ private:
   std::string       _name;
   Options &         _options;
   BaseRegistry      _registry;
-  yarp::os::Network _yarp;
+  yarp::os::Network _network;
   PortTable         _ports;
   Message           _message;
   Mutex             _ipcMutex;

@@ -1,6 +1,5 @@
 #include "UrusRegistry.h"
-#include <_urus/UrusHandler.h>
-#include <_urus/FormatString.h>
+#include <_urus/Conversions.h>
 #include <rotor/Lock.h>
 #include <rotor/Logger.h>
 #include <rotor/Message.h>
@@ -85,8 +84,8 @@ UrusRegistry::registerMessage(
 void
 UrusRegistry::subscribeToMessage( const string & messageName )
 {
-  Type & type = _registry.messageType( messageName );
-  string::iterator splitPoint = messageName.rfind( "/" );
+  const Type & type = _registry.messageType( messageName );
+  size_t splitPoint = messageName.rfind( "/" );
   string serverString   = messageName.substr( 0, splitPoint );
   string datafeedString = messageName.substr( splitPoint );
   
@@ -94,8 +93,8 @@ UrusRegistry::subscribeToMessage( const string & messageName )
   string outputPort = serverString + "/data-feed/output/" + datafeedString;
   PortTable::iterator it = _ports.find( inputPort );
   if ( it == _ports.end() ) {
-    yarp::os::Port & port = ports[inputPort];
-    _network.connect( outputPort, inputPort );
+    yarp::os::Port & port = _ports[inputPort];
+    _network.connect( outputPort.c_str(), inputPort.c_str() );
   }
 }
 
@@ -104,11 +103,11 @@ UrusRegistry::subscribeToMessage( const string & messageName )
 void
 UrusRegistry::subscribeToQuery( const string & messageName )
 {
-  Type & type = _registry.messageType( messageName );
+  const Type & type = _registry.messageType( messageName );
   string completeName = _name + "/service-request/input";
   PortTable::iterator it = _ports.find( completeName );
   if ( it == _ports.end() ) {
-    yarp::os::Port & port = ports[completeName];
+    yarp::os::Port & port = _ports[completeName];
   }
 }
 
@@ -125,14 +124,18 @@ UrusRegistry::messageType( const string & messageName ) const
 void 
 UrusRegistry::sendMessage( const Message & message )
 {
-  Type & type = _registry.messageType( message.name );
-  string::iterator splitPoint = message.name.rfind( "/" );
-  string serverString   = message.name.substr( 0, splitPoint );
-  string datafeedString = message.name.substr( splitPoint );
-  string outputPort = serverString + "/data-feed/output/" + datafeedString;
-  PortTable::iterator it = _ports.find( outputPort );
-  yarp::os::Port & port = ports[outputPort];
-  port.write( messageToBottle( *( message.data ) ) );
+  const Type & type       = _registry.messageType( message.name );
+  size_t splitPoint       = message.name.rfind( "/" );
+  string serverString     = message.name.substr( 0, splitPoint );
+  string datafeedString   = message.name.substr( splitPoint );
+  string outputPort       = serverString + "/data-feed/output/" + datafeedString;
+  
+  PortTable::iterator it  = _ports.find( outputPort );
+  yarp::os::Port & port   = _ports[outputPort];
+  
+  yarp::os::Bottle bottle;
+  appendToBottle( bottle, *( message.data ) );
+  port.write( bottle );
 }
 
 //------------------------------------------------------------------------------
@@ -142,7 +145,7 @@ UrusRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
     Logger::spam( "Receiving message" );
-    return _handler->dequeueMessage( timeout );
+//     return _handler->dequeueMessage( timeout );
   } catch ( TimeoutException & e ) {
     Logger::spam( "Receive message timed out" );
     throw MessagingTimeout( "No message was received" );
@@ -155,21 +158,8 @@ Structure *
 UrusRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
-  void * reply;
-  _ipcMutex.lock();
-  IPC_RETURN_TYPE result =  IPC_queryNotifyData(
-                              message.name.c_str(),
-                              message.data->buffer(),
-                              UrusHandler::handleReply,
-                              _handler );
-                            
-  _ipcMutex.unlock();
-  if (  result == IPC_Error ) {
-    fprintf( stderr, "Problem sending message\n" );
-    exit( 1 );
-  }
   try {
-    return _handler->dequeueReply( timeout );
+//     return _handler->dequeueReply( timeout );
   } catch ( TimeoutException & e ) {
     throw MessagingTimeout( "No message was received" );
   }
@@ -182,9 +172,9 @@ UrusRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
   try {
     Logger::spam( "ReceivingQuery" );
-    pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
-    Logger::spam( "Received query name: " + result.first.name );
-    return result.first;
+//     pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
+//     Logger::spam( "Received query name: " + result.first.name );
+//     return result.first;
   } catch ( TimeoutException & e ) {
     Logger::spam( "Receive query timed out" );
     throw MessagingTimeout( "No message was received" );
@@ -196,5 +186,5 @@ UrusRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 void
 UrusRegistry::reply( const Message & message ) 
 {
-  _handler->reply( message );
+//   _handler->reply( message );
 }

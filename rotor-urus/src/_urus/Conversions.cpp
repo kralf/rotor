@@ -8,14 +8,14 @@ using namespace std;
 
 
 void 
-appendToBottle( Bottle & bottle, const AbstractVariable & value )
+Rotor::appendToBottle( Bottle & bottle, const AbstractVariable & value )
 {
   if ( value.type() == IntType )  {
-    bottle->addInt(  value );
+    bottle.addInt(  value );
   } else if ( value.type() == DoubleType ) {
-    bottle->addDouble(  value );
+    bottle.addDouble(  value );
   } else if ( value.type() == StringType ) {
-    bottle->addString(  value );
+    bottle.addString(  value );
   } else if ( value.type() == ArrayType ) {
     Bottle & subBottle = bottle.addList();
     for ( int i = 0; i < value.size(); i++ ) {
@@ -32,6 +32,6 @@ appendToBottle( Bottle & bottle, const AbstractVariable & value )
 //------------------------------------------------------------------------------
 
 Structure * 
-bottleToStructure( const Bottle & bottle, const Type & type )
+Rotor::bottleToStructure( const Bottle & bottle, const Type & type )
 {
 }

@@ -2,6 +2,7 @@
 #define ROTOR_URUS_CONVERSIONS_H
 
 
+#include <rotor/AbstractVariable.h>
 #include <rotor/Message.h>
 #include <rotor/Type.h>
 #include <yarp/os/Bottle.h>
