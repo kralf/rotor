@@ -36,9 +36,11 @@ def out( string ):
 
 def getHostName():
   s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-  s.connect( ( '1.2.3.4', 56 ) )
-  ip = s.getsockname()[0]
-  return ip
+  try:
+    s.connect( ( '1.2.3.4', 56 ) )
+    return s.getsockname()[0]
+  except socket.error:
+    return "127.0.0.1"
 
 #-------------------------------------------------------------------------------
 

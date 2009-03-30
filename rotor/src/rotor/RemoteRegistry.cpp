@@ -95,9 +95,17 @@ RemoteRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void 
-RemoteRegistry::subscribeToMessage( const std::string & messageName )
+RemoteRegistry::subscribeToMessage(
+  const std::string & messageName,
+  bool queueOwner,
+  size_t queueCapacity,
+  QueuePolicy queuePolicy )
 {
-  _registry->subscribeToMessage( messageName );
+  _registry->subscribeToMessage( 
+    messageName, 
+    queueOwner, 
+    queueCapacity, 
+    queuePolicy );
 }
 
 //------------------------------------------------------------------------------
@@ -131,6 +139,21 @@ RemoteRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
     return _registry->receiveMessage( timeout );
+  } catch ( ... ) {
+    throw MessagingTimeout( "No message was received" );
+  }
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+RemoteRegistry::receiveMessage( 
+  const string & messageName,
+  double timeout ) 
+throw( MessagingTimeout )
+{
+  try {
+    return _registry->receiveMessage( messageName, timeout );
   } catch ( ... ) {
     throw MessagingTimeout( "No message was received" );
   }

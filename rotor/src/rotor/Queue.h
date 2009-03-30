@@ -6,6 +6,7 @@
 #include "Condition.h"
 #include "Exceptions.h"
 #include "Lock.h"
+#include "QueuePolicy.h"
 #include <queue>
 
 
@@ -15,14 +16,7 @@ template < typename T >
 class Queue
 {
 public:
-  enum Policy {
-    WAIT_WHEN_FULL = 0,
-    DISCARD_NEWEST = 1,
-    DISCARD_OLDEST = 2
-  };
-
-  
-  Queue( size_t capacity = 0, Policy policy = WAIT_WHEN_FULL );
+  Queue( size_t capacity = 0, QueuePolicy policy = WAIT_WHEN_FULL );
   
   void push( const T & value, double timeout = 0 ) throw ( TimeoutException );
   T & next( double timeout = 0 ) throw ( TimeoutException );
@@ -33,7 +27,7 @@ private:
   void operator=( const Queue & );
   
   size_t        _capacity;
-  Policy        _policy;
+  QueuePolicy   _policy;
   Mutex         _mutex;
   Condition     _notEmpty;
   Condition     _notFull;

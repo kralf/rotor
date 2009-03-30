@@ -110,7 +110,11 @@ BaseRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void 
-BaseRegistry::subscribeToMessage( const std::string & messageName )
+BaseRegistry::subscribeToMessage(
+  const std::string & messageName,
+  bool queueOwner,
+  size_t queueCapacity,
+  QueuePolicy queuePolicy )
 {
 }
 
@@ -145,6 +149,16 @@ BaseRegistry::sendMessage( const Message & message )
 
 Message 
 BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
+{
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+BaseRegistry::receiveMessage( 
+  const string & messageName,
+  double timeout ) 
+throw( MessagingTimeout )
 {
 }
 

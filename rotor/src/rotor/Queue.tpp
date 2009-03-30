@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 
 template <typename T>
-Queue<T>::Queue( size_t capacity, Policy policy )
+Queue<T>::Queue( size_t capacity, QueuePolicy policy )
   : _capacity( capacity ),
     _policy( policy )
 {

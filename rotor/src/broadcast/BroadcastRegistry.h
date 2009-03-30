@@ -35,7 +35,11 @@ public:
     const std::string & messageName, 
     const std::string & typeName );
 
-  virtual void subscribeToMessage( const std::string & messageName );
+  virtual void subscribeToMessage( 
+    const std::string & messageName,
+    bool queueOwner = false,
+    size_t queueCapacity = 0,
+    QueuePolicy queuePolicy = DISCARD_OLDEST );  
 
   virtual void subscribeToQuery( const std::string & messageName );  
 
@@ -46,6 +50,11 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
   
+  virtual Message receiveMessage( 
+    const std::string & messageName, 
+    double timeout = 0 ) 
+  throw( MessagingTimeout );
+
   virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
   
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );

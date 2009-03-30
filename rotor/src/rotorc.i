@@ -10,6 +10,7 @@
 #include <rotor/Logger.h>
 #include <rotor/Serialization.h>
 #include <rotor/Thread.h>
+#include <rotor/QueuePolicy.h>
 %}
 
 //------------------------------------------------------------------------------
@@ -29,6 +30,7 @@
 
 //------------------------------------------------------------------------------
 
+%include <rotor/QueuePolicy.h>
 %include <rotor/Time.h>
 %include <rotor/Logger.h>
 %include <rotor/Options.h>

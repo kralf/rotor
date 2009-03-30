@@ -101,7 +101,11 @@ BroadcastRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void
-BroadcastRegistry::subscribeToMessage( const string & messageName )
+BroadcastRegistry::subscribeToMessage(
+  const std::string & messageName,
+  bool queueOwner,
+  size_t queueCapacity,
+  QueuePolicy queuePolicy )
 {
 }
 
@@ -155,6 +159,16 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
       throw MessagingTimeout( "No message was received" );
     }
   }
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+BroadcastRegistry::receiveMessage( 
+  const string & messageName,
+  double timeout ) 
+throw( MessagingTimeout )
+{
 }
 
 //------------------------------------------------------------------------------
