@@ -67,3 +67,22 @@ Queue<T>::pop( double timeout ) throw ( TimeoutException )
   _queue.pop();
   _notFull.notify();
 }
+
+//------------------------------------------------------------------------------
+  
+template <typename T>
+T
+Queue<T>::popNext( double timeout ) throw ( TimeoutException )
+{
+  Lock lock( _mutex );
+  while ( _queue.empty() ) {
+    if ( ! _notEmpty.wait( _mutex, timeout ) ) {
+      throw TimeoutException( "Timeout in queue" );
+    }
+  }
+  T result = _queue.front();
+  _queue.pop();
+  _notFull.notify();
+  return result;
+}
+

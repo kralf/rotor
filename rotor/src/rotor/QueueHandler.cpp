@@ -1,4 +1,8 @@
 #include "QueueHandler.h"
+#include "Logger.h"
+
+using namespace Rotor;
+using namespace std;
 
 //------------------------------------------------------------------------------
 
@@ -24,13 +28,13 @@ QueueHandler::subscribeToMessage(
   size_t queueCapacity, 
   QueuePolicy queuePolicy )
 {
-  StructureQueues::iterator it = _structureQueues.find( messageName );
-  if ( it != _structureQueues.end() ) {
-    StructureQueue * queue = 0;
-    if ( queueOwner ) {
+  if ( queueOwner ) {
+    StructureQueues::iterator it = _structureQueues.find( messageName );
+    if ( it != _structureQueues.end() ) {
+      StructureQueue * queue = 0;
       queue = new StructureQueue( queueCapacity, queuePolicy );
+      _structureQueues[messageName] = queue;
     }
-    _structureQueues[messageName] = queue;
   }
 }
 
@@ -39,15 +43,15 @@ QueueHandler::subscribeToMessage(
 void 
 QueueHandler::enqueueMessage( Message & message )
 {
-}
-
-//------------------------------------------------------------------------------
-
-void 
-QueueHandler::enqueueMessage( 
-  const string & messageName, 
-  Structure * structure )
-{
+  //TODO: Check if not owning queues have been subscribed
+  StructureQueues::iterator it = _structureQueues.find( message.name );
+  if ( it != _structureQueues.end() ) {
+    Logger::warning( "Enqueing owned " + message.name );
+    it->second->push( message.data );
+  } else {
+    Logger::warning( "Enqueing not owned " + message.name );
+    _mainQueue.push( message );
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -55,6 +59,7 @@ QueueHandler::enqueueMessage(
 Message 
 QueueHandler::dequeueMessage( double timeout ) throw ( MessagingTimeout )
 {
+  return _mainQueue.popNext( timeout );
 }
 
 //------------------------------------------------------------------------------
@@ -63,9 +68,8 @@ Structure *
 QueueHandler::dequeueMessage( const std::string & messageName, double timeout )
 throw( MessagingTimeout )
 {
+  StructureQueues::iterator it = _structureQueues.find( messageName );
+  if ( it != _structureQueues.end() ) {
+    return it->second->popNext( timeout );
+  }
 }
-  
-private:
-  typedef Queue< Message > MessageQueue;
-  typedef Queue< Structure *> StructureQueue;
-  typedef std::map< std::string, StructureQueue * > StructureQueues;

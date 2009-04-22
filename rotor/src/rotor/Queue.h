@@ -21,6 +21,7 @@ public:
   void push( const T & value, double timeout = 0 ) throw ( TimeoutException );
   T & next( double timeout = 0 ) throw ( TimeoutException );
   void pop( double timeout = 0 ) throw ( TimeoutException );
+  T popNext( double timeout = 0 ) throw ( TimeoutException );
 
 private:
   Queue( const Queue & );

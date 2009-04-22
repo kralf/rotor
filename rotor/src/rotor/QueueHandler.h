@@ -26,8 +26,6 @@ public:
   
   void enqueueMessage( Message & message );
   
-  void enqueueMessage( const std::string & messageName, Structure * structure );
-  
   Message dequeueMessage( double timeout ) throw ( MessagingTimeout );
   
   Structure * dequeueMessage( const std::string & messageName, double timeout )
@@ -39,7 +37,7 @@ private:
   typedef std::map< std::string, StructureQueue * > StructureQueues;
   
   MessageQueue    _mainQueue;
-  StructureQueues _messageQueues;
+  StructureQueues _structureQueues;
 };
 
 
