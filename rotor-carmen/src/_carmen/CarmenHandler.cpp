@@ -12,8 +12,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 CarmenHandler::CarmenHandler( CarmenRegistry & registry )
-  : _registry( registry ),
-    _messageQueue( 1, Queue<Message>::DISCARD_OLDEST )
+  : _registry( registry )
 {
   _dispatchThread = new Thread();
   _dispatchThread->start( CarmenHandler::dispatcher, &registry );
@@ -56,14 +55,6 @@ CarmenHandler::reply( const Message & message )
 //------------------------------------------------------------------------------
 
 void 
-CarmenHandler::enqueueMessage( Message & message )
-{
-  _messageQueue.push( message );
-}
-
-//------------------------------------------------------------------------------
-
-void 
 CarmenHandler::enqueueQuery( Message & message, MSG_INSTANCE msgInstance )
 {
   _queryQueue.push( make_pair( message, msgInstance ) );
@@ -77,16 +68,6 @@ CarmenHandler::enqueueReply( Message & message )
   _replyQueue.push( message );
 }
   
-//------------------------------------------------------------------------------
-
-Message 
-CarmenHandler::dequeueMessage( double timeout )
-{
-  Message result = _messageQueue.next( timeout );
-  _messageQueue.pop();
-  return result;
-}
-
 //------------------------------------------------------------------------------
 
 CarmenHandler::QueryInfo
@@ -140,7 +121,7 @@ CarmenHandler::handleMessage(
   message.data = new Structure( typeName, 0, handler->registry() );
   *(message.data) = tmp;
 
-  handler->enqueueMessage( message );
+  handler->_registry._queueHandler.enqueueMessage( message );
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   IPC_freeData( formatter, data );
 }

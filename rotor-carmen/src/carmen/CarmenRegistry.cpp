@@ -28,7 +28,8 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   : Registry( name, options ),
     _name( name ), 
     _options( options ),
-    _registry( name, options )
+    _registry( name, options ),
+    _queueHandler( 1, DISCARD_OLDEST )
 {
   stringstream tmpName;
   tmpName << setprecision( 10 );
@@ -134,9 +135,15 @@ CarmenRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void
-CarmenRegistry::subscribeToMessage( const string & messageName )
+CarmenRegistry::subscribeToMessage( 
+  const std::string & messageName,
+  bool queueOwner,
+  size_t queueCapacity,
+  QueuePolicy queuePolicy )
 {
   Lock lock( _ipcMutex );
+  _queueHandler.subscribeToMessage( 
+    messageName, queueOwner, queueCapacity, queuePolicy );
   if ( IPC_subscribeData(  messageName.c_str(), CarmenHandler::handleMessage, _handler ) == IPC_Error ) {
     fprintf( stderr, "Could not define message\n" );
     exit( 1 );
@@ -190,7 +197,23 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
     Logger::spam( "Receiving message" );
-    return _handler->dequeueMessage( timeout );
+    return _queueHandler.dequeueMessage( timeout );
+  } catch ( TimeoutException & e ) {
+    Logger::spam( "Receive message timed out" );
+    throw MessagingTimeout( "No message was received" );
+  }
+}
+
+//------------------------------------------------------------------------------
+
+Message 
+CarmenRegistry::receiveMessage( const string & messageName, double timeout ) 
+throw( MessagingTimeout )
+{
+  try {
+    Logger::spam( "Receiving message" );
+    Structure * data = _queueHandler.dequeueMessage( messageName, timeout );
+    return Message( messageName, data );
   } catch ( TimeoutException & e ) {
     Logger::spam( "Receive message timed out" );
     throw MessagingTimeout( "No message was received" );

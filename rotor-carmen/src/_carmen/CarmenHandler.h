@@ -29,11 +29,9 @@ public:
   
   void reply( const Message & message );
   
-  void enqueueMessage( Message & message );
   void enqueueQuery( Message & message, MSG_INSTANCE msgInstance );
   void enqueueReply( Message & message );
   
-  Message dequeueMessage( double timeout );
   QueryInfo dequeueQuery( double timeout );
   Structure * dequeueReply( double timeout );
 
@@ -46,7 +44,6 @@ private:
   typedef std::queue< MSG_INSTANCE > InstanceQueue;
   CarmenRegistry &   _registry;
   Thread *           _dispatchThread; 
-  Queue<Message>     _messageQueue;
   Queue<QueryInfo >  _queryQueue;
   Queue<Message>     _replyQueue;
   InstanceQueue      _instanceQueue;

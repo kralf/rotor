@@ -4,6 +4,7 @@
 
 #include <rotor/BaseRegistry.h>
 #include <rotor/Mutex.h>
+#include <rotor/QueueHandler.h>
 
 
 namespace Rotor {
@@ -34,7 +35,11 @@ public:
     const std::string & messageName, 
     const std::string & typeName );
 
-  virtual void subscribeToMessage( const std::string & messageName );
+  virtual void subscribeToMessage( 
+    const std::string & messageName,
+    bool queueOwner = false,
+    size_t queueCapacity = 0,
+    QueuePolicy queuePolicy = DISCARD_OLDEST );  
 
   virtual void subscribeToQuery( const std::string & messageName );
 
@@ -44,6 +49,11 @@ public:
   virtual void sendMessage( const Message & message );
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
+
+  virtual Message receiveMessage( 
+    const std::string & messageName, 
+    double timeout = 0 ) 
+  throw( MessagingTimeout );
 
   virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
 
@@ -58,6 +68,7 @@ private:
   Message          _message;
   CarmenHandler *  _handler;
   Mutex            _ipcMutex;
+  QueueHandler     _queueHandler;
   
   friend class CarmenHandler;
 };
