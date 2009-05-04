@@ -26,10 +26,10 @@ public:
   
   void enqueueMessage( Message & message );
   
-  Message dequeueMessage( double timeout ) throw ( MessagingTimeout );
+  Message dequeueMessage( double timeout ) throw ( TimeoutException );
   
   Structure * dequeueMessage( const std::string & messageName, double timeout )
-  throw( MessagingTimeout );
+  throw( TimeoutException );
   
 private:
   typedef Queue< Message > MessageQueue;

@@ -41,6 +41,15 @@ ROTOR_DEFINE_TYPE( IntAndStructure,
   };
 )
 
+ROTOR_DEFINE_TYPE( RealCase1,
+  struct RealCase1 {
+    double         globalpos_xy_cov;
+    int32_t        converged;
+    double         timestamp;
+  };
+)
+
+
 SUITE( Structure ) {
   
   //----------------------------------------------------------------------------
@@ -380,5 +389,26 @@ SUITE( Structure ) {
     Rotor::Structure preallocatedVPA( "VariablePointArray", &realVPA, registry );  
     CHECK_THROW( preallocatedVPA = originalVPA, Rotor::InvalidAssignmentError );
 
+  }
+
+    double         globalpos_xy_cov;
+    int32_t        converged;
+    double         timestamp;
+  //----------------------------------------------------------------------------
+
+  TEST( RealCase1 )
+  {
+    Rotor::BaseOptions options;
+    Rotor::BaseRegistry registry( "test", options );
+    registry.registerType( ROTOR_DEFINITION_STRING( RealCase1 ) );
+    Rotor::Structure structure( "RealCase1", 0, registry );  
+    structure["globalpos_xy_cov"]    = 1.1;
+    structure["converged"]           = 2;
+    structure["timestamp"]           = 2.2;
+    RealCase1 & realStruct = *( reinterpret_cast<RealCase1*>( structure.buffer() ) );
+    CHECK_EQUAL( sizeof realStruct, structure.typeData().size() );
+    CHECK( realStruct.globalpos_xy_cov == 1.1 );
+    CHECK( realStruct.converged        == 2 );
+    CHECK( realStruct.timestamp        == 2.2 );
   }
 }

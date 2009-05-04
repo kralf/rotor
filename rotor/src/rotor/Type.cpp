@@ -32,7 +32,7 @@ Type::Type(
     }
     
     size_t nextPad = ( definition.size - offset % definition.size ) % definition.size;
-    if ( nextPad > 4 ) {
+    if ( nextPad >= 4 ) {
       nextPad = nextPad % 4;
     }
     offset += nextPad;
@@ -44,7 +44,7 @@ Type::Type(
   _size = offset;
   size_t finalPad = ( structurePad - offset % structurePad ) %  structurePad; 
   if ( finalPad ) {
-    if ( finalPad > 4) {
+    if ( finalPad >= 4) {
       finalPad = finalPad % 4;
     }
     _members[_members.size() - 1].realSize += finalPad;
