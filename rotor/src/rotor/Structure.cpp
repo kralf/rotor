@@ -195,7 +195,11 @@ Structure::toString() const
   result << _type.name() << " {\n";
   for ( size_t i = 0; i < _type.members().size(); ++i ) {
     result << "  "  << _type.members()[i].name << ": ";
-    result << marshall( (*this)[i] ) <<";\n";
+    if ( (*this)[i].bufferSize() > 0 ) {
+      result << marshall( (*this)[i] ) <<";\n";
+    } else {
+      result << "(empty);\n";
+    }
   }
   result << "}\n";
   return result.str();

@@ -43,3 +43,7 @@ sm_cpp_install_binaries( BroadcastRegistry )
 #-------------------------------------------------------------------------------
 # Sandbox
 #-------------------------------------------------------------------------------
+
+# add_executable( print_laser sandbox/laser_receiver.cpp )
+# 
+# target_link_libraries( print_laser rotor )
