@@ -169,6 +169,7 @@ BroadcastRegistry::receiveMessage(
   double timeout ) 
 throw( MessagingTimeout )
 {
+  return Message();
 }
 
 //------------------------------------------------------------------------------

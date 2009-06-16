@@ -122,7 +122,7 @@ AbstractVariable::footprint() const
     return size();
   }
   size_t result = 0;
-  for ( int i = 0; i < size(); ++i ) {
+  for ( size_t i = 0; i < size(); ++i ) {
     result += operator[](i).footprint();
   }
   return result;

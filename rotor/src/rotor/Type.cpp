@@ -17,7 +17,7 @@ Type::Type(
 {
   size_t offset = 0;
   size_t structurePad = 1;
-  for ( int i = 0; i < _members.size(); i++ ) {
+  for ( size_t i = 0; i < _members.size(); i++ ) {
     MemberDefinition & definition = _members[i];
     definition.size = ::size( definition, registry );
         

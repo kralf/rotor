@@ -150,6 +150,7 @@ BaseRegistry::sendMessage( const Message & message )
 Message 
 BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
 {
+  return Message();
 }
 
 //------------------------------------------------------------------------------
@@ -160,6 +161,7 @@ BaseRegistry::receiveMessage(
   double timeout ) 
 throw( MessagingTimeout )
 {
+  return Message();
 }
 
 //------------------------------------------------------------------------------
@@ -168,6 +170,7 @@ Structure *
 BaseRegistry::query( const Message & message, double timeout )  
 throw( MessagingTimeout )
 {
+  return NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -175,6 +178,7 @@ throw( MessagingTimeout )
 Message 
 BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
 {
+  return Message();
 }
 
 //------------------------------------------------------------------------------

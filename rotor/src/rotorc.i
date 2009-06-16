@@ -132,6 +132,15 @@ namespace std {
 //------------------------------------------------------------------------------
 
 %pythoncode%{
+import socket
+def hostName():
+  s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
+  try:
+    s.connect( ( '1.2.3.4', 56 ) )
+    return s.getsockname()[0]
+  except socket.error:
+    return "127.0.0.1"
+
 
 def _GETITEM( self, index ): 
   result = self._member( index )

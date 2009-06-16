@@ -72,4 +72,5 @@ throw( TimeoutException )
   if ( it != _structureQueues.end() ) {
     return it->second->popNext( timeout );
   }
+  return NULL;
 }

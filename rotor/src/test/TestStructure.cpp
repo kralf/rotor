@@ -267,7 +267,7 @@ SUITE( Structure ) {
     CHECK( structure["stringValue"] == "fistandantilus" );
     CHECK( realStruct.intValue == 38 );
     CHECK( std::string( realStruct.stringValue ) == std::string( "fistandantilus" ) );
-    CHECK( "fistandantilus" == realStruct.stringValue );
+//     CHECK( "fistandantilus" == realStruct.stringValue );
     
     CHECK_THROW( structure["stringValue"] = "anotherThing", Rotor::InvalidAssignmentError );
   }  
@@ -297,7 +297,7 @@ SUITE( Structure ) {
     Rotor::BaseRegistry registry( "test", options );
     registry.registerType( ROTOR_DEFINITION_STRING( Complete ) );
     registry.registerType( ROTOR_DEFINITION_STRING( IntAndStructure ) );
-    IntAndStructure ias = {0, 0, 0, 0};
+    IntAndStructure ias = {0, {0, 0, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}};
     Rotor::Structure structure( "IntAndStructure", &ias, registry );  
     structure["structureValue"]["count"] = 1;
     structure["structureValue"]["y"][0] = 2;

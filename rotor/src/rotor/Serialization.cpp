@@ -15,14 +15,14 @@ using namespace std;
 const AbstractVariable & unmarshall( istream & stream, AbstractVariable & variable ) {
   if ( variable.type() == StructureType ) {
     stream.ignore();
-    for ( int i = 0; i < variable.size(); i++ ) {
+    for ( size_t i = 0; i < variable.size(); i++ ) {
       stream.ignore();
       unmarshall( stream, variable[i] );
     }
     stream.ignore( 2 );
   } else if ( variable.type() == ArrayType ) {
     stream.ignore();
-    for ( int i = 0; i < variable.size(); i++ ) {
+    for ( size_t i = 0; i < variable.size(); i++ ) {
       stream.ignore();
       unmarshall( stream, variable[i] );
     }
@@ -36,12 +36,12 @@ const AbstractVariable & unmarshall( istream & stream, AbstractVariable & variab
     stream >> value;
     variable = value;
   } else if ( variable.type() == StringType ) {
-    int count;
+    size_t count;
     stream >> count;
     stream.ignore();
     stream.ignore();
     string s;
-    for ( int i = 0; i < count; i++ ) {
+    for ( size_t i = 0; i < count; i++ ) {
       s += stream.get();
     }
     variable = s.c_str();
@@ -54,14 +54,14 @@ const AbstractVariable & unmarshall( istream & stream, AbstractVariable & variab
 const AbstractVariable & marshall( ostream & stream, const AbstractVariable & variable ) {
   if ( variable.type() == StructureType ) {
     stream << "{";
-    for ( int i = 0; i < variable.size(); i++ ) {
+    for ( size_t i = 0; i < variable.size(); i++ ) {
       stream << " ";
       marshall( stream, variable[i] );
     }
     stream << " }";
   } else if ( variable.type() == ArrayType ) {
     stream << "[";
-    for ( int i = 0; i < variable.size(); i++ ) {
+    for ( size_t i = 0; i < variable.size(); i++ ) {
       stream << " ";
       marshall( stream, variable[i] );
     }

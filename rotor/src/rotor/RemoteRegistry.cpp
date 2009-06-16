@@ -14,7 +14,7 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
 
-  Structure request = _registry->newStructure( "RemoteCommand" );
+  Structure request( "RemoteCommand", 0, *_registry );
   request["command"]   = "GET_OPTIONS";
   request["arguments"] = "BOOTSTRAP";
   Structure * reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );

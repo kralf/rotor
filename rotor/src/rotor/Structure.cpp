@@ -14,13 +14,13 @@ Structure::Structure(
   void * address, 
   const Registry & registry ) 
   : AbstractVariable( address, registry[typeName].size() ),
-    _type( registry[typeName] ),
-    _registry( registry )
+    _registry( registry ),
+    _type( registry[typeName] )
 {
   const MemberDefinitions & definitions = registry[ typeName ].members();
   uint8_t * bytePointer = static_cast<uint8_t *>( buffer() );
   AbstractVariable * variableArraySize = NULL;
-  for ( int i = 0; i < definitions.size(); i++ ) {
+  for ( size_t i = 0; i < definitions.size(); i++ ) {
     void * pointer = static_cast<void *>( bytePointer );
     const MemberDefinition & definition = definitions[i];
     
@@ -64,7 +64,7 @@ Structure::operator=( const Structure & structure )
     throw TypeError( "Trying to assign incompatible type to Structure:" + typeData().name() );
   }
   
-  for ( int i = 0; i < size(); i++ ) {
+  for ( size_t i = 0; i < size(); i++ ) {
     AbstractVariable & member = operator[]( i );
     if ( _variableArrayPointers.find( &member ) != _variableArrayPointers.end() ) {
       if ( ! owner() ) {

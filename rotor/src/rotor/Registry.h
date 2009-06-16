@@ -237,7 +237,7 @@ public:
    * @param address  The address of the c++ object this Structure points to or
    *                 0 if it should own its memory.
    */
-  virtual Structure newStructure( const std::string & typeName, void * address = NULL ) const;
+  virtual Structure * newStructure( const std::string & typeName, void * address = NULL ) const;
 
   /**
    * Loads a concrete implementation of the Registry class.

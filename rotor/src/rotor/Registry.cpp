@@ -80,10 +80,10 @@ Registry::queryStructure(
 
 //------------------------------------------------------------------------------
 
-Structure 
+Structure *
 Registry::newStructure( const std::string & type, void * address ) const
 {
-  return Structure( type, address, *this );
+  return new Structure( type, address, *this );
 }
 
 //------------------------------------------------------------------------------
