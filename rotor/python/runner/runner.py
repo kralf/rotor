@@ -138,6 +138,11 @@ class Command( object ):
   
   #-----
   
+  def clear( self ):
+    self._output = []
+  
+  #-----
+  
   def kill( self ):
     if self.running:
       if not self.remote:

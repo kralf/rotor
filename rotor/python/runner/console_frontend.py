@@ -120,6 +120,8 @@ class OutputList( urwid.WidgetWrap ):
     last = None
     if len( self.command.output ) > 0:
       last = self.command.output[-1]
+    else:
+      del self.walker.contents[:]
     if not last or last[1] <= self.lastTime:
       return
     self.lastTime = last[1]
@@ -224,7 +226,7 @@ class ConsoleFrontend():
     self.header_text = urwid.Text( self.header() )
     header = urwid.AttrWrap( self.header_text, 'header' )
     
-    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <tab: next panel>" )
+    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <c: clear> | <tab: next panel>" )
     footer = urwid.AttrWrap( instruction_text, 'header' )
     
     self.new_dialog = urwid.LineBox( CommandDialog( self.commands, self.output_lists ) )
@@ -286,5 +288,7 @@ class ConsoleFrontend():
           self.commands[pos].start()
         if "t" in keys:
           self.commands[pos].stop()
+        if "c" in keys:
+          self.commands[pos].clear()
       for k in keys:
         self.top.keypress( self.size, k )
