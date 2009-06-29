@@ -9,9 +9,10 @@ set( PACKAGE_MAINTAINER_NAME "Dizan Vasquez" )
 set( PACKAGE_MAINTAINER_EMAIL "vasquez@mavt.ethz.ch" )
 set( PACKAGE_DESCRIPTION_SUMMARY "Robot to robot communications" )
 set( PACKAGE_DESCRIPTION "A unifying middleware framework for robotics applications." )
-set( PACKAGE_DEPENDS libpoco-dev )
+set( PACKAGE_DEPENDS libpoco-dev,hapy,python-paramiko,python-urwid )
 
 include( SimpleCMake )
 sm_configure_project()
 
-add_subdirectory( python )
+# add_subdirectory( urwid-patch )
+

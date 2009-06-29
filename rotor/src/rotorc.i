@@ -133,6 +133,9 @@ namespace std {
 
 %pythoncode%{
 import socket
+import sys
+import dl
+sys.setdlopenflags( dl.RTLD_NOW | dl.RTLD_GLOBAL )
 def hostName():
   s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
   try:

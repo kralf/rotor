@@ -207,6 +207,16 @@ Structure::toString() const
 
 //------------------------------------------------------------------------------
 
+void 
+Structure::adjust() const
+{
+  for ( size_t i = 0; i < size(); ++i ) {
+    adjustPointers( (*this)[i] );
+  } 
+}
+
+//------------------------------------------------------------------------------
+
 //NOTE: Need to find a way to solve this const correctness mess.
 void 
 Structure::adjustPointers( const AbstractVariable & member ) const

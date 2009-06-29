@@ -85,12 +85,14 @@ template < typename T, GenericType TYPE >
 void 
 Array<T, TYPE>::resize( size_t newSize ) 
 {
-  resizeBuffer( newSize * sizeof( T ) );
-  for ( int i = 0; i < _size; i++ ) {
-    delete _members[i];
+  if ( newSize != static_cast<size_t>( _size ) ) {
+    resizeBuffer( newSize * sizeof( T ) );
+    for ( int i = 0; i < _size; i++ ) {
+      delete _members[i];
+    }
+    _size = newSize;
+    initializeMembers();
   }
-  _size = newSize;
-  initializeMembers();
 }
 
 //------------------------------------------------------------------------------

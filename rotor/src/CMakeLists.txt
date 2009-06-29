@@ -45,5 +45,8 @@ sm_cpp_install_binaries( BroadcastRegistry )
 #-------------------------------------------------------------------------------
 
 # add_executable( print_laser sandbox/laser_receiver.cpp )
-# 
+
 # target_link_libraries( print_laser rotor )
+
+add_executable( structurePerformance sandbox/structurePerformance.cpp )
+target_link_libraries( structurePerformance rotor )

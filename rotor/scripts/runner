@@ -20,6 +20,11 @@ def read_commands( filename ):
   for line in f.readlines():
     line = line.strip()
     if line[0] != "#":
+      if line[0] == "!":
+        start = True
+        line  = line[1:]
+      else:
+        start = False
       args = line.split( "\"" )
       args = [x for x in args if x != ""]
       if len( args ) > 0:
@@ -34,7 +39,7 @@ def read_commands( filename ):
             username = extra[1]
           if len( extra ) > 2:
             password = extra[2]
-        result.append( Command( command, host = host, username = username, password = password ) )
+        result.append( [ start, Command( command, host = host, username = username, password = password )] )
   f.close()
   return result
 
@@ -45,6 +50,7 @@ if len( sys.argv ) != 2 or not os.path.exists( sys.argv[1] ):
 commands = read_commands( sys.argv[1] )
 
 for c in commands:
-  c.start()
+  if c[0]:
+    c[1].start()
   
-ConsoleFrontend( commands )
+ConsoleFrontend( [c[1] for c in commands] )

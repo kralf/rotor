@@ -29,6 +29,7 @@ public:
   virtual const Type & typeData() const;
   virtual const Registry & registry() const;
   virtual std::string toString() const;
+  void adjust() const;
 
   
 private:
