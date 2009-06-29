@@ -134,6 +134,7 @@ CarmenHandler::handleQuery(
   void * data, 
   void * handlerPtr )
 {
+  Logger::spam( "Handling query" );
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
   Message message;
   message.name = IPC_msgInstanceName( msgInstance );
@@ -157,6 +158,7 @@ CarmenHandler::handleReply(
   BYTE_ARRAY byteArray, 
   void * handlerPtr )
 {
+  Logger::spam( "Handling reply" );
   void * data;
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   

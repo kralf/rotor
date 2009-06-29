@@ -13,7 +13,7 @@ Rotor::formatString( const Registry & registry, const std::string & typeName )
   const MemberDefinitions & definitions = registry[typeName].members();
   string result = "{ ";
   int lastIntIndex = -1;
-  for ( int i = 0; i < definitions.size(); i++ ) {
+  for ( size_t i = 0; i < definitions.size(); i++ ) {
     const MemberDefinition & definition = definitions[i];
     if ( i > 0 ) {
       result += ", ";
@@ -63,6 +63,24 @@ Rotor::formatString( const Registry & registry, const std::string & typeName )
         result += "<double: " + toString( lastIntIndex + 1 ) + ">";
       } else if ( definition.type == "char" ) {
         result += "string";
+      }      
+    } else {
+      if ( definition.type == "int8_t" ) {
+        result += "[byte: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "uint8_t" ) {
+        result += "[ubyte: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "int16_t" ) {
+        result += "[short: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "uint16_t" ) {
+        result += "[ushort: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "int32_t" ) {
+        result += "[int: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "uint32_t" ) {
+        result += "[uint: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "float" ) {
+        result += "[float: " + toString( definition.cardinality ) + "]";
+      } else if ( definition.type == "double" ) {
+        result += "[double: " + toString( definition.cardinality ) + "]";
       }      
     }
   }

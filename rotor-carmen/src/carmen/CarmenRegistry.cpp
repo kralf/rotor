@@ -35,29 +35,43 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   tmpName << setprecision( 10 );
   tmpName << name << "_" << seconds();
 
-  Logger::spam( "Establishing temporary connection" );
+  Logger::info( "Establishing temporary connection" );
   // Temporary connection, needed to call IPC_isModuleConnected
-  if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
-    fprintf( stderr, "Could not connect IPC\n" );
-    exit( 1 );
+  try {
+    if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
+      fprintf( stderr, "Could not connect IPC\n" );
+      exit( 1 );
+    }
+  } catch ( OptionError & e ) {  
+    if ( IPC_connectModule( tmpName.str().c_str(), NULL ) == IPC_Error ) {
+      fprintf( stderr, "Could not connect IPC\n" );
+      exit( 1 );
+    }
   }
 
-  Logger::spam( "Checking with same name is already connected" );
+  Logger::info( "Checking with same name is already connected" );
   if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
     fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
     exit( 1 );
   }
   
-  Logger::spam( "Disconnecting temporary connection" );
+  Logger::info( "Disconnecting temporary connection" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Error connecting to IPC\n" );
     exit( 1 );
   }
   
-  Logger::spam( "Establishing definitive connection" );
-  if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
-    fprintf( stderr, "Could not connect IPC\n" );
-    exit( 1 );
+  Logger::info( "Establishing definitive connection" );
+  try {
+    if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
+      fprintf( stderr, "Could not connect IPC\n" );
+      exit( 1 );
+    }
+  } catch ( OptionError & e ) {  
+    if ( IPC_connectModule( name.c_str(), NULL ) == IPC_Error ) {
+      fprintf( stderr, "Could not connect IPC\n" );
+      exit( 1 );
+    }
   }
   
   IPC_setCapacity( 4 );
@@ -118,6 +132,9 @@ CarmenRegistry::registerMessage(
   const string & typeName )
 {
   Lock lock( _ipcMutex );
+  Logger::debug( 
+    string( "Registered " ) + messageName + " with type: " + typeName + 
+    " and format: " + formatString( *this, typeName ) );
   _registry.registerMessage( messageName, typeName );
   if ( ! IPC_isMsgDefined( messageName.c_str() ) ) {
     if (  IPC_defineMsg( 
@@ -178,7 +195,6 @@ void
 CarmenRegistry::sendMessage( const Message & message )
 {
   Logger::spam( "Publishing message name:" + message.name );
-//   _ipcMutex.lock();
   if (  IPC_publishData( 
           message.name.c_str(), 
           message.data->buffer() ) == IPC_Error ) 
@@ -186,7 +202,6 @@ CarmenRegistry::sendMessage( const Message & message )
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
-//   _ipcMutex.unlock();
   Logger::spam( "Message published" );
 }
 
@@ -226,7 +241,6 @@ Structure *
 CarmenRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
-  void * reply;
   _ipcMutex.lock();
   IPC_RETURN_TYPE result =  IPC_queryNotifyData(
                               message.name.c_str(),
