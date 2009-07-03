@@ -3,6 +3,7 @@
 #include <rotor/BaseRegistry.h>
 #include <rotor/RemoteRegistry.h>
 #include <rotor/BaseOptions.h>
+#include <rotor/BasicTypes.h>
 #include <rotor/Structure.h>
 #include <rotor/StructureArray.h>
 #include <rotor/Exceptions.h>
@@ -30,15 +31,36 @@
 
 //------------------------------------------------------------------------------
 
+
+namespace boost {
+  template<class T> class shared_ptr
+  {
+  public:
+    T * operator-> () const;
+    T & operator* () const;
+  };
+}
+
+
+namespace Rotor {
+  class LightweightStructure;
+}
+
+%include <rotor/SharedPointers.h>
+
+%template( StructurePtr ) boost::shared_ptr<Rotor::Structure>;
+%template( RegistryPtr ) boost::shared_ptr<Rotor::Registry>;
+//------------------------------------------------------------------------------
+
 %include <rotor/QueuePolicy.h>
 %include <rotor/Time.h>
 %include <rotor/Logger.h>
 %include <rotor/Options.h>
 %include <rotor/BaseOptions.h>
-%include <rotor/Message.h>
 %include <rotor/MemberDefinition.h>
-%include <rotor/Type.h>
 %include <rotor/BasicTypes.h>
+%include <rotor/Message.h>
+%include <rotor/Type.h>
 %include <rotor/Registry.h>
 %include <rotor/RemoteRegistry.h>
 %include <rotor/Serialization.h>
@@ -46,6 +68,7 @@
 %include <rotor/AbstractVariable.h>
 %include <rotor/Structure.h>
 %include <rotor/StructureArray.h>
+%include <rotor/LightweightStructure.h>
 %include <rotor/Thread.h>
 
 //------------------------------------------------------------------------------
@@ -178,6 +201,8 @@ def _SETATTR( self, name, value ):
 
 Structure.__getattr__ = _GETATTR
 Structure.__setattr__ = _SETATTR
+LightweightStructure.__getattr__ = _GETATTR
+LightweightStructure.__setattr__ = _SETATTR
 AbstractVariable.__getitem__ = _GETITEM
 AbstractVariable.__setitem__ = _SETITEM
 AbstractVariable.__getattr__ = _GETATTR

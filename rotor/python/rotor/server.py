@@ -131,15 +131,16 @@ class Server:
             reply.value = self.options.toString( message.data.arguments )
           registry.reply( Message( "OPTION_STRING", reply ) )
           Logger.debug( "%s" % reply.toString() )
-    except Exception, e:
-      if e.message != "No message was received":
-        print e.message
-        raise
+    except MessagingTimeout, e:
+      pass
+      #if e.message != "No message was received":
+        #print e.message
+        #raise
     
 #-------------------------------------------------------------------------------
 
   def setupBroadcastServer( self ):
-    self.broadcastRegistry = Registry.load( "BroadcastRegistry", "rotor", self.options, "" )
+    self.broadcastRegistry = RemoteRegistry( "BroadcastRegistry", "rotor", self.options, "" )
     for typeDefinitions in types:
       self.broadcastRegistry.registerType( typeDefinitions )
     for message in messages:
@@ -150,7 +151,7 @@ class Server:
 #-------------------------------------------------------------------------------
 
   def setupDefaultServer( self ):
-    self.defaultRegistry = Registry.load( self.defaultRegistryClass, "rotor", self.options, "" )
+    self.defaultRegistry = RemoteRegistry( self.defaultRegistryClass, "rotor", self.options, "" )
     for typeDefinitions in types:
       self.defaultRegistry.registerType( typeDefinitions )
     for message in messages:

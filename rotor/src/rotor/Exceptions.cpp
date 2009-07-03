@@ -5,6 +5,11 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
+NotImplementedError::NotImplementedError( const std::string & message ) 
+: logic_error( message ) {}
+
+//------------------------------------------------------------------------------
+
 MemoryAllocationError::MemoryAllocationError( const std::string & message ) 
 : logic_error( message ) {}
 

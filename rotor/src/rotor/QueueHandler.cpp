@@ -44,12 +44,12 @@ void
 QueueHandler::enqueueMessage( Message & message )
 {
   //TODO: Check if not owning queues have been subscribed
-  StructureQueues::iterator it = _structureQueues.find( message.name );
+  StructureQueues::iterator it = _structureQueues.find( message.name() );
   if ( it != _structureQueues.end() ) {
-    Logger::debug( "Enqueing owned " + message.name );
-    it->second->push( message.data );
+    Logger::debug( "Enqueing owned " + message.name() );
+    it->second->push( StructurePtr( const_cast<Structure*>( &( message.data() ) ) ) );
   } else {
-    Logger::debug( "Enqueing not owned " + message.name );
+    Logger::debug( "Enqueing not owned " + message.name() );
     _mainQueue.push( message );
   }
 }
@@ -64,7 +64,7 @@ QueueHandler::dequeueMessage( double timeout ) throw ( TimeoutException )
 
 //------------------------------------------------------------------------------
 
-Structure * 
+StructurePtr
 QueueHandler::dequeueMessage( const std::string & messageName, double timeout )
 throw( TimeoutException )
 {
@@ -72,5 +72,5 @@ throw( TimeoutException )
   if ( it != _structureQueues.end() ) {
     return it->second->popNext( timeout );
   }
-  return NULL;
+  return StructurePtr();
 }

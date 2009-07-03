@@ -26,8 +26,8 @@ public:
   virtual ~StructureArray();
   virtual AbstractVariable & operator=( const StructureArray & value );
   virtual AbstractVariable & operator=( const AbstractVariable & value );
-  virtual AbstractVariable & operator[]( size_t index );
-  virtual const AbstractVariable & operator[]( size_t index ) const;
+  virtual AbstractVariable & operator[]( int index );
+  virtual const AbstractVariable & operator[]( int index ) const;
   virtual void resize( size_t newSize );
   virtual size_t size() const;
   GenericType type() const;
@@ -35,7 +35,7 @@ public:
 private:
   void initializeMembers();
   
-  size_t                   _size;
+  int                      _size;
   std::vector<Structure *> _members;
   const Registry &         _registry;
   const Type &             _type;

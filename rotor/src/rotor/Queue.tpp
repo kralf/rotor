@@ -1,8 +1,8 @@
 
 //------------------------------------------------------------------------------
 
-template <typename T>
-Queue<T>::Queue( size_t capacity, QueuePolicy policy )
+template <typename T, class RELEASER>
+Queue<T, RELEASER>::Queue( size_t capacity, QueuePolicy policy )
   : _capacity( capacity ),
     _policy( policy )
 {
@@ -10,9 +10,9 @@ Queue<T>::Queue( size_t capacity, QueuePolicy policy )
 
 //------------------------------------------------------------------------------
   
-template <typename T>
+template <typename T, class RELEASER>
 void 
-Queue<T>::push( const T & value, double timeout ) throw ( TimeoutException)
+Queue<T, RELEASER>::push( const T & value, double timeout ) throw ( TimeoutException)
 {
   _mutex.lock();
   if ( _capacity > 0 && _queue.size() == _capacity ) {
@@ -23,6 +23,7 @@ Queue<T>::push( const T & value, double timeout ) throw ( TimeoutException)
         }
       }
     } else if ( _policy == DISCARD_OLDEST ) {
+      RELEASER::release( _queue.front() ); 
       _queue.pop();
       _queue.push( value );
       _mutex.unlock();
@@ -39,9 +40,9 @@ Queue<T>::push( const T & value, double timeout ) throw ( TimeoutException)
 
 //------------------------------------------------------------------------------
   
-template <typename T>
+template <typename T, class RELEASER>
 T &
-Queue<T>::next( double timeout ) throw ( TimeoutException )
+Queue<T, RELEASER>::next( double timeout ) throw ( TimeoutException )
 {
   Lock lock( _mutex );
   while ( _queue.empty() ) {
@@ -54,9 +55,9 @@ Queue<T>::next( double timeout ) throw ( TimeoutException )
 
 //------------------------------------------------------------------------------
   
-template <typename T>
+template <typename T, class RELEASER>
 void
-Queue<T>::pop( double timeout ) throw ( TimeoutException )
+Queue<T, RELEASER>::pop( double timeout ) throw ( TimeoutException )
 {
   Lock lock( _mutex );
   while ( _queue.empty() ) {
@@ -70,9 +71,9 @@ Queue<T>::pop( double timeout ) throw ( TimeoutException )
 
 //------------------------------------------------------------------------------
   
-template <typename T>
+template <typename T, class RELEASER>
 T
-Queue<T>::popNext( double timeout ) throw ( TimeoutException )
+Queue<T, RELEASER>::popNext( double timeout ) throw ( TimeoutException )
 {
   Lock lock( _mutex );
   while ( _queue.empty() ) {

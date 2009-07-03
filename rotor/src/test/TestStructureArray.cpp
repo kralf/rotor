@@ -5,6 +5,7 @@
 #include <rotor/Serialization.h>
 #include <rotor/Structure.h>
 #include <rotor/StructureArray.h>
+#include <rotor/Debug.h>
 #include <cmath>
 
 int abs( int num );
@@ -34,11 +35,10 @@ SUITE( StructureArray ) {
     registry.registerType( ROTOR_DEFINITION_STRING( Point ) );
     registry.registerType( ROTOR_DEFINITION_STRING( PointList ) );
     Rotor::Structure structure( "PointList", 0, registry );
-  
     structure["count"] = 10;
     CHECK_EQUAL( 10 * sizeof( Point ), structure["points"].bufferSize() );
     CHECK_EQUAL( 10 , structure["points"].size() );
-
+  
     for ( int i = 0; i < 10; i++ ) {
       structure["points"][i]["x"] = i * 2;
       structure["points"][i]["y"] = i * 2 + 1;

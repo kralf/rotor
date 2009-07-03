@@ -3,6 +3,7 @@
 #include "MemberDefinition.h"
 #include "Registry.h"
 #include "Structure.h"
+#include "Logger.h"
 #include <iomanip>
 #include <sstream>
 #include <ostream>
@@ -84,8 +85,8 @@ Rotor::marshall( const Message & message )
 {
   stringstream stream;
   stream << setprecision( 10 );
-  stream << message.name;
-  ::marshall( stream, *message.data );
+  stream << message.name();
+  ::marshall( stream, message.data() );
   return stream.str();
 }
   
@@ -106,13 +107,12 @@ Rotor::marshall( const AbstractVariable & variable )
 Message 
 Rotor::unmarshall( const Registry & registry, const string & input )
 {
-  Structure * data;
   string::size_type last = input.find_first_of( "{", 0 );
   string name = input.substr( 0, last );
   string type = registry.messageType( name ).name();
-  data = new Structure( type, 0, registry );
+  LightweightStructure data( StructurePtr( new Structure( type, 0, registry ) ) );
   
   stringstream stream( input.substr( last, input.size() - last ) );
-  ::unmarshall( stream, *data );
+  ::unmarshall( stream, data );
   return Message( name, data );
 }

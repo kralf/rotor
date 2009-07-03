@@ -5,7 +5,7 @@
 #include "Logger.h"
 #include "Options.h"
 #include "Structure.h"
-#include <dlfcn.h>
+#include "NullDeleter.h"
 
 using namespace Rotor;
 using namespace std;
@@ -13,6 +13,12 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 Registry::Registry()
+{
+}
+
+//------------------------------------------------------------------------------
+
+Registry::~Registry()
 {
 }
 
@@ -63,54 +69,25 @@ Registry::sendStructure(
   const std::string & messageName, 
   Structure & structure )
 {
-  sendMessage( Message( messageName, &structure ) );
+  sendMessage( Message( messageName, structure ) );
 }
 
 //------------------------------------------------------------------------------
 
-Structure *
+LightweightStructure
 Registry::queryStructure( 
   const std::string & messageName, 
   Structure & structure,
   double timeout )
  throw( MessagingTimeout )  
 {
-  return query( Message( messageName, &structure ), timeout );
+  return query( Message( messageName, structure ), timeout );
 }
 
 //------------------------------------------------------------------------------
 
-Structure *
+LightweightStructure
 Registry::newStructure( const std::string & type, void * address ) const
 {
-  return new Structure( type, address, *this );
-}
-
-//------------------------------------------------------------------------------
-
-Registry * 
-Registry::load( 
-  const string & className, 
-  const string & registryName, 
-  Options & options,
-  const string & searchPath )
-{
-  size_t flags = RTLD_NOW | RTLD_GLOBAL;
-  void * handle = dlopen( findFile( "lib" + className + ".so", searchPath ).c_str(), flags );  
-  if( handle == 0 ) {
-    fprintf( stderr, "Error: %s\n", dlerror() );
-    handle = dlopen( findFile( className + ".so", searchPath ).c_str(), flags );  
-    if ( handle == 0 ) {
-      throw ClassLoadingError( "Unable to open class lib for registry: " + className + "\nError:" + dlerror() );
-    }
-  }
-  
-  std::string factoryName = className + "Factory";
-  RegistryFactory factory = reinterpret_cast<RegistryFactory>( dlsym( handle, factoryName.c_str() ) );
-
-  if( factory == 0 ) {
-    dlclose( handle );
-    throw ClassLoadingError( "Factory function not found for registry: " + className );
-  }
-  return factory( registryName, options );
+  return StructurePtr( new Structure( type, address, *this ) );
 }

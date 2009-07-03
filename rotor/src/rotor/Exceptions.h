@@ -5,6 +5,11 @@
 #include <stdexcept>
 
 namespace Rotor {
+  class NotImplementedError : public std::logic_error {
+  public:
+    NotImplementedError( const std::string & message );
+  };
+  
   class MemoryAllocationError : public std::logic_error {
   public:
     MemoryAllocationError( const std::string & message );

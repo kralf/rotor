@@ -11,10 +11,14 @@ namespace Rotor {
 class RemoteRegistry : public Registry
 {
 public:
-  RemoteRegistry( const std::string & name );
-  
-  virtual ~RemoteRegistry();
-  
+  RemoteRegistry( 
+    const std::string & className, 
+    const std::string & name, 
+    Options & options, 
+    const std::string & path );
+    
+  explicit RemoteRegistry( const std::string & name );
+    
   virtual const std::string & name() const;
   
   virtual Options & options() const;
@@ -50,14 +54,23 @@ public:
     double timeout = 0 ) 
   throw( MessagingTimeout );
 
-  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual LightweightStructure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
 
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 
   virtual void reply( const Message & message ) ;
   
+protected:
+  static RegistryPtr load( 
+    const std::string & className,
+    const std::string & registryName,
+    Options & options,
+    const std::string & searchPath = "" );
+    
 private:
-  Registry *  _registry;
+  typedef RegistryPtr (* RegistryFactory)( const std::string &, Options & );
+
+  RegistryPtr _registry;
   BaseOptions _options;
 };
 

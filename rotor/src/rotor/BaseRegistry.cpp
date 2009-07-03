@@ -143,6 +143,7 @@ BaseRegistry::messageType( const string & messageName ) const
 void 
 BaseRegistry::sendMessage( const Message & message )
 {
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
@@ -150,7 +151,7 @@ BaseRegistry::sendMessage( const Message & message )
 Message 
 BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
 {
-  return Message();
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
@@ -161,16 +162,16 @@ BaseRegistry::receiveMessage(
   double timeout ) 
 throw( MessagingTimeout )
 {
-  return Message();
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
 
-Structure *
+LightweightStructure
 BaseRegistry::query( const Message & message, double timeout )  
 throw( MessagingTimeout )
 {
-  return NULL;
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
@@ -178,7 +179,7 @@ throw( MessagingTimeout )
 Message 
 BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
 {
-  return Message();
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
@@ -186,5 +187,6 @@ BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
 void
 BaseRegistry::reply( const Message & message )  
 {
+  throw NotImplementedError( "Not implemented" );
 }
 

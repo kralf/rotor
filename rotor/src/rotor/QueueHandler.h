@@ -4,7 +4,8 @@
 
 #include "Exceptions.h"
 #include "Queue.h"
-#include "Structure.h"
+#include "Message.h"
+#include "PointerQueueReleaser.h"
 #include <map>
 #include <string>
 
@@ -28,12 +29,12 @@ public:
   
   Message dequeueMessage( double timeout ) throw ( TimeoutException );
   
-  Structure * dequeueMessage( const std::string & messageName, double timeout )
+  StructurePtr dequeueMessage( const std::string & messageName, double timeout )
   throw( TimeoutException );
   
 private:
   typedef Queue< Message > MessageQueue;
-  typedef Queue< Structure *> StructureQueue;
+  typedef Queue< StructurePtr > StructureQueue;
   typedef std::map< std::string, StructureQueue * > StructureQueues;
   
   MessageQueue    _mainQueue;

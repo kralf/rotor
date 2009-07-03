@@ -1,5 +1,6 @@
 #include "AbstractVariable.h"
 #include "Exceptions.h"
+#include "Conversion.h"
 
 using namespace Rotor;
 
@@ -46,35 +47,35 @@ AbstractVariable::operator=( const char * value )
 
 AbstractVariable::operator int() const
 {
-  throw InvalidCastError( "Variable cannot be cast to int" );
+  throw InvalidCastError( "Variable of type " + toString( type() ) + " cannot be cast to int" );
 }
 
 //------------------------------------------------------------------------------
 
 AbstractVariable::operator double() const
 {
-  throw InvalidCastError( "Variable cannot be cast to double" );
+  throw InvalidCastError( "Variable of type " + toString( type() ) + " cannot be cast to double" );
 }
 
 //------------------------------------------------------------------------------
 
 AbstractVariable::operator const char *() const
 {
-  throw InvalidCastError( "Variable is not a string" );
+  throw InvalidCastError( "Variable of type " + toString( type() ) + " is not a string" );
 }
 
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
 AbstractVariable::operator[]( int index ) {
-  throw InvalidOperatorError( "Variable is not an Array" );
+  throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not an Array" );
 }
 
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
 AbstractVariable::operator[]( const char * fieldName ) {
-  throw InvalidOperatorError( "Variable is not a Structure" );
+  throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not a Structure" );
 }
 
 //------------------------------------------------------------------------------
@@ -82,7 +83,7 @@ AbstractVariable::operator[]( const char * fieldName ) {
 const AbstractVariable & 
 AbstractVariable::operator[]( int index ) const
 {
-  throw InvalidOperatorError( "Variable is not an Array" );
+  throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not an Array" );
 }
 
 //------------------------------------------------------------------------------
@@ -90,7 +91,7 @@ AbstractVariable::operator[]( int index ) const
 const AbstractVariable & 
 AbstractVariable::operator[]( const char * fieldName ) const
 {
-  throw InvalidOperatorError( "Variable is not a Structure" );
+  throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not a Structure" );
 }
 
 //------------------------------------------------------------------------------

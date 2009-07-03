@@ -1,33 +1,43 @@
 #include "RemoteRegistry.h"
 #include "BaseOptions.h"
 #include "CoreMessages.h"
+#include "FileUtils.h"
 #include "Logger.h"
+#include <dlfcn.h>
 
 using namespace Rotor;
 using namespace std;
 
 //------------------------------------------------------------------------------
 
+RemoteRegistry::RemoteRegistry( 
+  const string & className, 
+  const string & name, 
+  Options & options, 
+  const string & path
+) : _registry( load( className, name, options, path ) )
+{
+}
+
+//------------------------------------------------------------------------------
+
 RemoteRegistry::RemoteRegistry( const std::string & name )
 {
-  _registry = Registry::load( "BroadcastRegistry", "bootstrap", _options, "" );
+  _registry = load( "BroadcastRegistry", "bootstrap", _options, "" );
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
 
   Structure request( "RemoteCommand", 0, *_registry );
   request["command"]   = "GET_OPTIONS";
   request["arguments"] = "BOOTSTRAP";
-  Structure * reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
+  LightweightStructure reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
   Logger::info( "Main server found" );
   
   OptionString sReply;
   sReply << reply;  
   _options.fromString( sReply.value );
   
-  delete _registry;
-  delete reply;
-
-  _registry = Registry::load( _options.getString( "BOOTSTRAP", "registry" ), name, _options, "" );
+  _registry = load( _options.getString( "BOOTSTRAP", "registry" ), name, _options, "" );
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
   Logger::debug( "Retrieving options" );
@@ -40,16 +50,9 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   sReply << reply;
   _options.fromString( sReply.value );
   
-  delete reply;
   Logger::info( string( "Connected to server with transport: " ) + _options.getString( "BOOTSTRAP", "registry" ) );
 }
 
-//------------------------------------------------------------------------------
-
-RemoteRegistry::~RemoteRegistry()
-{
-  delete _registry;
-}
 //------------------------------------------------------------------------------
 
 const std::string & 
@@ -161,7 +164,7 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Structure * 
+LightweightStructure 
 RemoteRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
@@ -191,4 +194,33 @@ void
 RemoteRegistry::reply( const Message & message )
 {
   _registry->reply( message );
+}
+
+//------------------------------------------------------------------------------
+
+RegistryPtr 
+RemoteRegistry::load( 
+  const string & className, 
+  const string & registryName, 
+  Options & options,
+  const string & searchPath )
+{
+  size_t flags = RTLD_NOW | RTLD_GLOBAL;
+  void * handle = dlopen( findFile( "lib" + className + ".so", searchPath ).c_str(), flags );  
+  if( handle == 0 ) {
+    fprintf( stderr, "Error: %s\n", dlerror() );
+    handle = dlopen( findFile( className + ".so", searchPath ).c_str(), flags );  
+    if ( handle == 0 ) {
+      throw ClassLoadingError( "Unable to open class lib for registry: " + className + "\nError:" + dlerror() );
+    }
+  }
+  
+  std::string factoryName = className + "Factory";
+  RegistryFactory factory = reinterpret_cast<RegistryFactory>( dlsym( handle, factoryName.c_str() ) );
+
+  if( factory == 0 ) {
+    dlclose( handle );
+    throw ClassLoadingError( "Factory function not found for registry: " + className );
+  }
+  return RegistryPtr( factory( registryName, options ) );
 }

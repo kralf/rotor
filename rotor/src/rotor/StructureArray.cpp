@@ -26,7 +26,7 @@ StructureArray::StructureArray(
 
 StructureArray::~StructureArray() 
 {
-  for ( size_t i = 0; i < _size; i++ ) {
+  for ( int i = 0; i < _size; i++ ) {
     delete _members[i];
   }
 }
@@ -63,7 +63,7 @@ StructureArray::operator=( const AbstractVariable & value )
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-StructureArray::operator[]( size_t index ) 
+StructureArray::operator[]( int index ) 
 {
   if ( index >= _size || index < 0 ) {
     throw( std::out_of_range( "Index out of range while accesing a StructureArray" ) );
@@ -74,7 +74,7 @@ StructureArray::operator[]( size_t index )
 //------------------------------------------------------------------------------
 
 const AbstractVariable & 
-StructureArray::operator[]( size_t index ) const
+StructureArray::operator[]( int index ) const
 {
   if ( index >= _size || index < 0 ) {
     throw( std::out_of_range( "Index out of range while accesing a StructureArray" ) );
@@ -87,14 +87,14 @@ StructureArray::operator[]( size_t index ) const
 void 
 StructureArray::resize( size_t newSize ) 
 {
-  if ( _size == newSize ) {
+  if ( static_cast<size_t>( _size ) == newSize ) {
     return;
   }
   resizeBuffer( newSize * _type.size() );
-  for ( size_t i = 0; i < _size; i++ ) {
+  for ( int i = 0; i < _size; i++ ) {
     delete _members[i];
   }
-  if ( newSize > _size ) {
+  if ( newSize > static_cast<size_t>( _size ) ) {
     memset( 
       static_cast<int8_t*>( buffer() ) + _size * _type.size(), 
       0, 
@@ -127,7 +127,7 @@ StructureArray::initializeMembers()
 {
   _members.resize( _size );
   int8_t * pointer = reinterpret_cast<int8_t *>( buffer() );
-  for ( size_t i = 0; i < _size; i++ ) {
+  for ( int i = 0; i < _size; i++ ) {
     _members[i] = new Structure( _type.name(), pointer, _registry );
     pointer    += _members[i]->bufferSize();
   }

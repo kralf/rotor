@@ -169,22 +169,19 @@ BroadcastRegistry::receiveMessage(
   double timeout ) 
 throw( MessagingTimeout )
 {
-  return Message();
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
 
-Structure *
+LightweightStructure
 BroadcastRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
   for ( int i = 0; i < 3; ++i ) {
     sendMessage( message );
     try {
-      Structure * result = receiveMessage( timeout ).data;
-      if ( result ) {
-        return result;
-      }
+      return receiveMessage( timeout ).data();
     } catch ( MessagingTimeout ) {
     }
   }

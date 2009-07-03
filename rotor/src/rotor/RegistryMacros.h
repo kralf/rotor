@@ -3,6 +3,7 @@
 
 
 #include "Structure.h"
+#include "Type.h"
 
 
 #define ROTOR_DEFINE_TYPE( NAME, DEFINITION ) \
@@ -16,7 +17,7 @@ NAME & operator<<( NAME & value, Rotor::Structure & structure ) { \
   value =  *( reinterpret_cast<NAME*>( structure.buffer() ) ); \
   return value; \
 } \
-NAME & operator<<( NAME & value, Rotor::Structure * structure ) { \
+NAME & operator<<( NAME & value, Rotor::StructurePtr structure ) { \
   return value << *structure; \
 } \
 Rotor::Structure & operator>>( NAME & value, Rotor::Structure & structure ) { \
@@ -27,7 +28,7 @@ Rotor::Structure & operator>>( NAME & value, Rotor::Structure & structure ) { \
   structure = tmp; \
   return structure; \
 } \
-Rotor::Structure & operator>>( NAME & value, Rotor::Structure * structure ) { \
+Rotor::Structure & operator>>( NAME & value, Rotor::StructurePtr structure ) { \
   return value >> *structure; \
 } 
 
@@ -36,9 +37,9 @@ ROTOR_DEFINITION_##NAME
 
 #define ROTOR_REGISTRY_FACTORY( CLASS ) \
 extern "C" { \
-  Rotor::Registry * CLASS##Factory( const string & name, Options & options ) \
+  Rotor::RegistryPtr CLASS##Factory( const string & name, Options & options ) \
   { \
-    return new CLASS( name, options ); \
+    return RegistryPtr( new CLASS( name, options ) ); \
   } \
 }
 

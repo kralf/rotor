@@ -1,4 +1,5 @@
 #include "Structure.h"
+#include "BasicTypes.h"
 #include "Debug.h"
 #include "Logger.h"
 #include "Serialization.h"
@@ -17,7 +18,15 @@ Structure::Structure(
     _registry( registry ),
     _type( registry[typeName] )
 {
-  const MemberDefinitions & definitions = registry[ typeName ].members();
+  initialize();
+}
+
+//------------------------------------------------------------------------------
+
+void
+Structure::initialize()
+{
+  const MemberDefinitions & definitions = _registry[ _type.name() ].members();
   uint8_t * bytePointer = static_cast<uint8_t *>( buffer() );
   AbstractVariable * variableArraySize = NULL;
   for ( size_t i = 0; i < definitions.size(); i++ ) {
@@ -28,14 +37,14 @@ Structure::Structure(
     // For owned pointer arrays, the default capacity is 10
     // TODO: What to do with the corresponding count?
     if ( owner() ) {
-      variable = newVariable( registry, pointer, definition, 0, 0 ); //HERE
+      variable = newVariable( _registry, pointer, definition, 0, 0 ); //HERE
     } else {
       void * variableArrayPointer = *( reinterpret_cast<void **>( pointer ) );
       if ( ! variableArraySize ) {
-        variable = newVariable( registry, pointer, definition, variableArrayPointer, 0 );
+        variable = newVariable( _registry, pointer, definition, variableArrayPointer, 0 );
       } else {
         int arraySize = *variableArraySize;
-        variable = newVariable( registry, pointer, definition, variableArrayPointer, arraySize );
+        variable = newVariable( _registry, pointer, definition, variableArrayPointer, arraySize );
       }
     }
     
@@ -133,7 +142,6 @@ Structure::operator[]( const char * fieldName )
   if (  iMember == _members.end() ) {
     throw  TypeError( "Structure does not have field: " + std::string( fieldName ) );
   }
-  
   AbstractVariable & member = *iMember->second;
   adjustPointers( member );
   return member;

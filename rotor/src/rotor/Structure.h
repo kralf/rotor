@@ -3,13 +3,15 @@
 
 
 #include "AbstractVariable.h"
-#include "Registry.h"
-#include "BasicTypes.h"
+#include "SharedPointers.h"
 #include "Exceptions.h"
 #include <map>
-
+#include <vector>
 
 namespace Rotor {
+
+
+class Type;
 
 
 class Structure : public AbstractVariable
@@ -29,7 +31,7 @@ public:
   virtual const Type & typeData() const;
   virtual const Registry & registry() const;
   virtual std::string toString() const;
-  void adjust() const;
+  virtual void adjust() const;
 
   
 private:
@@ -38,6 +40,7 @@ private:
   typedef std::map<AbstractVariable *, AbstractVariable * > VariableTable;
   typedef std::map<AbstractVariable*, size_t *> SizeTable;
   
+  void initialize();
   void adjustPointers( const AbstractVariable & member ) const;
 
   const Registry &  _registry;

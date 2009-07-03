@@ -1,5 +1,6 @@
 #include "BasicTypes.h"
 #include "AbstractVariable.h"
+#include "Registry.h"
 #include "Structure.h"
 #include "StructureArray.h"
 #include "Exceptions.h"

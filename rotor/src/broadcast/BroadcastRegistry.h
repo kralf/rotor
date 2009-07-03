@@ -55,7 +55,7 @@ public:
     double timeout = 0 ) 
   throw( MessagingTimeout );
 
-  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual LightweightStructure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
   
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 

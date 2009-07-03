@@ -6,11 +6,12 @@
 #include "Type.h"
 #include "Message.h"
 #include "QueuePolicy.h"
+#include "SharedPointers.h"
+#include "LightweightStructure.h"
 #include <string>
 
 
 namespace Rotor {
-
 
 class Options;
 class Structure;
@@ -28,6 +29,7 @@ class Registry
 public:
 
   Registry();
+  virtual ~Registry();
   
   /**
    * Standard low level constructor.
@@ -199,7 +201,7 @@ public:
    * @return The next query in the reception queue.
    * @throw MessagingTimeout If the timeout is exceeded.
    */
-  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout ) = 0;
+  virtual LightweightStructure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout ) = 0;
 
   /**
    * Convenience method that makes a query message from the given message name 
@@ -211,7 +213,7 @@ public:
    * @return The next query in the reception queue.
    * @throw MessagingTimeout If the timeout is exceeded.
    */
-  virtual Structure * queryStructure( const std::string & messageName, Structure & structure, double timeout = 0 ) throw( MessagingTimeout );
+  virtual LightweightStructure queryStructure( const std::string & messageName, Structure & structure, double timeout = 0 ) throw( MessagingTimeout );
 
   /**
    * Waits for a query to arrive, with an optional timeout.
@@ -237,26 +239,8 @@ public:
    * @param address  The address of the c++ object this Structure points to or
    *                 0 if it should own its memory.
    */
-  virtual Structure * newStructure( const std::string & typeName, void * address = NULL ) const;
-
-  /**
-   * Loads a concrete implementation of the Registry class.
-   *
-   * @param className    The name of the of the implementation class and 
-                         library.
-   * @param registryName The name of the module for the registry.
-   * @param options      The Options object used to initialize the registry.
-   * @param searchPath   The list of search paths to look for the library, given
-   *                     as a colon-separated list.
-   */
-  static Registry * load( 
-    const std::string & className,
-    const std::string & registryName,
-    Options & options,
-    const std::string & searchPath = "" );
+  virtual LightweightStructure newStructure( const std::string & typeName, void * address = NULL ) const;
     
-private:
-  typedef Registry * (* RegistryFactory)( const std::string &, Options & );
 };
 
 

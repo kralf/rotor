@@ -7,12 +7,13 @@
 #include "Exceptions.h"
 #include "Lock.h"
 #include "QueuePolicy.h"
+#include "DefaultQueueReleaser.h" 
 #include <queue>
 
 
 namespace Rotor {
 
-template < typename T >
+template < typename T, class RELEASER = DefaultQueueReleaser<T> >
 class Queue
 {
 public:
