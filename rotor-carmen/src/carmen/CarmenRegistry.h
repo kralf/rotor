@@ -55,7 +55,7 @@ public:
     double timeout = 0 ) 
   throw( MessagingTimeout );
 
-  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual LightweightStructure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
 
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 
@@ -65,7 +65,7 @@ private:
   std::string      _name;
   Options &        _options;
   BaseRegistry     _registry;
-  Message          _message;
+//   Message          _message;
   CarmenHandler *  _handler;
   Mutex            _ipcMutex;
   QueueHandler     _queueHandler;

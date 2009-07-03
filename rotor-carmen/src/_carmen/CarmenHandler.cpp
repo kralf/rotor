@@ -43,8 +43,8 @@ CarmenHandler::reply( const Message & message )
   _registry._ipcMutex.lock();
   if (  IPC_respondData( 
           msgInstance,
-          message.name.c_str(),
-          message.data->buffer() ) == IPC_Error ) 
+          message.name().c_str(),
+          message.data().buffer() ) == IPC_Error ) 
   {
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
@@ -81,12 +81,12 @@ CarmenHandler::dequeueQuery( double timeout )
 
 //------------------------------------------------------------------------------
 
-Structure * 
+LightweightStructure
 CarmenHandler::dequeueReply( double timeout )
 {
   Message result = _replyQueue.next( timeout );
   _replyQueue.pop();
-  return result.data;
+  return result.data();
 }
 
 //------------------------------------------------------------------------------
@@ -113,13 +113,14 @@ CarmenHandler::handleMessage(
   void * handlerPtr )
 {
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
-  Message message;
-  message.name = IPC_msgInstanceName( msgInstance );
+  string name = IPC_msgInstanceName( msgInstance );
 
-  string typeName    = handler->registry().messageType( message.name ).name();
+  string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  message.data = new Structure( typeName, 0, handler->registry() );
-  *(message.data) = tmp;
+  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
+  (*newData) = tmp;
+  LightweightStructure s( newData );
+  Message message( name, s );
 
   handler->_registry._queueHandler.enqueueMessage( message );
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
@@ -136,14 +137,15 @@ CarmenHandler::handleQuery(
 {
   Logger::spam( "Handling query" );
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
-  Message message;
-  message.name = IPC_msgInstanceName( msgInstance );
+  string name = IPC_msgInstanceName( msgInstance );
 
-  string typeName    = handler->registry().messageType( message.name ).name();
+  string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  message.data = new Structure( typeName, 0, handler->registry() );
-  *(message.data) = tmp;
-  
+  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
+  (*newData) = tmp;
+  LightweightStructure s( newData );
+  Message message( name, s );
+ 
   IPC_delayResponse( msgInstance );
   handler->enqueueQuery( message, msgInstance );
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
@@ -166,13 +168,14 @@ CarmenHandler::handleReply(
   IPC_freeByteArray(byteArray);
   
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
-  Message message;
-  message.name = IPC_msgInstanceName( msgInstance );
+  string name = IPC_msgInstanceName( msgInstance );
 
-  string typeName    = handler->registry().messageType( message.name ).name();
+  string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  message.data = new Structure( typeName, 0, handler->registry() );
-  *(message.data) = tmp;
+  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
+  (*newData) = tmp;
+  LightweightStructure s( newData );
+  Message message( name, s );
   
   handler->enqueueReply( message );
   IPC_freeData( formatter, data );

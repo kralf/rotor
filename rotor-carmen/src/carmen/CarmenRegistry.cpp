@@ -42,7 +42,7 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
-  } catch ( OptionError & e ) {  
+  } catch ( ... ) {  
     if ( IPC_connectModule( tmpName.str().c_str(), NULL ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
@@ -67,7 +67,7 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
-  } catch ( OptionError & e ) {  
+  } catch ( ... ) {  
     if ( IPC_connectModule( name.c_str(), NULL ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
@@ -85,11 +85,14 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
 
 CarmenRegistry::~CarmenRegistry()
 {
+  Logger::info( "Deleting carmen handler" );
   delete _handler;
+  Logger::info( "Disconnecting from IPC" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Could not disconnect IPC\n" );
     exit( 1 );
   }
+  Logger::info( "Carmen registry was successfully destroyed" );
 }
 
 //------------------------------------------------------------------------------
@@ -194,10 +197,10 @@ CarmenRegistry::messageType( const string & messageName ) const
 void 
 CarmenRegistry::sendMessage( const Message & message )
 {
-  Logger::spam( "Publishing message name:" + message.name );
+  Logger::spam( "Publishing message name:" + message.name() );
   if (  IPC_publishData( 
-          message.name.c_str(), 
-          message.data->buffer() ) == IPC_Error ) 
+          message.name().c_str(), 
+          message.data().buffer() ) == IPC_Error ) 
   {
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
@@ -213,7 +216,7 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   try {
     Logger::spam( "Receiving message" );
     return _queueHandler.dequeueMessage( timeout );
-  } catch ( TimeoutException & e ) {
+  } catch ( ... ) {
     Logger::spam( "Receive message timed out" );
     throw MessagingTimeout( "No message was received" );
   }
@@ -227,9 +230,9 @@ throw( MessagingTimeout )
 {
   try {
     Logger::spam( "Receiving message" );
-    Structure * data = _queueHandler.dequeueMessage( messageName, timeout );
+    LightweightStructure data( _queueHandler.dequeueMessage( messageName, timeout ) );
     return Message( messageName, data );
-  } catch ( TimeoutException & e ) {
+  } catch ( ... ) {
     Logger::spam( "Receive message timed out" );
     throw MessagingTimeout( "No message was received" );
   }
@@ -237,14 +240,14 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Structure *
+LightweightStructure
 CarmenRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
   _ipcMutex.lock();
   IPC_RETURN_TYPE result =  IPC_queryNotifyData(
-                              message.name.c_str(),
-                              message.data->buffer(),
+                              message.name().c_str(),
+                              message.data().buffer(),
                               CarmenHandler::handleReply,
                               _handler );
                             
@@ -255,7 +258,7 @@ throw( MessagingTimeout )
   }
   try {
     return _handler->dequeueReply( timeout );
-  } catch ( TimeoutException & e ) {
+  } catch ( ... ) {
     throw MessagingTimeout( "No message was received" );
   }
 }
@@ -268,9 +271,9 @@ CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
   try {
     Logger::spam( "ReceivingQuery" );
     pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
-    Logger::spam( "Received query name: " + result.first.name );
+    Logger::spam( "Received query name: " + result.first.name() );
     return result.first;
-  } catch ( TimeoutException & e ) {
+  } catch ( ... ) {
     Logger::spam( "Receive query timed out" );
     throw MessagingTimeout( "No message was received" );
   }
