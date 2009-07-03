@@ -1,0 +1,3 @@
+"rotor server cfg/test.ini"
+"build/bin/sender s"
+"build/bin/receiver r"
