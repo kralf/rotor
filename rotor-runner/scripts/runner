@@ -3,14 +3,7 @@
 import sys
 import os
 
-filedir = os.path.dirname( __file__ )
-
-sys.path.append( os.environ["HOME"] + "/.rotor/python" )
-sys.path.append( os.environ["HOME"] + "/.rotor/lib" )
-sys.path.append( "/usr/share/rotor/python" )
-sys.path.append( "/usr/share/rotor/lib" )
-
-from runner import *
+from rotor_runner import *
 
 
 
