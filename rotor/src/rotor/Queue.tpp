@@ -87,3 +87,13 @@ Queue<T, RELEASER>::popNext( double timeout ) throw ( TimeoutException )
   return result;
 }
 
+//------------------------------------------------------------------------------
+  
+template <typename T, class RELEASER>
+bool
+Queue<T, RELEASER>::empty()
+{
+  Lock lock( _mutex );
+  return _queue.empty();
+}
+

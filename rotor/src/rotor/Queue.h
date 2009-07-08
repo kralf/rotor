@@ -23,6 +23,7 @@ public:
   T & next( double timeout = 0 ) throw ( TimeoutException );
   void pop( double timeout = 0 ) throw ( TimeoutException );
   T popNext( double timeout = 0 ) throw ( TimeoutException );
+  bool empty();
 
 private:
   Queue( const Queue & );
