@@ -195,17 +195,17 @@ class ConsoleFrontend():
   def __init__( self, commands = [] ):
     self.screen = urwid.curses_display.Screen()    
     self.screen.register_palette( [
-      ( "body", "black", "light gray" ),
+      ( "body", "dark gray", "light gray" ),
       ( "header", "white", "dark blue" ),
       ( "list_header", "white", "black" ),
       ( "command", "yellow", "dark blue" ),
       ( "selected_command", "black", "light gray" ),
-      ( "prompt", "light gray", "black" ), 
-      ( "stdout", "light green", "black" ), 
-      ( "stderr", "light red", "black" ),
-      ( "running", "light green", "black" ),
-      ( "error", "light red", "black" ),
-      ( "stopped", "yellow", "black" )
+      ( "prompt", "black", "default" ), 
+      ( "stdout", "light green", "default" ), 
+      ( "stderr", "light red", "default" ),
+      ( "running", "light green", "default" ),
+      ( "error", "light red", "default" ),
+      ( "stopped", "yellow", "default" )
     ] )
     
     self.commands  = commands
