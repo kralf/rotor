@@ -198,13 +198,7 @@ void
 CarmenRegistry::sendMessage( const Message & message )
 {
   Logger::spam( "Publishing message name:" + message.name() );
-  if (  IPC_publishData( 
-          message.name().c_str(), 
-          message.data().buffer() ) == IPC_Error ) 
-  {
-    fprintf( stderr, "Problem sending message\n" );
-    exit( 1 );
-  }
+  _outputQueue.push( message );
   Logger::spam( "Message published" );
 }
 

@@ -97,6 +97,16 @@ CarmenHandler::dispatcher( void * data )
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
     registry->_ipcMutex.lock(); 
+    while( ! registry->_outputQueue.empty() ) {
+      Message message = registry->_outputQueue.popNext();
+      if (  IPC_publishData( 
+              message.name().c_str(), 
+              message.data().buffer() ) == IPC_Error ) 
+      {
+        fprintf( stderr, "Problem sending message\n" );
+        exit( 1 );
+      }      
+    }
     IPC_listenClear( 10 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
@@ -113,6 +123,7 @@ CarmenHandler::handleMessage(
   void * handlerPtr )
 {
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
+//   Lock lock( handler->_registry._ipcMutex );
   string name = IPC_msgInstanceName( msgInstance );
 
   string typeName    = handler->registry().messageType( name ).name();
@@ -135,8 +146,9 @@ CarmenHandler::handleQuery(
   void * data, 
   void * handlerPtr )
 {
-  Logger::spam( "Handling query" );
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
+//   Lock lock( handler->_registry._ipcMutex );
+  Logger::spam( "Handling query" );
   string name = IPC_msgInstanceName( msgInstance );
 
   string typeName    = handler->registry().messageType( name ).name();
@@ -160,6 +172,8 @@ CarmenHandler::handleReply(
   BYTE_ARRAY byteArray, 
   void * handlerPtr )
 {
+  CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
+//   Lock lock( handler->_registry._ipcMutex );
   Logger::spam( "Handling reply" );
   void * data;
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
@@ -167,7 +181,6 @@ CarmenHandler::handleReply(
   IPC_unmarshall( formatter, byteArray, &data );
   IPC_freeByteArray(byteArray);
   
-  CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
   string name = IPC_msgInstanceName( msgInstance );
 
   string typeName    = handler->registry().messageType( name ).name();

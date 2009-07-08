@@ -62,13 +62,15 @@ public:
   virtual void reply( const Message & message );
 
 private:
+  typedef Queue<Message> MessageQueue;
+
   std::string      _name;
   Options &        _options;
   BaseRegistry     _registry;
-//   Message          _message;
   CarmenHandler *  _handler;
   Mutex            _ipcMutex;
   QueueHandler     _queueHandler;
+  MessageQueue     _outputQueue;
   
   friend class CarmenHandler;
 };
