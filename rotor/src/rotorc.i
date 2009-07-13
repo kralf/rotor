@@ -7,6 +7,7 @@
 #include <rotor/Structure.h>
 #include <rotor/StructureArray.h>
 #include <rotor/Exceptions.h>
+#include <rotor/FileUtils.h>
 #include <rotor/Time.h>
 #include <rotor/Logger.h>
 #include <rotor/Serialization.h>
@@ -70,6 +71,7 @@ namespace Rotor {
 %include <rotor/StructureArray.h>
 %include <rotor/LightweightStructure.h>
 %include <rotor/Thread.h>
+%include <rotor/FileUtils.h>
 
 //------------------------------------------------------------------------------
 

@@ -32,6 +32,9 @@ Rotor::Structure & operator>>( NAME & value, Rotor::StructurePtr structure ) { \
   return value >> *structure; \
 } 
 
+#define ROTOR_VARIABLE( NAME, STRUCTURE ) \
+* reinterpret_cast<NAME *>( STRUCTURE.buffer() )
+
 #define ROTOR_DEFINITION_STRING( NAME ) \
 ROTOR_DEFINITION_##NAME
 

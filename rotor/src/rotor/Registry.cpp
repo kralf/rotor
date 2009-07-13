@@ -26,7 +26,7 @@ Registry::~Registry()
 
 Registry::Registry( const std::string & name, Options & options )
 {
-  Logger::setLevel( static_cast<Logger::Level>( options.getInt( "BOOTSTRAP", "loggingLevel",  3 ) ) );
+  Logger::setLevel( static_cast<Logger::Level>( options.getInt( name, "loggingLevel",  3 ) ) );
 }
 
 //------------------------------------------------------------------------------
