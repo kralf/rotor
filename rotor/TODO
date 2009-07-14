@@ -13,5 +13,6 @@
 
 * ADD: Implement file reading for types and messages. <- URGENT
 * ADD: Translators.
+* FIX: Option parser should ignore additional newlines at the end.
 
 

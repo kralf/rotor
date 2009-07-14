@@ -12,12 +12,12 @@ using namespace std;
 OptionParser::OptionParser() 
 {
   _lines          = !( _comment | _sectionHeader ) >> *(eol_r >> _line ) >> *eol_r >> end_r;
-  _line           = _comment | _sectionHeader | _option;
+  _line           = _comment | _sectionHeader | _option | *space_r;
   _comment        = *space_r >> ';' >> +(anychar_r - eol_r );
   _sectionHeader  = *space_r >> '[' >> _identifier >> ']' >> * space_r;
   _option         = *space_r >> _identifier >> *space_r >> '=' >> *space_r >> _optionValue;
   _optionValue    = +(anychar_r - eol_r );
-  _identifier     = ( alpha_r | '_' ) >> *( alnum_r | '_' );
+  _identifier     = ( alpha_r | '_' | '-' ) >> *( alnum_r | '_' | '-' );
   
   _lines.verbatim( true );
   
@@ -65,4 +65,12 @@ OptionParser::parse( const string & input, Options & options )
   }
 
   return true;
+}
+
+//------------------------------------------------------------------------------
+
+const string & 
+OptionParser::error() const
+{
+  return _error;
 }

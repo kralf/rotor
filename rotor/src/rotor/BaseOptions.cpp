@@ -172,7 +172,9 @@ void
 BaseOptions::fromString( const string & input )
 {
   OptionParser parser;
-  parser.parse( input, *this );
+  if ( ! parser.parse( input, *this ) ) {
+    throw ParsingError( parser.error() );
+  }
 }
 
 //------------------------------------------------------------------------------
