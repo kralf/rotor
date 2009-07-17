@@ -108,6 +108,7 @@ CarmenHandler::dispatcher( void * data )
       } 
       Logger::spam( "Carmen Sent:" + message.name() );      
     }
+    registry->_ipcMutex.lock(); 
     IPC_listen( 10 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
