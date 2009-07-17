@@ -96,8 +96,8 @@ CarmenHandler::dispatcher( void * data )
 {
   CarmenRegistry * registry = reinterpret_cast<CarmenRegistry *>( data );
   while ( true ) {
-    registry->_ipcMutex.lock(); 
     while( ! registry->_outputQueue.empty() ) {
+      Lock lock( registry->_ipcMutex ); 
       Message message = registry->_outputQueue.popNext();
       if (  IPC_publishData( 
               message.name().c_str(), 
@@ -105,9 +105,10 @@ CarmenHandler::dispatcher( void * data )
       {
         fprintf( stderr, "Problem sending message\n" );
         exit( 1 );
-      }      
+      } 
+      Logger::spam( "Carmen Sent:" + message.name() );      
     }
-    IPC_listenClear( 10 );
+    IPC_listen( 10 );
     registry->_ipcMutex.unlock(); 
     Thread::yield();
   }
