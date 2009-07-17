@@ -4,12 +4,12 @@
 
 file( GLOB ROTOR_SRC rotor/*.cpp )
 file( GLOB _ROTOR_SRC _rotor/*.cpp )
-find_library( HAPY_LIB hapy )
+find_library( HAPY_LIB Hapy )
 find_library( POCONET_LIB PocoNet )
 
 add_library( rotor SHARED ${ROTOR_SRC} ${_ROTOR_SRC} )
 
-target_link_libraries( rotor ${HAPY_LIB} pthread dl )
+target_link_libraries( rotor ${HAPY_LIB} ${POCONET_LIB} pthread dl )
 
 
 sm_cpp_install( rotor )

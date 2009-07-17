@@ -1,5 +1,6 @@
 %module rotorc
 %{
+#include <rotor/NetUtils.h>
 #include <rotor/BaseRegistry.h>
 #include <rotor/RemoteRegistry.h>
 #include <rotor/BaseOptions.h>
