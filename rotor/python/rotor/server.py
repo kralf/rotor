@@ -105,8 +105,10 @@ class Server:
   def write_string( self, channel, stream ):
     while True:
       try:
+        rotorc.Logger.error( "getting: " + stream )
         line = channel.readline()
-        if not line or line == "":
+        rotorc.Logger.error( "got: " + stream )
+        if not line:
           break
         if stream == "error":
           Logger.error( line[:-1] )
@@ -132,10 +134,8 @@ class Server:
           registry.reply( Message( "OPTION_STRING", reply ) )
           Logger.debug( "%s" % reply.toString() )
     except MessagingTimeout, e:
+      Logger.spam( "Message timed out" )
       pass
-      #if e.message != "No message was received":
-        #print e.message
-        #raise
     
 #-------------------------------------------------------------------------------
 
