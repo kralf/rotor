@@ -53,7 +53,7 @@ class ConsoleFrontend():
     self.header_text = urwid.Text( self.header() )
     header = urwid.AttrWrap( self.header_text, 'header' )
     
-    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <c: clear> | <tab: next panel>" )
+    instruction_text = urwid.Text( "Keys <esc: quit> | <s: start> | <t: stop> | <k: kill> | <c: clear> | <tab: next panel>" )
     footer = urwid.AttrWrap( instruction_text, 'header' )
     
     self.new_dialog = urwid.LineBox( CommandDialog( self.commands, self.output_lists ) )
@@ -132,6 +132,8 @@ class ConsoleFrontend():
           self.commands[pos].start()
         if "t" in keys:
           self.commands[pos].stop()
+        if "k" in keys:
+          self.commands[pos].kill()
         if "c" in keys:
           self.lock.acquire()
           self.commandOutputs[self.commands[pos]] = []

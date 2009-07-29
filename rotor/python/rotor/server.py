@@ -145,7 +145,6 @@ class Server:
           break
         self.commandHandler( self.defaultRegistry, "default" )
       for p in self.processes:
-        p[1].join()
-        p[2].join()
+        p.join()
     except KeyboardInterrupt:
       self.shutdown( 15 )
