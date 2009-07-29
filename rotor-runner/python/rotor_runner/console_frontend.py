@@ -72,7 +72,7 @@ class ConsoleFrontend():
 
   def processOutput( self, command, source, line ):
     s = 0
-    if source == "stdout":
+    if source == "stderr":
       s = 1
     self.lock.acquire()
     output = self.commandOutputs[command]
