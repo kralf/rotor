@@ -31,11 +31,15 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
     _registry( name, options ),
     _queueHandler( 1, DISCARD_OLDEST )
 {
+  Logger::setLevel(
+    static_cast<Logger::Level>( options.getInt( "CarmenRegistry", "loggingLevel",  3 ) ),
+    "CarmenRegistry"
+  );
   stringstream tmpName;
   tmpName << setprecision( 10 );
   tmpName << name << "_" << seconds();
 
-  Logger::info( "Establishing temporary connection" );
+  Logger::info( "Establishing temporary connection", "CarmenRegistry" );
   // Temporary connection, needed to call IPC_isModuleConnected
   try {
     if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
@@ -49,19 +53,22 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
     }
   }
 
-  Logger::info( "Checking with same name is already connected" );
+  Logger::info( 
+    "Checking if module with same name is already connected", 
+    "CarmenRegistry" 
+  );
   if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
     fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
     exit( 1 );
   }
   
-  Logger::info( "Disconnecting temporary connection" );
+  Logger::info( "Disconnecting temporary connection", "CarmenRegistry" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Error connecting to IPC\n" );
     exit( 1 );
   }
   
-  Logger::info( "Establishing definitive connection" );
+  Logger::info( "Establishing definitive connection", "CarmenRegistry" );
   try {
     if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
@@ -76,23 +83,23 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   
   IPC_setCapacity( 4 );
   
-  Logger::spam( "Setting up carmen handler" );
+  Logger::spam( "Setting up carmen handler", "CarmenRegistry" );
   _handler = new CarmenHandler( *this );
-  Logger::debug( "Created CarmenRegistry for " + name );
+  Logger::debug( "Created CarmenRegistry for " + name, "CarmenRegistry" );
 }
 
 //------------------------------------------------------------------------------
 
 CarmenRegistry::~CarmenRegistry()
 {
-  Logger::info( "Deleting carmen handler" );
+  Logger::info( "Deleting carmen handler", "CarmenRegistry" );
   delete _handler;
-  Logger::info( "Disconnecting from IPC" );
+  Logger::info( "Disconnecting from IPC", "CarmenRegistry" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Could not disconnect IPC\n" );
     exit( 1 );
   }
-  Logger::info( "Carmen registry was successfully destroyed" );
+  Logger::info( "Carmen registry was successfully destroyed", "CarmenRegistry" );
 }
 
 //------------------------------------------------------------------------------
@@ -137,7 +144,9 @@ CarmenRegistry::registerMessage(
   Lock lock( _ipcMutex );
   Logger::debug( 
     string( "Registered " ) + messageName + " with type: " + typeName + 
-    " and format: " + formatString( *this, typeName ) );
+    " and format: " + formatString( *this, typeName ),
+    "CarmenRegistry" 
+  );
   _registry.registerMessage( messageName, typeName );
   if ( ! IPC_isMsgDefined( messageName.c_str() ) ) {
     if (  IPC_defineMsg( 
@@ -197,9 +206,9 @@ CarmenRegistry::messageType( const string & messageName ) const
 void 
 CarmenRegistry::sendMessage( const Message & message )
 {
-  Logger::spam( "Publishing message name:" + message.name() );
+  Logger::spam( "Publishing message name:" + message.name(), "CarmenRegistry" );
   _outputQueue.push( message );
-  Logger::spam( "Message published" );
+  Logger::spam( "Message published", "CarmenRegistry" );
 }
 
 //------------------------------------------------------------------------------
@@ -208,10 +217,10 @@ Message
 CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
-    Logger::spam( "Receiving message" );
+    Logger::spam( "Receiving message", "CarmenRegistry" );
     return _queueHandler.dequeueMessage( timeout );
   } catch ( ... ) {
-    Logger::spam( "Receive message timed out" );
+    Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
 }
@@ -223,35 +232,39 @@ CarmenRegistry::receiveMessage( const string & messageName, double timeout )
 throw( MessagingTimeout )
 {
   try {
-    Logger::spam( "Receiving message" );
-    LightweightStructure data( _queueHandler.dequeueMessage( messageName, timeout ) );
+    Logger::spam( "Receiving message", "CarmenRegistry" );
+    Structure data( _queueHandler.dequeueMessage( messageName, timeout ) );
     return Message( messageName, data );
   } catch ( ... ) {
-    Logger::spam( "Receive message timed out" );
+    Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
 }
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 CarmenRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
   _ipcMutex.lock();
+  Logger::spam( "Calling IPC query notify", "CarmenRegistry" );
   IPC_RETURN_TYPE result =  IPC_queryNotifyData(
                               message.name().c_str(),
                               message.data().buffer(),
                               CarmenHandler::handleReply,
                               _handler );
                             
+  Logger::spam( "IPC query notify returned from call", "CarmenRegistry" );
   _ipcMutex.unlock();
   if (  result == IPC_Error ) {
     fprintf( stderr, "Problem sending message\n" );
     exit( 1 );
   }
   try {
-    return _handler->dequeueReply( timeout );
+    Logger::spam( "Dequeuing reply", "CarmenRegistry" );
+    Structure result =  _handler->dequeueReply( timeout );
+    return result;
   } catch ( ... ) {
     throw MessagingTimeout( "No message was received" );
   }
@@ -263,12 +276,12 @@ Message
 CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
   try {
-    Logger::spam( "ReceivingQuery" );
+    Logger::spam( "ReceivingQuery", "CarmenRegistry" );
     pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
-    Logger::spam( "Received query name: " + result.first.name() );
+    Logger::spam( "Received query name: " + result.first.name(), "CarmenRegistry" );
     return result.first;
   } catch ( ... ) {
-    Logger::spam( "Receive query timed out" );
+    Logger::spam( "Receive query timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
 }

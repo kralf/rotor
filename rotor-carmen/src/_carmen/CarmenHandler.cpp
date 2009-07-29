@@ -81,7 +81,7 @@ CarmenHandler::dequeueQuery( double timeout )
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 CarmenHandler::dequeueReply( double timeout )
 {
   Message result = _replyQueue.next( timeout );
@@ -130,9 +130,8 @@ CarmenHandler::handleMessage(
 
   string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
-  (*newData) = tmp;
-  LightweightStructure s( newData );
+  Structure s( typeName, 0, handler->registry() ); 
+  s = tmp;
   Message message( name, s );
 
   handler->_registry._queueHandler.enqueueMessage( message );
@@ -150,14 +149,13 @@ CarmenHandler::handleQuery(
 {
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
 //   Lock lock( handler->_registry._ipcMutex );
-  Logger::spam( "Handling query" );
+  Logger::spam( "Handling query", "CarmenRegistry" );
   string name = IPC_msgInstanceName( msgInstance );
 
   string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
-  (*newData) = tmp;
-  LightweightStructure s( newData );
+  Structure s( typeName, 0, handler->registry() ); 
+  s = tmp;
   Message message( name, s );
  
   IPC_delayResponse( msgInstance );
@@ -176,7 +174,7 @@ CarmenHandler::handleReply(
 {
   CarmenHandler * handler = reinterpret_cast<CarmenHandler *>( handlerPtr );
 //   Lock lock( handler->_registry._ipcMutex );
-  Logger::spam( "Handling reply" );
+  Logger::spam( "Handling reply", "CarmenRegistry" );
   void * data;
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   
@@ -187,11 +185,11 @@ CarmenHandler::handleReply(
 
   string typeName    = handler->registry().messageType( name ).name();
   Structure tmp( typeName, data, handler->registry() );
-  StructurePtr newData( StructurePtr( new Structure( typeName, 0, handler->registry() ) ) ); 
-  (*newData) = tmp;
-  LightweightStructure s( newData );
+  Structure s( typeName, 0, handler->registry() ); 
+  s = tmp;
   Message message( name, s );
   
   handler->enqueueReply( message );
   IPC_freeData( formatter, data );
+  Logger::spam( "Reply handler finished", "CarmenRegistry" );
 }

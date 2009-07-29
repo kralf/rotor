@@ -33,7 +33,7 @@ public:
   void enqueueReply( Message & message );
   
   QueryInfo dequeueQuery( double timeout );
-  LightweightStructure dequeueReply( double timeout );
+  Structure dequeueReply( double timeout );
 
   static void * dispatcher( void * data );
   static void handleMessage( MSG_INSTANCE msgInstance, void * data, void * handlerPtr );
