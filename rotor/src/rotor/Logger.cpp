@@ -7,7 +7,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-Logger::Level Logger::_level     = Logger::INFO;
+Logger::LevelMap Logger::_levels;
 ostream * Logger::_errorStream   = &cerr; 
 ostream * Logger::_warningStream = &cerr; 
 ostream * Logger::_infoStream    = &cout; 
@@ -17,9 +17,9 @@ ostream * Logger::_spamStream    = &cout;
 //------------------------------------------------------------------------------
 
 void 
-Logger::setLevel( Level level )
+Logger::setLevel( Level level, const string & group )
 {
-  _level = level;
+  _levels[group] = level;
 }
 
 //------------------------------------------------------------------------------
@@ -65,54 +65,62 @@ Logger::setSpamOutput( ostream & stream )
 //------------------------------------------------------------------------------
 
 void 
-Logger::error( const std::string & message )
+Logger::error( const std::string & message, const string & group )
 {
-  if ( _level >= ERROR ) {
-    *_errorStream << "ERROR  : " << message << endl;
-    _errorStream->flush();
-  }
+  printMessage( ERROR, "ERROR", *_errorStream, message, group );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-Logger::warning( const std::string & message )
+Logger::warning( const std::string & message, const string & group )
 {
-  if ( _level >= WARNING ) {
-    *_warningStream << "WARNING: "<< message << endl;
-    _warningStream->flush();
-  }
+  printMessage( WARNING, "WARNING", *_warningStream, message, group );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-Logger::info( const std::string & message )
+Logger::info( const std::string & message, const string & group )
 {
-  if ( _level >= INFO ) {
-    *_infoStream << "INFO   : " << message << endl;
-    _infoStream->flush();
-  }
+  printMessage( INFO, "INFO", *_infoStream, message, group );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-Logger::debug( const std::string & message )
+Logger::debug( const std::string & message, const string & group )
 {
-  if ( _level >= DEBUG ) {
-    *_debugStream << "DEBUG  : " << message << endl;
-    _debugStream->flush();
-  }
+  printMessage( DEBUG, "DEBUG", *_debugStream, message, group );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-Logger::spam( const std::string & message )
+Logger::spam( const std::string & message, const string & group )
 {
-  if ( _level >= SPAM ) {
-    *_spamStream << "SPAM   : " << message << endl;
-    _spamStream->flush();
+  printMessage( SPAM, "SPAM", *_spamStream, message, group );
+}
+
+//------------------------------------------------------------------------------
+
+void
+Logger::printMessage( 
+  Level level, 
+  const string & levelName,
+  ostream & levelStream,
+  const string & message,
+  const string & group )
+{
+  Level groupLevel      = INFO;
+  LevelMap::iterator it = _levels.find( group );
+  if ( it != _levels.end() ) {
+    groupLevel = it->second;
+  } else {
+    _levels[group] = groupLevel;
+  }
+  if ( groupLevel >= level ) {
+    levelStream << levelName << " (" << group << "): " << message << endl;
+    levelStream.flush();
   }
 }

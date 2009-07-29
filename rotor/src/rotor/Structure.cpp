@@ -13,12 +13,15 @@ using namespace std;
 Structure::Structure( 
   const std::string & typeName, 
   void * address, 
-  const Registry & registry ) 
+  const Registry & registry,
+  bool initializeMembers ) 
   : AbstractVariable( address, registry[typeName].size() ),
     _registry( registry ),
     _type( registry[typeName] )
 {
-  initialize();
+  if ( initializeMembers ) {
+    initialize();
+  }
 }
 
 //------------------------------------------------------------------------------

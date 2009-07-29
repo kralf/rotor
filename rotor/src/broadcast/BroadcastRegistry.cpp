@@ -31,15 +31,19 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
     _registry( name, options ),
     _destination( "255.255.255.255:60709" ) 
 {
+  Logger::setLevel(
+    static_cast<Logger::Level>( options.getInt( "BroadcastRegistry", "loggingLevel",  3 ) ),
+    "BroadcastRegistry"
+  );
   _socket.setBroadcast( true );
-  int port  = options.getInt( name, "listenPort", 0 );
-  
+  int port  = options.getInt( name, "serverPort", 0 );
+ 
   if ( port ) {
     _socket.bind( SocketAddress( "0", port ) );
   } else {
     _socket.bind( SocketAddress( hostIp(), "0" ) );
   }
-  Logger::info( "Broadcast registry bound to:" + _socket.address().toString() );
+  Logger::info(   "Broadcast registry bound to:" + _socket.address().toString() );
 }
 
 //------------------------------------------------------------------------------
@@ -145,6 +149,7 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
     try {
       _socket.receiveFrom( buffer, 2048, address );
       _destination = address;
+      Logger::spam( string( "Raw message:" ) + buffer, "BroadcastRegistry" );
       //NOTE: Here is necessary to check for subscribed messages.
       return unmarshall( _registry, buffer );
     } catch ( Poco::TimeoutException ) {
@@ -173,7 +178,11 @@ throw( MessagingTimeout )
   for ( int i = 0; i < 3; ++i ) {
     sendMessage( message );
     try {
-      return receiveMessage( timeout ).data();
+      Logger::error( "In query" );
+      LightweightStructure result = receiveMessage( timeout ).data();
+      Logger::error( "out query" );
+      fprintf( stderr, "Address %p\n", result.buffer() );
+      return result;
     } catch ( MessagingTimeout ) {
     }
   }

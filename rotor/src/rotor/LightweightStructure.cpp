@@ -8,25 +8,28 @@ using namespace Rotor;
 //------------------------------------------------------------------------------
 
 LightweightStructure::LightweightStructure( const Structure & structure )
-  : Structure( structure.typeData().name(), 0, structure.registry() ),
+  : Structure( structure.typeData().name(), structure.buffer(), structure.registry(), false ),
     _structure( const_cast<Structure*>( &structure ), NullDeleter() )
 {
+  Logger::error( "From structure: " + structure.toString() );
 }
 
 //------------------------------------------------------------------------------
 
 LightweightStructure::LightweightStructure( const LightweightStructure & structure )
-  : Structure( structure.typeData().name(), 0, structure.registry() ),
+  : Structure( structure.typeData().name(), structure.buffer(), structure.registry(), false ),
     _structure( structure._structure )
 {
+  Logger::error( "From lw structure: " + structure.toString() );
 }
 
 //------------------------------------------------------------------------------
 
 LightweightStructure::LightweightStructure( const StructurePtr & structure )
-  : Structure( structure->typeData().name(), 0, structure->registry() ),
+  : Structure( structure->typeData().name(), structure->buffer(), structure->registry(), false ),
     _structure( structure )
 {
+  Logger::error( "From structure ptr: " + structure->toString() );
 }
 
 //------------------------------------------------------------------------------

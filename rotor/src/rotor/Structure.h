@@ -17,7 +17,11 @@ class Type;
 class Structure : public AbstractVariable
 {
 public:
-  Structure( const std::string & typeName, void * address, const Registry & registry );
+  Structure( 
+    const std::string & typeName, 
+    void * address, 
+    const Registry & registry,
+    bool initializeMembers = true );
   virtual ~Structure();
   virtual AbstractVariable & operator=( const Structure & value );
   virtual AbstractVariable & operator=( const AbstractVariable & value );

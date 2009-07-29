@@ -73,6 +73,7 @@ namespace Rotor {
 %include <rotor/LightweightStructure.h>
 %include <rotor/Thread.h>
 %include <rotor/FileUtils.h>
+%include <rotor/NetUtils.h>
 
 //------------------------------------------------------------------------------
 

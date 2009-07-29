@@ -1,11 +1,11 @@
 from rotorc import *
+
+import pycommand
 import rotorc
-import subprocess
-import threading
 import sys
-import socket
 import signal
 import os
+
 
 types = [
   '''
@@ -34,16 +34,6 @@ def out( string ):
 
 #-------------------------------------------------------------------------------
 
-def getHostName():
-  s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-  try:
-    s.connect( ( '1.2.3.4', 56 ) )
-    return s.getsockname()[0]
-  except socket.error:
-    return "127.0.0.1"
-
-#-------------------------------------------------------------------------------
-
 class Server:
   def __init__( self, parameterFile ):
     self.options  = BaseOptions()
@@ -51,21 +41,18 @@ class Server:
     self.options.fromString( f.read() )
     f.close()
     
-    server = self.options.getString( "BOOTSTRAP", "server", "" )
-    if server == "":
-      server = getHostName()
+    serverIp = self.options.getString( "rotor_server", "serverIp",rotorc.hostIp() )
     
-    self.options.setString( "BOOTSTRAP", "server", server )
-    self.options.setInt( "rotor", "listenPort", 60709 )
+    self.options.setInt( "rotor_server", "serverPort", 60709 )
     out( self.options.toString() )
     
-    self.defaultRegistryClass = self.options.getString( "BOOTSTRAP", "registry" )
-    self.options.setString( self.defaultRegistryClass, "server", server )
+    self.defaultRegistryClass = self.options.getString( "rotor_server", "registry" )
+    self.options.setString( self.defaultRegistryClass, "serverIp", serverIp )
 
     signal.signal( signal.SIGTERM, self.shutdown )
     
     self.processes = []
-    self.setupExternalServer()
+    #self.setupExternalServer()
     self.setupBroadcastServer()
     self.setupDefaultServer()
     
@@ -74,7 +61,7 @@ class Server:
   def shutdown( self, signal, frame  = None ):
     self.terminated = True
     for p in self.processes:
-      os.kill( p[0].pid, 15 )
+      p.kill()
     self.join()
     
 #-------------------------------------------------------------------------------
@@ -82,32 +69,16 @@ class Server:
   def setupExternalServer( self ):
     if self.defaultRegistryClass == "CarmenRegistry":
       Logger.info( "Starting central" )
-      self.startProcess( "central" )
+      p = pycommand.Command( "central" )
+      self.processes.append( p )
+      p.start()
 
-#-------------------------------------------------------------------------------
-
-  def startProcess( self, command ):
-    popen = subprocess.Popen( 
-      command.split(), 
-      shell  = False, 
-      stdout = subprocess.PIPE, 
-      stdin  = subprocess.PIPE, 
-      stderr = subprocess.PIPE )
-    pid     = popen.pid
-    thread1 = threading.Thread( target = self.write_string, args = ( popen.stdout, "out" ) )    
-    thread2 = threading.Thread( target = self.write_string, args = ( popen.stderr, "error" ) )
-    thread1.start()
-    thread2.start()
-    self.processes.append( ( popen, thread1, thread2 ) )
-    
 #-------------------------------------------------------------------------------
 
   def write_string( self, channel, stream ):
     while True:
       try:
-        rotorc.Logger.error( "getting: " + stream )
         line = channel.readline()
-        rotorc.Logger.error( "got: " + stream )
         if not line:
           break
         if stream == "error":
@@ -123,16 +94,17 @@ class Server:
     try:
       Logger.spam( "receiving: %s %d" % ( name, seconds() ) )
       message = registry.receiveQuery( 1 )
-      if message.name == "SERVER_COMMAND":
-        Logger.info( "%s>%s %s" % ( name, message.data.command, message.data.arguments ) )
-        if message.data.command == "GET_OPTIONS":
-          reply       = Structure( "OptionString", None, registry )
-          if message.data.arguments == "*":
+      if message.name() == "SERVER_COMMAND":
+        data = message.data()
+        Logger.spam( "%s>%s %s" % ( name, data.command, data.arguments ) )
+        if data.command == "GET_OPTIONS":
+          reply       = registry.newStructure( "OptionString" )
+          if data.arguments == "*":
             reply.value = self.options.toString()
           else:
-            reply.value = self.options.toString( message.data.arguments )
+            reply.value = self.options.toString( data.arguments )
           registry.reply( Message( "OPTION_STRING", reply ) )
-          Logger.debug( "%s" % reply.toString() )
+          Logger.spam( "%s" % reply.toString() )
     except MessagingTimeout, e:
       Logger.spam( "Message timed out" )
       pass
@@ -140,7 +112,7 @@ class Server:
 #-------------------------------------------------------------------------------
 
   def setupBroadcastServer( self ):
-    self.broadcastRegistry = RemoteRegistry( "BroadcastRegistry", "rotor", self.options, "" )
+    self.broadcastRegistry = RemoteRegistry( "BroadcastRegistry", "rotor_server", self.options, "" )
     for typeDefinitions in types:
       self.broadcastRegistry.registerType( typeDefinitions )
     for message in messages:
