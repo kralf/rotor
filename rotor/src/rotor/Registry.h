@@ -7,7 +7,7 @@
 #include "Message.h"
 #include "QueuePolicy.h"
 #include "SharedPointers.h"
-#include "LightweightStructure.h"
+#include "Structure.h"
 #include <string>
 
 
@@ -201,7 +201,7 @@ public:
    * @return The next query in the reception queue.
    * @throw MessagingTimeout If the timeout is exceeded.
    */
-  virtual LightweightStructure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout ) = 0;
+  virtual Structure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout ) = 0;
 
   /**
    * Convenience method that makes a query message from the given message name 
@@ -213,7 +213,7 @@ public:
    * @return The next query in the reception queue.
    * @throw MessagingTimeout If the timeout is exceeded.
    */
-  virtual LightweightStructure queryStructure( const std::string & messageName, Structure & structure, double timeout = 0 ) throw( MessagingTimeout );
+  virtual Structure queryStructure( const std::string & messageName, Structure & structure, double timeout = 0 ) throw( MessagingTimeout );
 
   /**
    * Waits for a query to arrive, with an optional timeout.
@@ -239,7 +239,7 @@ public:
    * @param address  The address of the c++ object this Structure points to or
    *                 0 if it should own its memory.
    */
-  virtual LightweightStructure newStructure( const std::string & typeName, void * address = NULL ) const;
+  virtual Structure newStructure( const std::string & typeName, void * address = NULL ) const;
     
 };
 

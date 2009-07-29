@@ -1,5 +1,6 @@
 #include "RemoteRegistry.h"
 #include "BaseOptions.h"
+#include "Conversion.h"
 #include "CoreMessages.h"
 #include "FileUtils.h"
 #include "Logger.h"
@@ -30,19 +31,14 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   Structure request( "RemoteCommand", 0, *_registry );
   request["command"]   = "GET_OPTIONS";
   request["arguments"] = "rotor_server";
-  LightweightStructure reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
-  Logger::info( "Main server found" );
-  Logger::info( "1" );
-  fprintf( stderr, "*Address %p\n", reply.buffer() );
-  Logger::info( reply.typeData().name() );
-  Logger::info( "2" );
+  Structure reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
+  Logger::info( "Main server found", "RemoteRegistry" );
   
   OptionString sReply;
   sReply << reply;  
-  Logger::info( "3" );
   _options.fromString( sReply.value );
-  Logger::info( "4" );
-  
+
+  Logger::info( "Loading definitive registry", "RemoteRegistry" );
   _registry = load( _options.getString( "rotor_server", "registry" ), name, _options, "" );
   _registry->registerMessageType( "SERVER_COMMAND", ROTOR_DEFINITION_STRING( RemoteCommand ) );
   _registry->registerMessageType( "OPTION_STRING", ROTOR_DEFINITION_STRING( OptionString ) );
@@ -51,12 +47,17 @@ RemoteRegistry::RemoteRegistry( const std::string & name )
   request["command"]   = "GET_OPTIONS";
   request["arguments"] = "*";
   
-  reply = _registry->queryStructure( "SERVER_COMMAND", request, 3 );
+  reply.referTo( _registry->queryStructure( "SERVER_COMMAND", request, 3 ) );
+  
+  Logger::debug( reply.toString() );
   
   sReply << reply;
   _options.fromString( sReply.value );
   
-  Logger::info( string( "Connected to server with transport: " ) + _options.getString( "rotor_server", "registry" ) );
+  Logger::info( 
+    string( "Connected to server with transport: " ) + _options.getString( "rotor_server", "registry" ),
+    "RemoteRegistry" 
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -170,7 +171,7 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-LightweightStructure 
+Structure 
 RemoteRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {

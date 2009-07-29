@@ -2,7 +2,7 @@
 #define ROTOR_MESSAGE_H
 
 
-#include "LightweightStructure.h"
+#include "Structure.h"
 #include <string>
 
 
@@ -12,14 +12,13 @@ struct Message
 {
 public:
   Message( const std::string & name, Structure & data );
-  Message( const std::string & name, LightweightStructure & data );
   const std::string & name() const;
   const Structure & data() const;
   Structure & data();
 
 private:
-  std::string          _name;
-  LightweightStructure _data;
+  std::string _name;
+  Structure   _data;
 };
 
 

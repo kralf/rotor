@@ -110,9 +110,7 @@ Rotor::unmarshall( const Registry & registry, const string & input )
   string::size_type last = input.find_first_of( "{", 0 );
   string name = input.substr( 0, last );
   string type = registry.messageType( name ).name();
-  Logger::error( "In marshall" );
-  LightweightStructure data( StructurePtr( new Structure( type, 0, registry ) ) );
-  Logger::error( "out marshall" );
+  Structure data( type, 0, registry );
   
   stringstream stream( input.substr( last, input.size() - last ) );
   ::unmarshall( stream, data );

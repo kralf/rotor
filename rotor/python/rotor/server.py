@@ -44,7 +44,6 @@ class Server:
     serverIp = self.options.getString( "rotor_server", "serverIp",rotorc.hostIp() )
     
     self.options.setInt( "rotor_server", "serverPort", 60709 )
-    out( self.options.toString() )
     
     self.defaultRegistryClass = self.options.getString( "rotor_server", "registry" )
     self.options.setString( self.defaultRegistryClass, "serverIp", serverIp )
@@ -52,7 +51,7 @@ class Server:
     signal.signal( signal.SIGTERM, self.shutdown )
     
     self.processes = []
-    #self.setupExternalServer()
+    self.setupExternalServer()
     self.setupBroadcastServer()
     self.setupDefaultServer()
     

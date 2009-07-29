@@ -77,7 +77,7 @@ Registry::sendStructure(
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 Registry::queryStructure( 
   const std::string & messageName, 
   Structure & structure,
@@ -89,8 +89,8 @@ Registry::queryStructure(
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 Registry::newStructure( const std::string & type, void * address ) const
 {
-  return StructurePtr( new Structure( type, address, *this ) );
+  return Structure( type, address, *this );
 }

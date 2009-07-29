@@ -25,7 +25,7 @@ SUITE( Serialization ) {
     BaseRegistry registry( "Test", options );
     registry.registerType( ROTOR_DEFINITION_STRING( Test ) );
     registry.registerMessage( "TEST", "Test" );
-    LightweightStructure structure = registry.newStructure( "Test", 0 );
+    Structure structure = registry.newStructure( "Test", 0 );
     Message m( "TEST", structure );
     m.data()["name"] = "This is a test";
     for ( int i = 0; i < 2; i++ ) {

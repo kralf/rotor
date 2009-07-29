@@ -384,6 +384,7 @@ SUITE( Structure ) {
     }
     
     //Test exceptions
+
     VariablePointArray realVPA = {0, 0, 0}; 
     
     Rotor::Structure preallocatedVPA( "VariablePointArray", &realVPA, registry );  

@@ -17,9 +17,6 @@ NAME & operator<<( NAME & value, Rotor::Structure & structure ) { \
   value =  *( reinterpret_cast<NAME*>( structure.buffer() ) ); \
   return value; \
 } \
-NAME & operator<<( NAME & value, Rotor::StructurePtr structure ) { \
-  return value << *structure; \
-} \
 Rotor::Structure & operator>>( NAME & value, Rotor::Structure & structure ) { \
   if ( structure.typeData().name() != #NAME ) { \
     throw Rotor::InvalidCastError( "Structure of type " + structure.typeData().name() + " could not be cast to " + #NAME ); \
@@ -27,9 +24,6 @@ Rotor::Structure & operator>>( NAME & value, Rotor::Structure & structure ) { \
   Rotor::Structure tmp( #NAME, &value, structure.registry() );\
   structure = tmp; \
   return structure; \
-} \
-Rotor::Structure & operator>>( NAME & value, Rotor::StructurePtr structure ) { \
-  return value >> *structure; \
 } 
 
 #define ROTOR_VARIABLE( NAME, STRUCTURE ) \

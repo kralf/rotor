@@ -167,7 +167,7 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 BaseRegistry::query( const Message & message, double timeout )  
 throw( MessagingTimeout )
 {

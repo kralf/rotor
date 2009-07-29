@@ -47,7 +47,7 @@ QueueHandler::enqueueMessage( Message & message )
   StructureQueues::iterator it = _structureQueues.find( message.name() );
   if ( it != _structureQueues.end() ) {
     Logger::debug( "Enqueing owned " + message.name() );
-    it->second->push( StructurePtr( const_cast<Structure*>( &( message.data() ) ) ) );
+    it->second->push( message.data() );
   } else {
     Logger::debug( "Enqueing not owned " + message.name() );
     _mainQueue.push( message );
@@ -64,13 +64,13 @@ QueueHandler::dequeueMessage( double timeout ) throw ( TimeoutException )
 
 //------------------------------------------------------------------------------
 
-StructurePtr
+Structure
 QueueHandler::dequeueMessage( const std::string & messageName, double timeout )
-throw( TimeoutException )
+throw( TimeoutException, MessagingError )
 {
   StructureQueues::iterator it = _structureQueues.find( messageName );
   if ( it != _structureQueues.end() ) {
     return it->second->popNext( timeout );
   }
-  return StructurePtr();
+  throw MessagingError( "Message " + messageName + " has not been registered" );
 }

@@ -43,15 +43,6 @@ namespace boost {
   };
 }
 
-
-namespace Rotor {
-  class LightweightStructure;
-}
-
-%include <rotor/SharedPointers.h>
-
-%template( StructurePtr ) boost::shared_ptr<Rotor::Structure>;
-%template( RegistryPtr ) boost::shared_ptr<Rotor::Registry>;
 //------------------------------------------------------------------------------
 
 %include <rotor/QueuePolicy.h>
@@ -61,16 +52,15 @@ namespace Rotor {
 %include <rotor/BaseOptions.h>
 %include <rotor/MemberDefinition.h>
 %include <rotor/BasicTypes.h>
-%include <rotor/Message.h>
 %include <rotor/Type.h>
+%include <rotor/AbstractVariable.h>
+%include <rotor/Structure.h>
+%include <rotor/Message.h>
 %include <rotor/Registry.h>
 %include <rotor/RemoteRegistry.h>
 %include <rotor/Serialization.h>
 %include <rotor/BaseRegistry.h>
-%include <rotor/AbstractVariable.h>
-%include <rotor/Structure.h>
 %include <rotor/StructureArray.h>
-%include <rotor/LightweightStructure.h>
 %include <rotor/Thread.h>
 %include <rotor/FileUtils.h>
 %include <rotor/NetUtils.h>
@@ -205,8 +195,6 @@ def _SETATTR( self, name, value ):
 
 Structure.__getattr__ = _GETATTR
 Structure.__setattr__ = _SETATTR
-LightweightStructure.__getattr__ = _GETATTR
-LightweightStructure.__setattr__ = _SETATTR
 AbstractVariable.__getitem__ = _GETITEM
 AbstractVariable.__setitem__ = _SETITEM
 AbstractVariable.__getattr__ = _GETATTR

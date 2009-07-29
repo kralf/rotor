@@ -43,7 +43,10 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
   } else {
     _socket.bind( SocketAddress( hostIp(), "0" ) );
   }
-  Logger::info(   "Broadcast registry bound to:" + _socket.address().toString() );
+  Logger::info(
+    "Broadcast registry bound to:" + _socket.address().toString(),
+    "BroadCastRegistry"
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -171,18 +174,14 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-LightweightStructure
+Structure
 BroadcastRegistry::query( const Message & message, double timeout ) 
 throw( MessagingTimeout )
 {
   for ( int i = 0; i < 3; ++i ) {
     sendMessage( message );
     try {
-      Logger::error( "In query" );
-      LightweightStructure result = receiveMessage( timeout ).data();
-      Logger::error( "out query" );
-      fprintf( stderr, "Address %p\n", result.buffer() );
-      return result;
+      return receiveMessage( timeout ).data();
     } catch ( MessagingTimeout ) {
     }
   }

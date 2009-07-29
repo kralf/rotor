@@ -29,12 +29,12 @@ public:
   
   Message dequeueMessage( double timeout ) throw ( TimeoutException );
   
-  StructurePtr dequeueMessage( const std::string & messageName, double timeout )
-  throw( TimeoutException );
+  Structure dequeueMessage( const std::string & messageName, double timeout )
+  throw( TimeoutException, MessagingError );
   
 private:
   typedef Queue< Message > MessageQueue;
-  typedef Queue< StructurePtr > StructureQueue;
+  typedef Queue< Structure > StructureQueue;
   typedef std::map< std::string, StructureQueue * > StructureQueues;
   
   MessageQueue    _mainQueue;

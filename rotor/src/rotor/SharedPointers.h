@@ -9,9 +9,9 @@ namespace Rotor {
 
 
 class Registry;
-class Structure;
+class StructureBase;
 typedef boost::shared_ptr<Registry> RegistryPtr;
-typedef boost::shared_ptr<Structure> StructurePtr;
+typedef boost::shared_ptr<StructureBase> StructurePtr;
 
 
 }
