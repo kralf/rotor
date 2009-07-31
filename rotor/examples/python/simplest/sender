@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+import shared_types
+import rotorc
+import os
+import sys
+
+#-------------------------------------------------------------------------------
+# Registry setup
+#-------------------------------------------------------------------------------
+
+moduleName = os.path.basename( sys.argv[0] )
+registry   = rotorc.RemoteRegistry( moduleName );
+options    = registry.options()
+
+#-------------------------------------------------------------------------------
+# Options
+#-------------------------------------------------------------------------------
+
+xIncrement = options.getDouble( moduleName, "xIncrement" )
+yIncrement = options.getDouble( moduleName, "yIncrement" )
+zIncrement = options.getDouble( moduleName, "zIncrement" )
+
+
+#-------------------------------------------------------------------------------
+# Type registration
+#-------------------------------------------------------------------------------
+
+registry.registerMessageType( "poseMessage", shared_types.poseDeclaration )
+
+#-------------------------------------------------------------------------------
+# Main body
+#-------------------------------------------------------------------------------
+
+
+poseStructure   = registry.newStructure( "Pose" )
+poseStructure.x = 0
+poseStructure.y = 0
+poseStructure.z = 0
+
+while True:
+  poseStructure.x += xIncrement
+  poseStructure.y += yIncrement
+  poseStructure.z += zIncrement
+  registry.sendStructure( "poseMessage", poseStructure )
+  rotorc.Logger.info( poseStructure.toString() )
+  rotorc.Thread.sleep( 0.01 )

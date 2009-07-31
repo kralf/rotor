@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+import shared_types
+import rotorc
+import os
+import sys
+
+#-------------------------------------------------------------------------------
+# Registry setup
+#-------------------------------------------------------------------------------
+
+moduleName = os.path.basename( sys.argv[0] )
+
+if len( sys.argv ) != 2:
+  rotorc.Logger.error( "Usage: " + moduleName + " <config.ini>" )
+  exit( 1 )
+  
+options = rotorc.BaseOptions()
+options.fromString( rotorc.fileContents( sys.argv[1] ) );
+registry  = rotorc.RemoteRegistry( "CarmenRegistry", moduleName, options, "lib" );
+
+#-------------------------------------------------------------------------------
+# Type registration
+#-------------------------------------------------------------------------------
+
+registry.registerMessageType( "poseMessage", shared_types.poseDeclaration )
+registry.subscribeToMessage( "poseMessage", False, 4 )
+
+#-------------------------------------------------------------------------------
+# Main body
+#-------------------------------------------------------------------------------
+
+
+while True:
+  try:
+    message = registry.receiveMessage( 1.0 )
+    if message.name() == "poseMessage":
+      print message.data().x, message.data().y, message.data().z
+      rotorc.Logger.info( message.data().toString() )
+  except rotorc.MessagingTimeout:
+    pass
