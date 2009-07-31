@@ -42,7 +42,7 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   Logger::info( "Establishing temporary connection", "CarmenRegistry" );
   // Temporary connection, needed to call IPC_isModuleConnected
   try {
-    if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
+    if ( IPC_connectModule( tmpName.str().c_str(), options.getString( "rotor_server", "serverIp" ).c_str() ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
@@ -70,7 +70,7 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   
   Logger::info( "Establishing definitive connection", "CarmenRegistry" );
   try {
-    if ( IPC_connectModule( name.c_str(), options.getString( "BOOTSTRAP", "server" ).c_str() ) == IPC_Error ) {
+    if ( IPC_connectModule( name.c_str(), options.getString( "rotor_server", "serverIp" ).c_str() ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
