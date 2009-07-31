@@ -4,12 +4,10 @@
 
 file( GLOB ROTOR_SRC rotor/*.cpp )
 file( GLOB _ROTOR_SRC _rotor/*.cpp )
-find_library( HAPY_LIB Hapy )
-find_library( POCONET_LIB PocoNet )
 
 add_library( rotor SHARED ${ROTOR_SRC} ${_ROTOR_SRC} )
 
-target_link_libraries( rotor ${HAPY_LIB} ${POCONET_LIB} pthread dl )
+target_link_libraries( rotor pthread dl )
 
 
 sm_cpp_install( rotor )
@@ -39,7 +37,7 @@ add_library(
   broadcast/BroadcastRegistry.cpp
 )
 
-target_link_libraries( BroadcastRegistry rotor ${POCONET_LIB} )
+target_link_libraries( BroadcastRegistry rotor )
 sm_cpp_install_binaries( BroadcastRegistry )
 
 #-------------------------------------------------------------------------------
@@ -50,5 +48,7 @@ sm_cpp_install_binaries( BroadcastRegistry )
 
 # target_link_libraries( print_laser rotor )
 
-add_executable( structurePerformance sandbox/structurePerformance.cpp )
-target_link_libraries( structurePerformance rotor )
+# add_executable( structurePerformance sandbox/structurePerformance.cpp )
+# target_link_libraries( structurePerformance rotor )
+
+# add_executable( spirit sandbox/spirit.cpp )

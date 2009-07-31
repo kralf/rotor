@@ -52,6 +52,7 @@ class Server:
     
     self.processes = []
     self.setupExternalServer()
+    rotorc.Thread.sleep( 0.1 )
     self.setupBroadcastServer()
     self.setupDefaultServer()
     

@@ -1,31 +1,114 @@
 #include "OptionParser.h"
-#include <Hapy/Parser.h>
-#include <iostream>
-#include <algorithm>
+#include <boost/spirit.hpp>
 
-using namespace Hapy;
+using namespace boost::spirit;
 using namespace Rotor;
 using namespace std;
 
 //------------------------------------------------------------------------------
 
+struct OptionGrammar : public grammar<OptionGrammar>
+{
+  OptionGrammar( Options & options ) : grammar<OptionGrammar>(), _options( options ) {}
+
+  struct captureOption
+  {
+    captureOption( const OptionGrammar & grammar ) : _grammar( grammar ) {}
+    void operator()( const char * begin, const char * end ) const
+    {
+      OptionGrammar & grammar = const_cast<OptionGrammar&>( _grammar );
+      grammar._options.setString( grammar._section, grammar._option, grammar._value );
+    }
+    const OptionGrammar & _grammar;
+  };
+
+  struct captureSection
+  {
+    captureSection( const OptionGrammar & grammar ) : _grammar( grammar ) {}
+    void operator()( const char * begin, const char * end ) const
+    {
+      OptionGrammar & grammar = const_cast<OptionGrammar&>( _grammar );
+      grammar._section = string( begin, end );
+    }
+    const OptionGrammar & _grammar;
+  };
+
+  struct captureOptionIdentifier
+  {
+    captureOptionIdentifier( const OptionGrammar & grammar ) : _grammar( grammar ) {}
+    void operator()( const char * begin, const char * end ) const
+    {
+      OptionGrammar & grammar = const_cast<OptionGrammar&>( _grammar );
+      grammar._option = string( begin, end );
+    }
+    const OptionGrammar & _grammar;
+  };
+
+  struct captureOptionValue
+  {
+    captureOptionValue( const OptionGrammar & grammar ) : _grammar( grammar ) {}
+    void operator()( const char * begin, const char * end ) const
+    {
+      OptionGrammar & grammar = const_cast<OptionGrammar&>( _grammar );
+      grammar._value = string( begin, end );
+    }
+    const OptionGrammar & _grammar;
+  };
+
+  template <typename SCANNER>
+  struct definition
+  {
+    typedef rule< SCANNER > Rule;
+    Rule lines, line, comment, sectionHeader, option, optionValue, identifier;
+    
+    Rule const &
+    start() const 
+    {
+      return lines;
+    }
+    
+    
+    definition ( OptionGrammar const & self )
+    {
+      lines          = !( comment | sectionHeader ) 
+                        >> *eol_p 
+                        >> *( line >> *eol_p ) 
+                        >> end_p;
+      line           =    comment 
+                        | sectionHeader 
+                        | option[captureOption( self )] 
+                        | +blank_p;
+      comment        = *blank_p 
+                        >> ';' 
+                        >> +(anychar_p - eol_p );
+      sectionHeader  = *blank_p 
+                        >> ( '[' 
+                          >> identifier[captureSection( self )]
+                        >> ']' )
+                        >> * blank_p;
+      option         = *blank_p 
+                        >> identifier[captureOptionIdentifier( self )]
+                        >> *blank_p >> '=' 
+                        >> *blank_p 
+                        >> optionValue[captureOptionValue( self )];
+                        ;
+      optionValue    = +(anychar_p - eol_p );
+      identifier     = ( alpha_p | '_' | '-' ) 
+                        >> *( alnum_p | '_' | '-' );
+    }
+    
+  };
+  
+  Options & _options;
+  string    _section;
+  string    _option;
+  string    _value;
+};
+
+//------------------------------------------------------------------------------
+
 OptionParser::OptionParser() 
 {
-  _lines          = !( _comment | _sectionHeader ) >> *(eol_r >> _line ) >> *eol_r >> end_r;
-  _line           = _comment | _sectionHeader | _option | *space_r;
-  _comment        = *space_r >> ';' >> +(anychar_r - eol_r );
-  _sectionHeader  = *space_r >> '[' >> _identifier >> ']' >> * space_r;
-  _option         = *space_r >> _identifier >> *space_r >> '=' >> *space_r >> _optionValue;
-  _optionValue    = +(anychar_r - eol_r );
-  _identifier     = ( alpha_r | '_' | '-' ) >> *( alnum_r | '_' | '-' );
-  
-  _lines.verbatim( true );
-  
-  _identifier.committed( true );
-
-  _identifier.leaf( true );
-  _comment.leaf( true );
-  _optionValue.leaf( true );
 }
 
 //------------------------------------------------------------------------------
@@ -33,38 +116,12 @@ OptionParser::OptionParser()
 bool
 OptionParser::parse( const string & input, Options & options )
 {
-  Parser parser;
-  parser.grammar( _lines );
-  _error = "";
-  if ( ! parser.parse( input ) ) {
-    _error = parser.result().location();
-    return false;
+  OptionGrammar grammar( options );
+  parse_info<> result = boost::spirit::parse( input.c_str(), grammar );
+  if ( ! result.full ) {
+    _error = string( "Parsing error around: " ) + result.stop;
   }
-
-  const Pree & pree = parser.result().pree;
-
-  string section;
-  string option;
-  string value;
-
-  if ( pree[0].count() == 1 ) {
-    if ( pree[0][0][0].rid() == _sectionHeader.id() ) {
-      section = pree[0][0][0][2].image();
-    }
-  }
-  
-  for ( size_t i = 0; i < pree[1].count(); i++ ) {
-    if ( pree[1][i][1][0].rid() == _sectionHeader.id() ) {
-      section = pree[1][i][1][0][2].image();
-    }
-    if ( pree[1][i][1][0].rid() == _option.id() ) {
-      option = pree[1][i][1][0][1].image();
-      value  = pree[1][i][1][0][5].image();
-      options.setString( section, option, value );
-    }
-  }
-
-  return true;
+  return result.full;
 }
 
 //------------------------------------------------------------------------------

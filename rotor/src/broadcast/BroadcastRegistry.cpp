@@ -9,18 +9,63 @@
 #include <rotor/Serialization.h>
 #include <rotor/Structure.h>
 #include <rotor/TypedThread.h>
-#include <Poco/Net/NetException.h>
+#include <boost/bind.hpp>
+#include <boost/optional.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <iostream>
 #include <cstdlib>
 
 
 using namespace Rotor;
 using namespace std;
-using namespace Poco::Net;
+using namespace boost;
+using namespace boost::posix_time;
+using namespace asio;
+using namespace asio::ip;
 
 //------------------------------------------------------------------------------
 
 ROTOR_REGISTRY_FACTORY( BroadcastRegistry )
+
+//------------------------------------------------------------------------------
+
+void 
+setResult( optional<error_code>* a, error_code b )
+{
+  a->reset( b );
+}
+
+//------------------------------------------------------------------------------
+
+template <typename SOCKET, typename BUFFER>
+void readTimeout( 
+  SOCKET & socket, 
+  const BUFFER & buffers,
+  udp::endpoint & address,
+  double timeout )
+{
+  optional<error_code> timerResult;
+  deadline_timer timer( socket.io_service() );
+  timer.expires_from_now( seconds( timeout ) );
+  timer.async_wait( boost::bind( setResult, &timerResult, _1 ) );
+
+  optional<error_code> readResult;
+  socket.async_receive_from( buffers, address, boost::bind( setResult, &readResult, _1 ) );
+
+  socket.io_service().reset();
+  
+  while ( socket.io_service().run_one() ) {
+    if ( readResult )
+      timer.cancel();
+    else if (timerResult) {
+      socket.cancel();
+    }
+  }
+
+  if (*readResult) {
+    throw MessagingTimeout( "No message was received" );
+  }
+} 
 
 //------------------------------------------------------------------------------
 
@@ -29,23 +74,36 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
     _name( name ), 
     _options( options ),
     _registry( name, options ),
-    _destination( "255.255.255.255:60709" ) 
+    _socket( _service ),
+    _destination( address::from_string( "255.255.255.255" ), 60709 )
 {
   Logger::setLevel(
     static_cast<Logger::Level>( options.getInt( "BroadcastRegistry", "loggingLevel",  3 ) ),
     "BroadcastRegistry"
   );
-  _socket.setBroadcast( true );
+  
   int port  = options.getInt( name, "serverPort", 0 );
- 
+
+  _socket.open( _destination.protocol() );
+  _socket.set_option( socket_base::broadcast( true ) );
+  
+  udp::endpoint listenAddress;
   if ( port ) {
-    _socket.bind( SocketAddress( "0", port ) );
+    listenAddress = udp::endpoint( ip::udp::v4(), port );
   } else {
-    _socket.bind( SocketAddress( hostIp(), "0" ) );
+    listenAddress = udp::endpoint( address::from_string( hostIp() ), 0 );
+  }
+  error_code error = error::host_not_found;
+  _socket.bind( listenAddress, error );
+  if ( error ) { 
+    throw asio::system_error( error );  
   }
   Logger::info(
-    "Broadcast registry bound to:" + _socket.address().toString(),
-    "BroadCastRegistry"
+      "Registry bound to:" 
+    + listenAddress.address().to_string()
+    + ":"
+    + toString( listenAddress.port() ),
+    "BroadcastRegistry"
   );
 }
 
@@ -53,6 +111,7 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
 
 BroadcastRegistry::~BroadcastRegistry()
 {
+  _socket.close();
 }
 
 //------------------------------------------------------------------------------
@@ -130,9 +189,9 @@ BroadcastRegistry::sendMessage( const Message & message )
 {
   string s = marshall( message );
   try {
-    _socket.sendTo( s.c_str(), s.size() + 1, _destination );
-  } catch ( NetException & e ) {
-    cerr << e.message() << endl;
+    _socket.send_to( buffer( s.c_str(), s.size() + 1 ), _destination );
+  } catch ( system_error & e ) {
+    cerr << e.what() << endl;
   }
 }
 
@@ -141,23 +200,14 @@ BroadcastRegistry::sendMessage( const Message & message )
 Message 
 BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
-  SocketAddress address;
-  char buffer[2048];
-  if ( timeout ) {
-    _socket.setReceiveTimeout( timeout * 1000000 );
-  } else {
-    _socket.setReceiveTimeout( 0 );
-  }
+  udp::endpoint address;
+  char input[2048];
   while ( true ) {
-    try {
-      _socket.receiveFrom( buffer, 2048, address );
-      _destination = address;
-      Logger::spam( string( "Raw message:" ) + buffer, "BroadcastRegistry" );
-      //NOTE: Here is necessary to check for subscribed messages.
-      return unmarshall( _registry, buffer );
-    } catch ( Poco::TimeoutException ) {
-      throw MessagingTimeout( "No message was received" );
-    }
+    readTimeout( _socket, buffer( input, 2048 ), address, timeout );
+    _destination = address;
+    Logger::spam( string( "Raw message:" ) + input, "BroadcastRegistry" );
+    //NOTE: Here is necessary to check for subscribed messages.
+    return unmarshall( _registry, input );
   }
 }
 

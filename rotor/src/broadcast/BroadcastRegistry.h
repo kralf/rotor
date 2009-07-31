@@ -4,7 +4,7 @@
 
 #include <rotor/BaseRegistry.h>
 #include <rotor/Options.h>
-#include <Poco/Net/MulticastSocket.h>
+#include <asio.hpp>
 
 
 typedef struct addrinfo Addrinfo;
@@ -61,11 +61,12 @@ public:
 
   virtual void reply( const Message & message );
 private:
-  std::string                _name;
-  Options &                  _options;
-  BaseRegistry               _registry;
-  Poco::Net::SocketAddress   _destination;
-  Poco::Net::DatagramSocket  _socket;
+  std::string             _name;
+  Options &               _options;
+  BaseRegistry            _registry;
+  asio::io_service        _service;
+  asio::ip::udp::socket   _socket;
+  asio::ip::udp::endpoint _destination;
 };
 
 

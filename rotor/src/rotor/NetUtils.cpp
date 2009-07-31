@@ -1,16 +1,23 @@
 #include "NetUtils.h"
-#include <Poco/Net/DatagramSocket.h>
-#include <Poco/Net/DNS.h>
-#include <Poco/Net/NetException.h>
+#include <asio.hpp>
+#include <boost/bind.hpp>
 
 using namespace std;
+using namespace asio;
+using namespace asio::ip;
+
+//------------------------------------------------------------------------------
+
+void connectHandler(const asio::error_code& error)
+{
+}
 
 //------------------------------------------------------------------------------
 
 std::string 
 Rotor::hostName()
 {
-  return Poco::Net::DNS::thisHost().name();
+  return  ip::host_name();
 }
 
 //------------------------------------------------------------------------------
@@ -18,14 +25,20 @@ Rotor::hostName()
 std::string 
 Rotor::hostIp()
 {
-  Poco::Net::DatagramSocket s;
   string ip;
-  try {
-    s.connect( Poco::Net::SocketAddress( "1.2.3.4", "56" ) );
-    ip = s.address().host().toString();
-    s.close();
-  } catch ( ... ) {
-    ip = "127.0.0.1";
-  }
+
+  tcp::endpoint  testAddress( address::from_string( "1.2.3.4" ), 56 );
+  io_service     service;
+  tcp::socket    socket( service );
+  deadline_timer timer( service );
+  
+  socket.open( testAddress.protocol() );
+  
+  timer.expires_from_now( boost::posix_time::seconds( 0.1 ) );
+  socket.async_connect( testAddress, &connectHandler );
+  timer.wait();
+  
+  ip = socket.local_endpoint().address().to_string();
+  socket.close();
   return ip;
 }
