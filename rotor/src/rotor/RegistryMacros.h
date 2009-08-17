@@ -9,14 +9,15 @@
 #define ROTOR_DEFINE_TYPE( NAME, DEFINITION ) \
 DEFINITION \
 const char * ROTOR_DEFINITION_##NAME = #DEFINITION; \
+inline \
 NAME & operator<<( NAME & value, Rotor::Structure & structure ) { \
   if ( structure.typeData().name() != #NAME ) { \
     throw Rotor::InvalidCastError( "Structure of type " + structure.typeData().name() + " could not be cast to " + #NAME ); \
   } \
-  for ( size_t i = 0; i < structure.size(); i++ ) structure[i];\
   value =  *( reinterpret_cast<NAME*>( structure.buffer() ) ); \
   return value; \
 } \
+inline \
 Rotor::Structure & operator>>( NAME & value, Rotor::Structure & structure ) { \
   if ( structure.typeData().name() != #NAME ) { \
     throw Rotor::InvalidCastError( "Structure of type " + structure.typeData().name() + " could not be cast to " + #NAME ); \
