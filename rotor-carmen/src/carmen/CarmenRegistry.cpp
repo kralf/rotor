@@ -219,7 +219,7 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   try {
     Logger::spam( "Receiving message", "CarmenRegistry" );
     return _queueHandler.dequeueMessage( timeout );
-  } catch ( ... ) {
+  } catch ( TimeoutException ) {
     Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
@@ -235,7 +235,7 @@ throw( MessagingTimeout )
     Logger::spam( "Receiving message", "CarmenRegistry" );
     Structure data( _queueHandler.dequeueMessage( messageName, timeout ) );
     return Message( messageName, data );
-  } catch ( ... ) {
+  } catch ( TimeoutException ) {
     Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
@@ -265,7 +265,7 @@ throw( MessagingTimeout )
     Logger::spam( "Dequeuing reply", "CarmenRegistry" );
     Structure result =  _handler->dequeueReply( timeout );
     return result;
-  } catch ( ... ) {
+  } catch ( TimeoutException ) {
     throw MessagingTimeout( "No message was received" );
   }
 }
@@ -280,7 +280,7 @@ CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
     pair<Message, MSG_INSTANCE> result = _handler->dequeueQuery( timeout );
     Logger::spam( "Received query name: " + result.first.name(), "CarmenRegistry" );
     return result.first;
-  } catch ( ... ) {
+  } catch ( TimeoutException ) {
     Logger::spam( "Receive query timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
