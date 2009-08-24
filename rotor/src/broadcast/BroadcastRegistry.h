@@ -4,7 +4,7 @@
 
 #include <rotor/BaseRegistry.h>
 #include <rotor/Options.h>
-#include <asio.hpp>
+#include <boost/asio.hpp>
 
 
 typedef struct addrinfo Addrinfo;
@@ -61,12 +61,12 @@ public:
 
   virtual void reply( const Message & message );
 private:
-  std::string             _name;
-  Options &               _options;
-  BaseRegistry            _registry;
-  asio::io_service        _service;
-  asio::ip::udp::socket   _socket;
-  asio::ip::udp::endpoint _destination;
+  std::string                    _name;
+  Options &                      _options;
+  BaseRegistry                   _registry;
+  boost::asio::io_service        _service;
+  boost::asio::ip::udp::socket   _socket;
+  boost::asio::ip::udp::endpoint _destination;
 };
 
 

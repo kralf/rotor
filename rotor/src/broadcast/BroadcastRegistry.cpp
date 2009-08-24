@@ -30,7 +30,7 @@ ROTOR_REGISTRY_FACTORY( BroadcastRegistry )
 //------------------------------------------------------------------------------
 
 void 
-setResult( optional<error_code>* a, error_code b )
+setResult( optional<system::error_code>* a, system::error_code b )
 {
   a->reset( b );
 }
@@ -44,12 +44,12 @@ void readTimeout(
   udp::endpoint & address,
   double timeout )
 {
-  optional<error_code> timerResult;
+  optional<system::error_code> timerResult;
   deadline_timer timer( socket.io_service() );
   timer.expires_from_now( seconds( timeout ) );
   timer.async_wait( boost::bind( setResult, &timerResult, _1 ) );
 
-  optional<error_code> readResult;
+  optional<system::error_code> readResult;
   socket.async_receive_from( buffers, address, boost::bind( setResult, &readResult, _1 ) );
 
   socket.io_service().reset();
@@ -62,7 +62,7 @@ void readTimeout(
     }
   }
 
-  if (*readResult) {
+  if ( readResult ) {
     throw MessagingTimeout( "No message was received" );
   }
 } 
@@ -93,10 +93,10 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
   } else {
     listenAddress = udp::endpoint( address::from_string( hostIp() ), 0 );
   }
-  error_code error = error::host_not_found;
+  system::error_code error = error::host_not_found;
   _socket.bind( listenAddress, error );
   if ( error ) { 
-    throw asio::system_error( error );  
+    throw boost::system::system_error( error );  
   }
   Logger::info(
       "Registry bound to:" 
@@ -190,7 +190,7 @@ BroadcastRegistry::sendMessage( const Message & message )
   string s = marshall( message );
   try {
     _socket.send_to( buffer( s.c_str(), s.size() + 1 ), _destination );
-  } catch ( system_error & e ) {
+  } catch ( system::system_error & e ) {
     cerr << e.what() << endl;
   }
 }

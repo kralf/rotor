@@ -5,9 +5,11 @@
 file( GLOB ROTOR_SRC rotor/*.cpp )
 file( GLOB _ROTOR_SRC _rotor/*.cpp )
 
+find_library( BOOST_SYSTEM_LIB boost_system-mt )
+
 add_library( rotor SHARED ${ROTOR_SRC} ${_ROTOR_SRC} )
 
-target_link_libraries( rotor pthread dl )
+target_link_libraries( rotor pthread dl ${BOOST_SYSTEM_LIB} )
 
 
 sm_cpp_install( rotor )

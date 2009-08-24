@@ -1,14 +1,14 @@
 #include "NetUtils.h"
-#include <asio.hpp>
+#include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
 using namespace std;
-using namespace asio;
-using namespace asio::ip;
+using namespace boost::asio;
+using namespace boost::asio::ip;
 
 //------------------------------------------------------------------------------
 
-void connectHandler(const asio::error_code& error)
+void connectHandler( const boost::system::error_code & error)
 {
 }
 
