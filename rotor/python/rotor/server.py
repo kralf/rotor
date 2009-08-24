@@ -41,7 +41,7 @@ class Server:
     self.options.fromString( f.read() )
     f.close()
     
-    serverIp = self.options.getString( "rotor_server", "serverIp",rotorc.hostIp() )
+    serverIp = self.options.getString( "rotor_server", "serverIp", rotorc.hostIp() )
     
     self.options.setInt( "rotor_server", "serverPort", 60709 )
     

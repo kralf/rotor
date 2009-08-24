@@ -53,16 +53,18 @@ void readTimeout(
   socket.async_receive_from( buffers, address, boost::bind( setResult, &readResult, _1 ) );
 
   socket.io_service().reset();
-  
+
+  bool timedOut = false;
   while ( socket.io_service().run_one() ) {
-    if ( readResult )
+    if ( readResult ) {
       timer.cancel();
-    else if (timerResult) {
+    } else if ( timerResult ) {
+      timedOut = true;
       socket.cancel();
     }
   }
 
-  if ( readResult ) {
+  if ( timedOut ) {
     throw MessagingTimeout( "No message was received" );
   }
 } 
@@ -189,6 +191,7 @@ BroadcastRegistry::sendMessage( const Message & message )
 {
   string s = marshall( message );
   try {
+    Logger::info( s, "BroadcastRegistry" );
     _socket.send_to( buffer( s.c_str(), s.size() + 1 ), _destination );
   } catch ( system::system_error & e ) {
     cerr << e.what() << endl;
