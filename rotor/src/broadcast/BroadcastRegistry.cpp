@@ -192,7 +192,6 @@ BroadcastRegistry::sendMessage( const Message & message )
 {
   string s = marshall( message );
   try {
-    Logger::info( s, "BroadcastRegistry" );
     _socket.send_to( buffer( s.c_str(), s.size() + 1 ), _destination );
   } catch ( boost::system::system_error & e ) {
     cerr << e.what() << endl;
