@@ -30,7 +30,7 @@ ROTOR_REGISTRY_FACTORY( BroadcastRegistry )
 //------------------------------------------------------------------------------
 
 void 
-setResult( optional<system::error_code>* a, system::error_code b )
+setResult( optional<boost::system::error_code>* a, boost::system::error_code b )
 {
   a->reset( b );
 }
@@ -44,12 +44,12 @@ void readTimeout(
   udp::endpoint & address,
   double timeout )
 {
-  optional<system::error_code> timerResult;
+  optional<boost::system::error_code> timerResult;
   deadline_timer timer( socket.io_service() );
   timer.expires_from_now( seconds( timeout ) );
   timer.async_wait( boost::bind( setResult, &timerResult, _1 ) );
 
-  optional<system::error_code> readResult;
+  optional<boost::system::error_code> readResult;
   socket.async_receive_from( buffers, address, boost::bind( setResult, &readResult, _1 ) );
 
   socket.io_service().reset();
@@ -95,7 +95,7 @@ BroadcastRegistry::BroadcastRegistry( const string & name, Options & options )
   } else {
     listenAddress = udp::endpoint( address::from_string( hostIp() ), 0 );
   }
-  system::error_code error = error::host_not_found;
+  boost::system::error_code error = error::host_not_found;
   _socket.bind( listenAddress, error );
   if ( error ) { 
     throw boost::system::system_error( error );  
@@ -162,17 +162,18 @@ BroadcastRegistry::registerMessage(
 
 void
 BroadcastRegistry::subscribeToMessage(
-  const std::string & messageName,
-  bool queueOwner,
-  size_t queueCapacity,
-  QueuePolicy queuePolicy )
+  const std::string &,
+  bool,
+  size_t,
+  QueuePolicy )
 {
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-BroadcastRegistry::subscribeToQuery( const std::string & messageName )
+BroadcastRegistry::subscribeToQuery( const std::string & )
 {
 }
 
@@ -193,7 +194,7 @@ BroadcastRegistry::sendMessage( const Message & message )
   try {
     Logger::info( s, "BroadcastRegistry" );
     _socket.send_to( buffer( s.c_str(), s.size() + 1 ), _destination );
-  } catch ( system::system_error & e ) {
+  } catch ( boost::system::system_error & e ) {
     cerr << e.what() << endl;
   }
 }
@@ -218,8 +219,8 @@ BroadcastRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 
 Message 
 BroadcastRegistry::receiveMessage( 
-  const string & messageName,
-  double timeout ) 
+  const string &,
+  double ) 
 throw( MessagingTimeout )
 {
   throw NotImplementedError( "Not implemented" );

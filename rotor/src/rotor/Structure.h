@@ -20,6 +20,8 @@ public:
     void * address, 
     const Registry & registry );
   Structure( const Structure & structure );
+  virtual ~Structure();
+  
   virtual AbstractVariable & operator=( const Structure & value );
   virtual AbstractVariable & operator=( const AbstractVariable & value );
   virtual AbstractVariable & operator[]( int index );
@@ -35,9 +37,9 @@ public:
   virtual void adjust() const;
   virtual void referTo( const Structure & value );
   
-  virtual const size_t bufferSize() const;
+  virtual size_t bufferSize() const;
   virtual void * buffer() const;
-  virtual const bool owner() const;
+  virtual bool owner() const;
 
 
 private:

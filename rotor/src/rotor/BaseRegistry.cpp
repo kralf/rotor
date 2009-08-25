@@ -111,18 +111,20 @@ BaseRegistry::registerMessage(
 
 void 
 BaseRegistry::subscribeToMessage(
-  const std::string & messageName,
-  bool queueOwner,
-  size_t queueCapacity,
-  QueuePolicy queuePolicy )
+  const std::string &,
+  bool,
+  size_t,
+  QueuePolicy )
 {
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
 
 void 
-BaseRegistry::subscribeToQuery( const std::string & messageName )
+BaseRegistry::subscribeToQuery( const std::string & )
 {
+  throw NotImplementedError( "Not implemented" );
 }
 
 //------------------------------------------------------------------------------
@@ -141,7 +143,7 @@ BaseRegistry::messageType( const string & messageName ) const
 //------------------------------------------------------------------------------
 
 void 
-BaseRegistry::sendMessage( const Message & message )
+BaseRegistry::sendMessage( const Message & )
 {
   throw NotImplementedError( "Not implemented" );
 }
@@ -149,7 +151,7 @@ BaseRegistry::sendMessage( const Message & message )
 //------------------------------------------------------------------------------
 
 Message 
-BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
+BaseRegistry::receiveMessage( double )  throw( MessagingTimeout )
 {
   throw NotImplementedError( "Not implemented" );
 }
@@ -158,8 +160,8 @@ BaseRegistry::receiveMessage( double timeout )  throw( MessagingTimeout )
 
 Message 
 BaseRegistry::receiveMessage( 
-  const string & messageName,
-  double timeout ) 
+  const string &,
+  double ) 
 throw( MessagingTimeout )
 {
   throw NotImplementedError( "Not implemented" );
@@ -168,7 +170,7 @@ throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 Structure
-BaseRegistry::query( const Message & message, double timeout )  
+BaseRegistry::query( const Message & , double )  
 throw( MessagingTimeout )
 {
   throw NotImplementedError( "Not implemented" );
@@ -177,7 +179,7 @@ throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 Message 
-BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
+BaseRegistry::receiveQuery( double )  throw( MessagingTimeout )
 {
   throw NotImplementedError( "Not implemented" );
 }
@@ -185,7 +187,7 @@ BaseRegistry::receiveQuery( double timeout )  throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 void
-BaseRegistry::reply( const Message & message )  
+BaseRegistry::reply( const Message & )  
 {
   throw NotImplementedError( "Not implemented" );
 }

@@ -54,13 +54,13 @@ SUITE( Structure ) {
   
   //----------------------------------------------------------------------------
 
-  TEST( Initialization )
-  {
-    Rotor::BaseOptions options;
-    Rotor::BaseRegistry registry( "test", options );
-    registry.registerType( ROTOR_DEFINITION_STRING( Complete ) );
-    Rotor::Structure complete( "Complete", 0, registry );
-  }
+//   TEST( Initialization )
+//   {
+//     Rotor::BaseOptions options;
+//     Rotor::BaseRegistry registry( "test", options );
+//     registry.registerType( ROTOR_DEFINITION_STRING( Complete ) );
+//     Rotor::Structure complete( "Complete", 0, registry );
+//   }
 
   //----------------------------------------------------------------------------
 
@@ -259,7 +259,9 @@ SUITE( Structure ) {
     Rotor::BaseRegistry registry( "test", options );
     registry.registerType( ROTOR_DEFINITION_STRING( IntAndString ) );
     
-    IntAndString realStruct = {38, "fistandantilus"};
+    const char * fistandantilus = "fistandantilus";
+    
+    IntAndString realStruct = {38, const_cast<char*>( fistandantilus ) };
 
     Rotor::Structure structure( "IntAndString", &realStruct, registry );  
     

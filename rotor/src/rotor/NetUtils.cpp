@@ -8,7 +8,7 @@ using namespace boost::asio::ip;
 
 //------------------------------------------------------------------------------
 
-void connectHandler( const boost::system::error_code & error)
+void connectHandler( const boost::system::error_code & )
 {
 }
 

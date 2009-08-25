@@ -14,7 +14,7 @@ struct OptionGrammar : public grammar<OptionGrammar>
   struct captureOption
   {
     captureOption( const OptionGrammar & grammar ) : _grammar( grammar ) {}
-    void operator()( const char * begin, const char * end ) const
+    void operator()( const char *, const char * ) const
     {
       OptionGrammar & grammar = const_cast<OptionGrammar&>( _grammar );
       grammar._options.setString( grammar._section, grammar._option, grammar._value );

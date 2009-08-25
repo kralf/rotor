@@ -28,6 +28,12 @@ Structure::Structure( const Structure & structure )
 
 //------------------------------------------------------------------------------
 
+Structure::~Structure()
+{
+}
+
+//------------------------------------------------------------------------------
+
 AbstractVariable & 
 Structure::operator=( const Structure & value )
 {
@@ -134,7 +140,7 @@ Structure::referTo( const Structure & structure )
 
 //------------------------------------------------------------------------------
 
-const size_t 
+size_t 
 Structure::bufferSize() const
 {
   return (*_structure).bufferSize();
@@ -150,7 +156,7 @@ Structure::buffer() const
 
 //------------------------------------------------------------------------------
 
-const bool 
+bool 
 Structure::owner() const
 {
   return (*_structure).owner();

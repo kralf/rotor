@@ -14,9 +14,9 @@ public:
   Memory( void * address, size_t size );
   virtual ~Memory();
   
-  virtual const size_t bufferSize() const;
+  virtual size_t bufferSize() const;
   virtual void * buffer() const;
-  virtual const bool owner() const;
+  virtual bool owner() const;
    
 protected:
   void resizeBuffer( size_t newSize );

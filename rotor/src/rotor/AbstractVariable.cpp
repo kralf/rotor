@@ -14,7 +14,7 @@ AbstractVariable::AbstractVariable( void * address, size_t size )
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator=( const AbstractVariable & value )
+AbstractVariable::operator=( const AbstractVariable & )
 {
   throw InvalidAssignmentError( "Value cannot be assigned to variable" );
 }
@@ -22,7 +22,7 @@ AbstractVariable::operator=( const AbstractVariable & value )
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator=( int value )
+AbstractVariable::operator=( int )
 {
   throw InvalidAssignmentError( "Value cannot be assigned to variable" );
 }
@@ -30,7 +30,7 @@ AbstractVariable::operator=( int value )
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator=( double value )
+AbstractVariable::operator=( double )
 {
   throw InvalidAssignmentError( "Value cannot be assigned to variable" );
 }
@@ -38,7 +38,7 @@ AbstractVariable::operator=( double value )
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator=( const char * value )
+AbstractVariable::operator=( const char * )
 {
   throw InvalidAssignmentError( "Value cannot be assigned to variable" );
 }
@@ -67,21 +67,21 @@ AbstractVariable::operator const char *() const
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator[]( int index ) {
+AbstractVariable::operator[]( int ) {
   throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not an Array" );
 }
 
 //------------------------------------------------------------------------------
 
 AbstractVariable & 
-AbstractVariable::operator[]( const char * fieldName ) {
+AbstractVariable::operator[]( const char * ) {
   throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not a Structure" );
 }
 
 //------------------------------------------------------------------------------
   
 const AbstractVariable & 
-AbstractVariable::operator[]( int index ) const
+AbstractVariable::operator[]( int ) const
 {
   throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not an Array" );
 }
@@ -89,7 +89,7 @@ AbstractVariable::operator[]( int index ) const
 //------------------------------------------------------------------------------
 
 const AbstractVariable & 
-AbstractVariable::operator[]( const char * fieldName ) const
+AbstractVariable::operator[]( const char * ) const
 {
   throw InvalidOperatorError( "Variable of type " + toString( type() ) + " is not a Structure" );
 }
@@ -105,7 +105,7 @@ AbstractVariable::size() const
 //------------------------------------------------------------------------------
 
 void 
-AbstractVariable::resize( size_t newSize )
+AbstractVariable::resize( size_t )
 {
   throw InvalidOperatorError( "Variable is not an Array" );
 }

@@ -9,8 +9,14 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
+BaseOptions::~BaseOptions()
+{
+}
+
+//------------------------------------------------------------------------------
+
 void 
-BaseOptions::setString ( 
+BaseOptions::setString( 
   const string & sectionName, 
   const string & optionName,
   const string & value ) throw ( OptionError )

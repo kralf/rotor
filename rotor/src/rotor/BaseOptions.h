@@ -12,6 +12,9 @@ namespace Rotor {
 class BaseOptions : public Options
 {
 public:
+
+  virtual ~BaseOptions();
+  
   virtual void setString( 
     const std::string & sectionName, 
     const std::string & optionName,

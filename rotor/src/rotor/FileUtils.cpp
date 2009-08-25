@@ -41,7 +41,8 @@ Rotor::findFile( const string & fileName, const string & searchPath )
       
   string delimiters = ":";
   string::size_type p1 = searchPath.find_first_not_of( delimiters, 0 );
-  string::size_type p2 = searchPath.find_first_of( delimiters, p2 );
+  string::size_type p2 = 0;
+  p2 = searchPath.find_first_of( delimiters, p2 );
   
   while ( p1 != string::npos || p2 != string::npos ) {
     string currentPath = searchPath.substr( p1, p2 - p1 );

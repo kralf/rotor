@@ -19,6 +19,7 @@ public:
   typedef Queue<Message> MessageQueue;
   
   Module();
+  virtual ~Module();
   
   Registry & registry();
   

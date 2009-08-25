@@ -33,7 +33,7 @@ Memory::~Memory()
 
 //------------------------------------------------------------------------------
 
-const unsigned int 
+size_t
 Memory::bufferSize() const
 {
   return _bufferSize;
@@ -41,7 +41,7 @@ Memory::bufferSize() const
 
 //------------------------------------------------------------------------------
 
-const bool 
+bool 
 Memory::owner() const
 {
   return _owner;

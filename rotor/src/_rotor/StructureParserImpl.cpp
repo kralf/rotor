@@ -64,7 +64,7 @@ struct StructureGrammar : public grammar<StructureGrammar>
   struct captureNormal
   {
     captureNormal( const StructureGrammar & grammar ) : _grammar( grammar ) {}
-    void operator()( const char * begin, const char * end ) const
+    void operator()( const char *, const char * ) const
     {
       StructureGrammar & grammar = const_cast<StructureGrammar&>( _grammar );
       grammar._members.resize( grammar._members.size() + 1 );
@@ -79,7 +79,7 @@ struct StructureGrammar : public grammar<StructureGrammar>
   struct captureFixed
   {
     captureFixed( const StructureGrammar & grammar ) : _grammar( grammar ) {}
-    void operator()( const char * begin, const char * end ) const
+    void operator()( const char *, const char * ) const
     {
       StructureGrammar & grammar = const_cast<StructureGrammar&>( _grammar );
       grammar._members.resize( grammar._members.size() + 1 );
@@ -94,7 +94,7 @@ struct StructureGrammar : public grammar<StructureGrammar>
   struct captureVariable
   {
     captureVariable( const StructureGrammar & grammar ) : _grammar( grammar ) {}
-    void operator()( const char * begin, const char * end ) const
+    void operator()( const char *, const char * ) const
     {
       StructureGrammar & grammar = const_cast<StructureGrammar&>( _grammar );
       grammar._members.resize( grammar._members.size() + 1 );
