@@ -5,6 +5,7 @@
 #include <rotor/BaseRegistry.h>
 #include <rotor/Structure.h>
 #include <rotor/Serialization.h>
+#include <stdint.h>
 
 ROTOR_DEFINE_TYPE( Test,
   struct Test {

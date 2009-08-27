@@ -3,6 +3,7 @@
 #include <rotor/BaseRegistry.h>
 #include <rotor/Structure.h>
 #include <rotor/Rotor.h>
+#include <stdint.h>
 
 ROTOR_DEFINE_TYPE( Complete,
   struct Complete {

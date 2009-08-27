@@ -4,6 +4,7 @@
 #include <rotor/Logger.h>
 #include <rotor/Serialization.h>
 #include <sstream>
+#include <stdint.h>
 
 using namespace Rotor;
 using namespace std;

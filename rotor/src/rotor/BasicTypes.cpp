@@ -6,6 +6,7 @@
 #include "Exceptions.h"
 #include "Array.h"
 #include "String.h"
+#include <stdint.h>
 
 using namespace Rotor;
 

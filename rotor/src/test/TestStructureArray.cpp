@@ -7,6 +7,7 @@
 #include <rotor/StructureArray.h>
 #include <rotor/Debug.h>
 #include <cmath>
+#include <stdint.h>
 
 int abs( int num );
 

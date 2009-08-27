@@ -1,6 +1,7 @@
 #include <unittest++/UnitTest++.h>
 #include <rotor/Array.h>
 #include <cmath>
+#include <stdint.h>
 
 int abs( int num );
 
