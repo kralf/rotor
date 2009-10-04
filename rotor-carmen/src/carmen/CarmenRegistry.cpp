@@ -238,6 +238,10 @@ throw( MessagingTimeout )
   } catch ( TimeoutException ) {
     Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
+  } catch ( ... ) {
+    //TODO: Fix this, python does not work without this ugly workaround
+    Logger::spam( "Receive message timed out", "CarmenRegistry" );
+    throw MessagingTimeout( "No message was received" );
   }
 }
 

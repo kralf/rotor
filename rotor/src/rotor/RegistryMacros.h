@@ -8,7 +8,7 @@
 
 #define ROTOR_DEFINE_TYPE( NAME, DEFINITION ) \
 DEFINITION \
-const char * ROTOR_DEFINITION_##NAME = #DEFINITION; \
+static const char * ROTOR_DEFINITION_##NAME = #DEFINITION; \
 inline \
 NAME & operator<<( NAME & value, Rotor::Structure & structure ) { \
   if ( structure.typeData().name() != #NAME ) { \

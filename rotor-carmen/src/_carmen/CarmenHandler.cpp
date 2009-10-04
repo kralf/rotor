@@ -73,9 +73,9 @@ CarmenHandler::enqueueReply( Message & message )
 CarmenHandler::QueryInfo
 CarmenHandler::dequeueQuery( double timeout )
 {
-  QueryInfo result = _queryQueue.next( timeout );
+  QueryInfo result = _queryQueue.popNext( timeout );
   _instanceQueue.push( result.second );
-  _queryQueue.pop();
+//   _queryQueue.pop();
   return result;
 }
 
