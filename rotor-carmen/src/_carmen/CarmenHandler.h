@@ -5,7 +5,7 @@
 #include <rotor/Message.h>
 #include <rotor/Registry.h>
 #include <rotor/Queue.h>
-#include <carmen/ipc.h>
+#include <libipc/ipc.h>
 #include <queue>
 #include <map>
 

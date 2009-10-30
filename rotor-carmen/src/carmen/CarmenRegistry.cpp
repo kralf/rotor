@@ -10,7 +10,6 @@
 #include <rotor/Conversion.h>
 #include <rotor/Time.h>
 #include <rotor/TypedThread.h>
-#include <carmen/ipc.h>
 #include <sstream>
 #include <cstdlib>
 #include <iomanip>

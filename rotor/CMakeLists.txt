@@ -11,7 +11,11 @@ set( PACKAGE_DESCRIPTION_SUMMARY "Robot to robot communications" )
 set( PACKAGE_DESCRIPTION "A unifying middleware framework for robotics applications." )
 set( PACKAGE_BUILD_DEPENDS libboost-dev,libasio-dev )
 
+execute_process(
+  COMMAND dpkg --print-architecture
+  OUTPUT_VARIABLE DEBIAN_ARCHITECTURE
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 include( SimpleCMake )
 sm_configure_project()
-
-

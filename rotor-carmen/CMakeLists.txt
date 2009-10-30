@@ -11,5 +11,11 @@ set( PACKAGE_DESCRIPTION_SUMMARY "Carmen drivers for rotor" )
 set( PACKAGE_DESCRIPTION "Carmen IPC drivers for the rotor communications framework" )
 set( PACKAGE_DEPENDS "rotor (>= 0.2.0)"  )
 
+execute_process(
+  COMMAND dpkg --print-architecture
+  OUTPUT_VARIABLE DEBIAN_ARCHITECTURE
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 include( SimpleCMake )
 sm_configure_project()
