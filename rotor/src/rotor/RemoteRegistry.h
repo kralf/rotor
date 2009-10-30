@@ -45,6 +45,9 @@ public:
   virtual const Type & 
   messageType( const std::string & messageName ) const;
   
+  virtual double
+  messageFrequency( const std::string & messageName ) const;
+
   virtual void sendMessage( const Message & message );
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );

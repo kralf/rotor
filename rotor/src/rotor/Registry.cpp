@@ -66,6 +66,15 @@ Registry::subscribeToQueryType(
 }
 
 //------------------------------------------------------------------------------
+
+double
+Registry::messageFrequency(
+  const std::string & messageName ) const
+{
+  return 0;
+}
+
+//------------------------------------------------------------------------------
   
 void 
 Registry::sendStructure( 

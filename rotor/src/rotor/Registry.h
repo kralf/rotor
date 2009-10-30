@@ -153,7 +153,15 @@ public:
    */
   virtual const Type & 
   messageType( const std::string & messageName ) const = 0;
-  
+
+  /**
+   * Returns the frequency of a given message in [Hz].
+   *
+   * @param messageName The name of the message.
+   */
+  virtual double
+  messageFrequency( const std::string & messageName ) const;
+
   /**
    * Sends the given Message.
    *

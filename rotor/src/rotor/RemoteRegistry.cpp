@@ -136,6 +136,14 @@ RemoteRegistry::messageType( const std::string & messageName ) const
 
 //------------------------------------------------------------------------------
 
+double
+RemoteRegistry::messageFrequency( const std::string & messageName ) const
+{
+  return _registry->messageFrequency( messageName );
+}
+
+//------------------------------------------------------------------------------
+
 void 
 RemoteRegistry::sendMessage( const Message & message )
 {
