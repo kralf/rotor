@@ -2,6 +2,8 @@
 #define ROTOR_CARMEN_REGISTRY_H
 
 
+#include <list>
+
 #include <rotor/BaseRegistry.h>
 #include <rotor/Mutex.h>
 #include <rotor/QueueHandler.h>
@@ -45,7 +47,10 @@ public:
 
   virtual const Type & 
   messageType( const std::string & messageName ) const;
-  
+
+  virtual double
+  messageFrequency( const std::string & messageName ) const;
+
   virtual void sendMessage( const Message & message );
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
@@ -60,17 +65,20 @@ public:
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 
   virtual void reply( const Message & message );
-
 private:
   typedef Queue<Message> MessageQueue;
+  typedef std::list<double> TimestampQueue;
+  typedef std::map< std::string, size_t > QueueCapacities;
+  typedef std::map< std::string, TimestampQueue * > TimestampQueues;
 
   std::string      _name;
   Options &        _options;
   BaseRegistry     _registry;
   CarmenHandler *  _handler;
-  Mutex            _ipcMutex;
+  mutable Mutex    _ipcMutex;
   QueueHandler     _queueHandler;
   MessageQueue     _outputQueue;
+  TimestampQueues  _timestampQueues;
   
   friend class CarmenHandler;
 };

@@ -170,6 +170,7 @@ CarmenRegistry::subscribeToMessage(
   size_t queueCapacity,
   QueuePolicy queuePolicy )
 {
+  printf("%s %d\n", messageName.c_str(), queueOwner);
   Lock lock( _ipcMutex );
   _queueHandler.subscribeToMessage( 
     messageName, queueOwner, queueCapacity, queuePolicy );
@@ -178,6 +179,13 @@ CarmenRegistry::subscribeToMessage(
     exit( 1 );
   }
   IPC_setMsgQueueLength( messageName.c_str(), 10 );
+
+  TimestampQueues::iterator it = _timestampQueues.find( messageName );
+  if ( it == _timestampQueues.end() ) {
+    TimestampQueue * queue = 0;
+    queue = new TimestampQueue();
+    _timestampQueues[messageName] = queue;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -199,6 +207,26 @@ const Type &
 CarmenRegistry::messageType( const string & messageName ) const
 {
   return _registry.messageType( messageName );
+}
+
+//------------------------------------------------------------------------------
+
+double
+CarmenRegistry::messageFrequency( const std::string & messageName ) const
+{
+  Lock lock( _ipcMutex );
+  double frequency = 0.0;
+  TimestampQueues::const_iterator it = _timestampQueues.find( messageName );
+
+  if ( it != _timestampQueues.end() ) {
+    TimestampQueue* timestampQueue = it->second;
+    double now = seconds();
+
+    if (!timestampQueue->empty())
+      frequency = timestampQueue->size()/(now-timestampQueue->back());
+  }
+
+  return frequency;
 }
 
 //------------------------------------------------------------------------------

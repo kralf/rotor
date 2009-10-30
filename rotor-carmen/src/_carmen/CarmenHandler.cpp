@@ -4,6 +4,7 @@
 #include <rotor/Message.h>
 #include <rotor/Structure.h>
 #include <rotor/TypedThread.h>
+#include <rotor/Time.h>
 #include <cstdlib>
 
 using namespace Rotor;
@@ -137,6 +138,13 @@ CarmenHandler::handleMessage(
   handler->_registry._queueHandler.enqueueMessage( message );
   FORMATTER_PTR formatter = IPC_msgInstanceFormatter( msgInstance );
   IPC_freeData( formatter, data );
+
+  CarmenRegistry::TimestampQueue* timestampQueue = handler->_registry._timestampQueues[name];
+  double now = seconds();
+  timestampQueue->push_front( now );
+
+  while ( now-timestampQueue->back() > 1 )
+    timestampQueue->pop_back();
 }
 
 //------------------------------------------------------------------------------
