@@ -25,7 +25,7 @@ ROTOR_REGISTRY_FACTORY( CarmenRegistry )
 
 CarmenRegistry::CarmenRegistry( const string & name, Options & options)
   : Registry( name, options ),
-    _name( name ), 
+    _name( name ),
     _options( options ),
     _registry( name, options ),
     _queueHandler( 1, DISCARD_OLDEST )
@@ -45,43 +45,43 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
-  } catch ( ... ) {  
+  } catch ( ... ) {
     if ( IPC_connectModule( tmpName.str().c_str(), NULL ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
   }
 
-  Logger::info( 
-    "Checking if module with same name is already connected", 
-    "CarmenRegistry" 
+  Logger::info(
+    "Checking if module with same name is already connected",
+    "CarmenRegistry"
   );
   if ( IPC_isModuleConnected( name.c_str() ) == 1 ) {
     fprintf( stderr, "Module '%s' is already connected\n", name.c_str() );
     exit( 1 );
   }
-  
+
   Logger::info( "Disconnecting temporary connection", "CarmenRegistry" );
   if ( IPC_disconnect() == IPC_Error ) {
     fprintf( stderr, "Error connecting to IPC\n" );
     exit( 1 );
   }
-  
+
   Logger::info( "Establishing definitive connection", "CarmenRegistry" );
   try {
     if ( IPC_connectModule( name.c_str(), options.getString( "rotor_server", "serverIp" ).c_str() ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
-  } catch ( ... ) {  
+  } catch ( ... ) {
     if ( IPC_connectModule( name.c_str(), NULL ) == IPC_Error ) {
       fprintf( stderr, "Could not connect IPC\n" );
       exit( 1 );
     }
   }
-  
+
   IPC_setCapacity( 4 );
-  
+
   Logger::spam( "Setting up carmen handler", "CarmenRegistry" );
   _handler = new CarmenHandler( *this );
   Logger::debug( "Created CarmenRegistry for " + name, "CarmenRegistry" );
@@ -102,16 +102,16 @@ CarmenRegistry::~CarmenRegistry()
 }
 
 //------------------------------------------------------------------------------
-  
-const std::string & 
+
+const std::string &
 CarmenRegistry::name() const
 {
   return _name;
 }
-  
+
 //------------------------------------------------------------------------------
-  
-Options & 
+
+Options &
 CarmenRegistry::options() const
 {
   return _options;
@@ -119,7 +119,7 @@ CarmenRegistry::options() const
 
 //------------------------------------------------------------------------------
 
-const Type & 
+const Type &
 CarmenRegistry::registerType( const string & definitionString )
 {
   return _registry.registerType( definitionString );
@@ -127,7 +127,7 @@ CarmenRegistry::registerType( const string & definitionString )
 
 //------------------------------------------------------------------------------
 
-const Type & 
+const Type &
 CarmenRegistry::operator[]( const std::string & typeName ) const
 {
   return _registry[typeName];
@@ -135,24 +135,24 @@ CarmenRegistry::operator[]( const std::string & typeName ) const
 
 //------------------------------------------------------------------------------
 
-void 
-CarmenRegistry::registerMessage( 
-  const string & messageName, 
+void
+CarmenRegistry::registerMessage(
+  const string & messageName,
   const string & typeName )
 {
   Lock lock( _ipcMutex );
-  Logger::debug( 
-    string( "Registered " ) + messageName + " with type: " + typeName + 
+  Logger::debug(
+    string( "Registered " ) + messageName + " with type: " + typeName +
     " and format: " + formatString( *this, typeName ),
-    "CarmenRegistry" 
+    "CarmenRegistry"
   );
   _registry.registerMessage( messageName, typeName );
   if ( ! IPC_isMsgDefined( messageName.c_str() ) ) {
-    if (  IPC_defineMsg( 
-            messageName.c_str(), 
-            IPC_VARIABLE_LENGTH, 
-            formatString( *this, typeName ).c_str() ) 
-          == IPC_Error ) 
+    if (  IPC_defineMsg(
+            messageName.c_str(),
+            IPC_VARIABLE_LENGTH,
+            formatString( *this, typeName ).c_str() )
+          == IPC_Error )
     {
       fprintf( stderr, "Could not define message\n" );
       exit( 1 );
@@ -163,7 +163,7 @@ CarmenRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void
-CarmenRegistry::subscribeToMessage( 
+CarmenRegistry::subscribeToMessage(
   const std::string & messageName,
   bool queueOwner,
   size_t queueCapacity,
@@ -171,7 +171,7 @@ CarmenRegistry::subscribeToMessage(
 {
   printf("%s %d\n", messageName.c_str(), queueOwner);
   Lock lock( _ipcMutex );
-  _queueHandler.subscribeToMessage( 
+  _queueHandler.subscribeToMessage(
     messageName, queueOwner, queueCapacity, queuePolicy );
   if ( IPC_subscribeData(  messageName.c_str(), CarmenHandler::handleMessage, _handler ) == IPC_Error ) {
     fprintf( stderr, "Could not define message\n" );
@@ -202,7 +202,7 @@ CarmenRegistry::subscribeToQuery( const string & messageName )
 
 //------------------------------------------------------------------------------
 
-const Type & 
+const Type &
 CarmenRegistry::messageType( const string & messageName ) const
 {
   return _registry.messageType( messageName );
@@ -213,7 +213,7 @@ CarmenRegistry::messageType( const string & messageName ) const
 double
 CarmenRegistry::messageFrequency( const std::string & messageName ) const
 {
-  Lock lock( _ipcMutex );
+  // Lock lock( _ipcMutex );
   double frequency = 0.0;
   TimestampQueues::const_iterator it = _timestampQueues.find( messageName );
 
@@ -230,7 +230,7 @@ CarmenRegistry::messageFrequency( const std::string & messageName ) const
 
 //------------------------------------------------------------------------------
 
-void 
+void
 CarmenRegistry::sendMessage( const Message & message )
 {
   Logger::spam( "Publishing message name:" + message.name(), "CarmenRegistry" );
@@ -240,7 +240,7 @@ CarmenRegistry::sendMessage( const Message & message )
 
 //------------------------------------------------------------------------------
 
-Message 
+Message
 CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
@@ -254,8 +254,8 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Message 
-CarmenRegistry::receiveMessage( const string & messageName, double timeout ) 
+Message
+CarmenRegistry::receiveMessage( const string & messageName, double timeout )
 throw( MessagingTimeout )
 {
   try {
@@ -275,7 +275,7 @@ throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 Structure
-CarmenRegistry::query( const Message & message, double timeout ) 
+CarmenRegistry::query( const Message & message, double timeout )
 throw( MessagingTimeout )
 {
   _ipcMutex.lock();
@@ -285,7 +285,7 @@ throw( MessagingTimeout )
                               message.data().buffer(),
                               CarmenHandler::handleReply,
                               _handler );
-                            
+
   Logger::spam( "IPC query notify returned from call", "CarmenRegistry" );
   _ipcMutex.unlock();
   if (  result == IPC_Error ) {
@@ -303,7 +303,7 @@ throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Message 
+Message
 CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
   try {
@@ -320,7 +320,7 @@ CarmenRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 void
-CarmenRegistry::reply( const Message & message ) 
+CarmenRegistry::reply( const Message & message )
 {
   _handler->reply( message );
 }
