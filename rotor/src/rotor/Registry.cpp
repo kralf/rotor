@@ -69,7 +69,7 @@ Registry::subscribeToQueryType(
 
 double
 Registry::messageFrequency(
-  const std::string & messageName ) const
+  const std::string & /* messageName */ ) const
 {
   return 0;
 }
