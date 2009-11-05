@@ -221,12 +221,11 @@ CarmenRegistry::messageFrequency( const std::string & messageName ) const
     TimestampQueue* timestampQueue = it->second;
     double now = seconds();
 
-    if (!timestampQueue->empty()) {
-      while ( now-timestampQueue->back() > 1 )
-        timestampQueue->pop_back();
+    while ( !timestampQueue->empty() && ( now-timestampQueue->back() > 1 ) )
+      timestampQueue->pop_back();
 
+    if (!timestampQueue->empty())
       frequency = timestampQueue->size()/(now-timestampQueue->back());
-    }
   }
 
   return frequency;
