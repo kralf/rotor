@@ -9,7 +9,7 @@
 {Rotor::Debug d( #STUFF ); STUFF;}
 
 #define ROTOR_DEBUG_METHOD \
-Rotor::Debug d( std::string( __FILE__ ) + " " + std::string( __FUNCTION__ ) ); 
+Rotor::Debug d( std::string( __FILE__ ) + " " + std::string( __FUNCTION__ ) );
 
 namespace Rotor {
 
@@ -19,7 +19,7 @@ class Debug
 public:
   Debug( const std::string & message );
   virtual ~Debug();
-  
+
 private:
   static int  _classDepth;
   int         _depth;

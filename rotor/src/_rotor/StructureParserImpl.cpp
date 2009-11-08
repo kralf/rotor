@@ -10,10 +10,10 @@ using namespace Rotor;
 
 struct StructureGrammar : public grammar<StructureGrammar>
 {
-  StructureGrammar( string & name, MemberDefinitions & members ) 
-    : grammar<StructureGrammar>(), 
+  StructureGrammar( string & name, MemberDefinitions & members )
+    : grammar<StructureGrammar>(),
       _name( name ),
-      _members( members ) 
+      _members( members )
   {
   }
 
@@ -60,7 +60,7 @@ struct StructureGrammar : public grammar<StructureGrammar>
     }
     const StructureGrammar & _grammar;
   };
-  
+
   struct captureNormal
   {
     captureNormal( const StructureGrammar & grammar ) : _grammar( grammar ) {}
@@ -110,66 +110,66 @@ struct StructureGrammar : public grammar<StructureGrammar>
   struct definition
   {
     typedef rule< SCANNER > Rule;
-    Rule  grammar, structure, identifier, 
-          declaration, typeDefinition, 
+    Rule  grammar, structure, identifier,
+          declaration, typeDefinition,
           normalType, fixedArrayType, variableArrayType, integer;
-    
+
     Rule const &
-    start() const 
+    start() const
     {
       return grammar;
     }
-    
-    
+
+
     definition ( StructureGrammar const & self )
     {
-      grammar           = *space_p 
-                          >> structure 
-                          >> *space_p 
-                          >>';' 
-                          >> *space_p 
+      grammar           = *space_p
+                          >> structure
+                          >> *space_p
+                          >>';'
+                          >> *space_p
                           >> end_p;
-      structure         = "struct" 
-                          >> +space_p 
-                          >> identifier [captureName( self )] 
-                          >> *space_p 
-                          >> '{' 
-                          >> *declaration 
+      structure         = "struct"
+                          >> +space_p
+                          >> identifier [captureName( self )]
+                          >> *space_p
+                          >> '{'
+                          >> *declaration
                           >> '}';
       identifier        = ( alpha_p | '_' ) >> *( alnum_p | '_' );
       declaration       = *space_p
-                          >> typeDefinition 
+                          >> typeDefinition
                           >> *space_p;
       typeDefinition    =   normalType        [captureNormal( self )]
                           | fixedArrayType    [captureFixed( self )]
                           | variableArrayType [captureVariable( self )];
       normalType        = identifier    [captureType( self )]
-                          >> +space_p 
-                          >> identifier [captureMemberName( self )] 
-                          >> *space_p 
+                          >> +space_p
+                          >> identifier [captureMemberName( self )]
+                          >> *space_p
                           >> ';';
       fixedArrayType    = identifier    [captureType( self )]
-                          >> +space_p 
-                          >> identifier [captureMemberName( self )] 
-                          >> *space_p 
-                          >> '[' 
-                          >> *space_p 
+                          >> +space_p
+                          >> identifier [captureMemberName( self )]
+                          >> *space_p
+                          >> '['
+                          >> *space_p
                           >> int_p      [captureCardinality( self )]
-                          >> *space_p 
+                          >> *space_p
                           >> ']'
-                          >> *space_p 
+                          >> *space_p
                           >> ';';
       variableArrayType = identifier    [captureType( self )]
-                          >> *space_p 
-                          >> '*' 
-                          >> *space_p 
-                          >> identifier [captureMemberName( self )] 
-                          >> *space_p 
+                          >> *space_p
+                          >> '*'
+                          >> *space_p
+                          >> identifier [captureMemberName( self )]
+                          >> *space_p
                           >> ';';
     }
-    
+
   };
-  
+
   string            & _name;
   string              _memberName;
   string              _type;
@@ -179,10 +179,10 @@ struct StructureGrammar : public grammar<StructureGrammar>
 
 //------------------------------------------------------------------------------
 
-StructureParserImpl::StructureParserImpl() 
+StructureParserImpl::StructureParserImpl()
 {
 }
-  
+
 //------------------------------------------------------------------------------
 
 bool
@@ -196,12 +196,12 @@ StructureParserImpl::parse( const string & declarationString )
   } else {
     return true;
   }
-  
+
 }
 
 //------------------------------------------------------------------------------
 
-const MemberDefinitions & 
+const MemberDefinitions &
 StructureParserImpl::members() const
 {
   return _members;
@@ -209,7 +209,7 @@ StructureParserImpl::members() const
 
 //------------------------------------------------------------------------------
 
-const std::string & 
+const std::string &
 StructureParserImpl::name() const
 {
   return _name;
@@ -217,7 +217,7 @@ StructureParserImpl::name() const
 
 //------------------------------------------------------------------------------
 
-const std::string & 
+const std::string &
 StructureParserImpl::error() const
 {
   return _error;

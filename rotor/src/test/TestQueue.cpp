@@ -2,7 +2,7 @@
 #include <rotor/Queue.h>
 
 SUITE( Queue ) {
-  
+
   //----------------------------------------------------------------------------
 
   TEST( InsertionAndDeletion )

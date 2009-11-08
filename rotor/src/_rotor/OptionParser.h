@@ -13,11 +13,11 @@ class OptionParser
 {
 public:
   OptionParser();
-    
+
   bool parse( const std::string & input, Options & options );
-  
+
   const std::string & error() const;
-  
+
 private:
   std::string  _error;
 };

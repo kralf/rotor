@@ -28,7 +28,7 @@ private:
   void operator=( const Thread & );
   virtual void * run();
 
-  
+
   ThreadImpl * _thread;
   void *       _result;
 };

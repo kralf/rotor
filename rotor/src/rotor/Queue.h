@@ -7,7 +7,7 @@
 #include "Exceptions.h"
 #include "Lock.h"
 #include "QueuePolicy.h"
-#include "DefaultQueueReleaser.h" 
+#include "DefaultQueueReleaser.h"
 #include <queue>
 
 
@@ -18,7 +18,7 @@ class Queue
 {
 public:
   Queue( size_t capacity = 0, QueuePolicy policy = WAIT_WHEN_FULL );
-  
+
   void push( const T & value, double timeout = 0 ) throw ( TimeoutException );
   T & next( double timeout = 0 ) throw ( TimeoutException );
   void pop( double timeout = 0 ) throw ( TimeoutException );
@@ -28,7 +28,7 @@ public:
 private:
   Queue( const Queue & );
   void operator=( const Queue & );
-  
+
   size_t        _capacity;
   QueuePolicy   _policy;
   Mutex         _mutex;

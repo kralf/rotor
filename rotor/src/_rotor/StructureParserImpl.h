@@ -12,11 +12,11 @@ namespace Rotor {
 class StructureParserImpl {
 public:
   StructureParserImpl();
-  
+
   bool parse( const std::string & definitionString );
-  
+
   const MemberDefinitions & members() const;
-  
+
   const std::string & name() const;
 
   const std::string & error() const;

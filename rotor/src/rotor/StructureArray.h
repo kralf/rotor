@@ -18,10 +18,10 @@ class Type;
 class StructureArray : public AbstractVariable
 {
 public:
-  StructureArray( 
-    const std::string & typeName, 
-    void * address, 
-    int size, 
+  StructureArray(
+    const std::string & typeName,
+    void * address,
+    int size,
     const Registry & registry );
   virtual ~StructureArray();
   virtual AbstractVariable & operator=( const StructureArray & value );
@@ -31,10 +31,10 @@ public:
   virtual void resize( size_t newSize );
   virtual size_t size() const;
   GenericType type() const;
-  
+
 private:
   void initializeMembers();
-  
+
   int                      _size;
   std::vector<Structure *> _members;
   const Registry &         _registry;

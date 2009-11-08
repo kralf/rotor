@@ -21,7 +21,7 @@ public:
   virtual operator const char*() const;
   virtual size_t size() const;
   virtual GenericType type() const;
-  
+
 private:
   void ** _ownerAddress;
   int     _size;

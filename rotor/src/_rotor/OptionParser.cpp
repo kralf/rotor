@@ -60,45 +60,45 @@ struct OptionGrammar : public grammar<OptionGrammar>
   {
     typedef rule< SCANNER > Rule;
     Rule lines, line, comment, sectionHeader, option, optionValue, identifier;
-    
+
     Rule const &
-    start() const 
+    start() const
     {
       return lines;
     }
-    
-    
+
+
     definition ( OptionGrammar const & self )
     {
-      lines          = !( comment | sectionHeader ) 
-                        >> *eol_p 
-                        >> *( line >> *eol_p ) 
+      lines          = !( comment | sectionHeader )
+                        >> *eol_p
+                        >> *( line >> *eol_p )
                         >> end_p;
-      line           =    comment 
-                        | sectionHeader 
-                        | option[captureOption( self )] 
+      line           =    comment
+                        | sectionHeader
+                        | option[captureOption( self )]
                         | +blank_p;
-      comment        = *blank_p 
-                        >> ';' 
+      comment        = *blank_p
+                        >> ';'
                         >> +(anychar_p - eol_p );
-      sectionHeader  = *blank_p 
-                        >> ( '[' 
+      sectionHeader  = *blank_p
+                        >> ( '['
                           >> identifier[captureSection( self )]
                         >> ']' )
                         >> * blank_p;
-      option         = *blank_p 
+      option         = *blank_p
                         >> identifier[captureOptionIdentifier( self )]
-                        >> *blank_p >> '=' 
-                        >> *blank_p 
+                        >> *blank_p >> '='
+                        >> *blank_p
                         >> optionValue[captureOptionValue( self )];
                         ;
       optionValue    = +(anychar_p - eol_p );
-      identifier     = ( alpha_p | '_' | '-' ) 
+      identifier     = ( alpha_p | '_' | '-' )
                         >> *( alnum_p | '_' | '-' );
     }
-    
+
   };
-  
+
   Options & _options;
   string    _section;
   string    _option;
@@ -107,7 +107,7 @@ struct OptionGrammar : public grammar<OptionGrammar>
 
 //------------------------------------------------------------------------------
 
-OptionParser::OptionParser() 
+OptionParser::OptionParser()
 {
 }
 
@@ -126,7 +126,7 @@ OptionParser::parse( const string & input, Options & options )
 
 //------------------------------------------------------------------------------
 
-const string & 
+const string &
 OptionParser::error() const
 {
   return _error;
