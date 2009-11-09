@@ -19,33 +19,33 @@ class CarmenRegistry : public Registry
 {
 public:
   CarmenRegistry( const std::string & name, Options & options );
-  
+
   virtual ~CarmenRegistry();
-  
+
   virtual const std::string & name() const;
-  
+
   virtual Options & options() const;
-  
-  virtual const Type & 
+
+  virtual const Type &
   registerType( const std::string & definitionString );
-  
-  virtual const Type & 
+
+  virtual const Type &
   operator[]( const std::string & typeName ) const;
 
-  virtual void 
-  registerMessage( 
-    const std::string & messageName, 
+  virtual void
+  registerMessage(
+    const std::string & messageName,
     const std::string & typeName );
 
-  virtual void subscribeToMessage( 
+  virtual void subscribeToMessage(
     const std::string & messageName,
     bool queueOwner = false,
     size_t queueCapacity = 0,
-    QueuePolicy queuePolicy = DISCARD_OLDEST );  
+    QueuePolicy queuePolicy = DISCARD_OLDEST );
 
   virtual void subscribeToQuery( const std::string & messageName );
 
-  virtual const Type & 
+  virtual const Type &
   messageType( const std::string & messageName ) const;
 
   virtual double
@@ -55,9 +55,9 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 
-  virtual Message receiveMessage( 
-    const std::string & messageName, 
-    double timeout = 0 ) 
+  virtual Message receiveMessage(
+    const std::string & messageName,
+    double timeout = 0 )
   throw( MessagingTimeout );
 
   virtual Structure query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
@@ -79,7 +79,7 @@ private:
   QueueHandler     _queueHandler;
   MessageQueue     _outputQueue;
   TimestampQueues  _timestampQueues;
-  
+
   friend class CarmenHandler;
 };
 
