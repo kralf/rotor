@@ -249,7 +249,7 @@ CarmenRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
   try {
     Logger::spam( "Receiving message", "CarmenRegistry" );
     return _queueHandler.dequeueMessage( timeout );
-  } catch ( TimeoutException ) {
+  } catch ( ... ) {
     Logger::spam( "Receive message timed out", "CarmenRegistry" );
     throw MessagingTimeout( "No message was received" );
   }
