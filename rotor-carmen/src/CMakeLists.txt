@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 
 find_library( ROTOR_LIB rotor )
-find_library( IPC_LIB carmen-ipc )
+find_library( IPC_LIB NAMES carmen-ipc ipc )
 
 file( GLOB CARMEN_SRC carmen/*.cpp )
 file( GLOB _CARMEN_SRC _carmen/*.cpp )
