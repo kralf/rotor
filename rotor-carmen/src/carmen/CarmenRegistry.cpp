@@ -28,7 +28,7 @@ CarmenRegistry::CarmenRegistry( const string & name, Options & options)
     _name( name ),
     _options( options ),
     _registry( name, options ),
-    _queueHandler( 1, DISCARD_OLDEST )
+    _queueHandler( 2, DISCARD_OLDEST )
 {
   Logger::setLevel(
     static_cast<Logger::Level>( options.getInt( "CarmenRegistry", "loggingLevel",  3 ) ),
@@ -197,7 +197,7 @@ CarmenRegistry::subscribeToQuery( const string & messageName )
     fprintf( stderr, "Could not define message\n" );
     exit( 1 );
   }
-  IPC_setMsgQueueLength( messageName.c_str(), 1 );
+  IPC_setMsgQueueLength( messageName.c_str(), 10 );
 }
 
 //------------------------------------------------------------------------------
