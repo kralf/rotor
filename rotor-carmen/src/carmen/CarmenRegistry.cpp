@@ -213,7 +213,7 @@ CarmenRegistry::messageType( const string & messageName ) const
 double
 CarmenRegistry::messageFrequency( const std::string & messageName ) const
 {
-  // Lock lock( _ipcMutex );
+  Lock lock( _ipcMutex );
   double frequency = 0.0;
   TimestampQueues::const_iterator it = _timestampQueues.find( messageName );
 
