@@ -1,1 +1,5 @@
-remake_add_documentation(DOXYGEN Doxyfile.remake)
+remake_add_directories(rotor)
+remake_add_directories(
+  carmen
+  COMPONENT carmen
+)

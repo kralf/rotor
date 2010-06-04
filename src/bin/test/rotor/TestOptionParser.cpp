@@ -1,6 +1,6 @@
 #include <unittest++/UnitTest++.h>
 #include <rotor/BaseOptions.h>
-#include <_rotor/OptionParser.h>
+#include "rotor/OptionParser.ipp"
 #include <string>
 
 

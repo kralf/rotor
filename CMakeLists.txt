@@ -20,6 +20,34 @@ remake_doc(
   html
 )
 
-remake_pack_deb()
-remake_pack_deb(COMPONENT dev rotor)
-remake_pack_deb(ARCH all COMPONENT doc)
+remake_pack_deb(
+  libboost-system
+)
+remake_pack_deb(
+  COMPONENT carmen
+  DESCRIPTION "CARMEN driver"
+  "rotor (>= 0.2)" carmen-core
+)
+
+remake_pack_deb(
+  COMPONENT dev
+  DESCRIPTION "development headers"
+  rotor libboost-system-dev
+)
+remake_pack_deb(
+  COMPONENT carmen-dev
+  DESCRIPTION "CARMEN driver development headers"
+  "rotor-dev (>= 0.2)" carmen-core-dev
+)
+
+remake_pack_deb(
+  ARCH all
+  COMPONENT doc
+  DESCRIPTION "documentation"
+)
+remake_pack_deb(
+  ARCH all
+  COMPONENT carmen-doc
+  DESCRIPTION "CARMEN driver documentation"
+  rotor-doc
+)

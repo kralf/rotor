@@ -1,6 +1,6 @@
 #include "CarmenRegistry.h"
-#include <_carmen/CarmenHandler.h>
-#include <_carmen/FormatString.h>
+#include "CarmenHandler.ipp"
+#include "FormatString.ipp"
 #include <rotor/Lock.h>
 #include <rotor/Logger.h>
 #include <rotor/Message.h>

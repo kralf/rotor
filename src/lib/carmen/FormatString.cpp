@@ -1,4 +1,4 @@
-#include "FormatString.h"
+#include "FormatString.ipp"
 #include <rotor/Conversion.h>
 #include <rotor/Registry.h>
 

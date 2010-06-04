@@ -1,4 +1,4 @@
-#include "CarmenHandler.h"
+#include "CarmenHandler.ipp"
 #include <carmen/CarmenRegistry.h>
 #include <rotor/Logger.h>
 #include <rotor/Message.h>
