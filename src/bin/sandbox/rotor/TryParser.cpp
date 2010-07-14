@@ -1,4 +1,4 @@
-#include <rotor/StructureParser.h>
+#include <rotor/StructParser.h>
 #include <iostream>
 #include <algorithm>
 #include <functional>
@@ -9,7 +9,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 void 
-print( const MemberDefinition & member )
+print( const StructParser::Member & member )
 {
   cout << "\t- Name: " << member.name << endl;
   cout << "\t  Type: " << member.type << endl;
@@ -27,7 +27,7 @@ int main( int argc, char * argv[] ) {
                         "  float y[10];\n" +
                         "};";
 
-  StructureParser parser;
+  StructParser parser;
   parser.parse( content );
   
   cout << "Name: " << parser.name() << endl;

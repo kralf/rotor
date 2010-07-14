@@ -1,7 +1,6 @@
-from rotorc import *
+from rotor.extensions import *
 
 import pycommand
-import rotorc
 import sys
 import signal
 import os

@@ -1,4 +1,5 @@
-from rotorc import *
+from rotor.extensions import *
+
 from threading import *
 from time import *
 import sys

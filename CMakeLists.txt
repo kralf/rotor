@@ -7,26 +7,35 @@ remake_project(
   VERSION 1.1
   RELEASE beta
   SUMMARY "Robot-to-robot communications."
-  AUTHOR "Dizan Vasquez"
   AUTHOR "Ralf Kaestner"
+  AUTHOR "Dizan Vasquez"
   CONTACT "ralf.kaestner@gmail.com"
   HOME "http://aslforge.ethz.ch/projects/rotor"
   LICENSE "GNU General Public License (GPL)"
   INSTALL /usr
 )
 
+remake_python()
 remake_doc(
-  man INSTALL share
   html
 )
 
-remake_pack_deb(
-  libboost-system
-)
+remake_pack_deb()
 remake_pack_deb(
   COMPONENT carmen
   DESCRIPTION "CARMEN driver"
   "rotor (>= 0.2)" carmen-core
+)
+remake_pack_deb(
+  COMPONENT runner
+  DESCRIPTION "process runner"
+  rotor
+)
+
+remake_pack_deb(
+  COMPONENT python
+  DESCRIPTION "Python modules"
+  rotor
 )
 
 remake_pack_deb(
