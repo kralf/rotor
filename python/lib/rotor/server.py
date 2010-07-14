@@ -1,6 +1,6 @@
 from rotor.extensions import *
+from rotor.pycommand import *
 
-import pycommand
 import sys
 import signal
 import os

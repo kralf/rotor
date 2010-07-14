@@ -1,4 +1,5 @@
 remake_python_package(
-  COMPONENT runner
+  RECURSE
   DESCRIPTION "process runner"
+  COMPONENT runner
 )

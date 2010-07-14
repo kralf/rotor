@@ -29,7 +29,7 @@ remake_pack_deb(
 remake_pack_deb(
   COMPONENT runner
   DESCRIPTION "process runner"
-  rotor
+  rotor python-urwid
 )
 
 remake_pack_deb(

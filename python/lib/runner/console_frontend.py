@@ -4,8 +4,9 @@ from memory_info     import *
 from output_list     import *
 from selectable_text import *
 
+from rotor.pycommand import *
+
 import threading
-import pycommand
 import urwid.curses_display
 import urwid
 import time
@@ -110,7 +111,7 @@ class ConsoleFrontend():
       if pos != None:
         output = self.output_lists[pos]
         output.update()
-        self.output_box.set_w( urwid.LineBox( output ) )
+        self.output_box._w = urwid.LineBox( output )
 
       canvas = self.top.render( self.size, focus=True )
       self.screen.draw_screen( self.size, canvas )
