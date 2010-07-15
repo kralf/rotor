@@ -1,5 +1,7 @@
-from rotor.extensions import *
-from rotor.pycommand import *
+from rotor import *
+from rotor.extensions import rotorc
+from rotor.extensions.rotorc import *
+from rotor import pycommand
 
 import sys
 import signal

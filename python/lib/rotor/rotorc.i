@@ -151,8 +151,12 @@ namespace std {
 %pythoncode%{
 import socket
 import sys
-import dl
-sys.setdlopenflags( dl.RTLD_NOW | dl.RTLD_GLOBAL )
+import ctypes
+
+RTLD_NOW = 0x2
+RTLD_GLOBAL = 0x100
+sys.setdlopenflags( RTLD_NOW | RTLD_GLOBAL )
+
 def hostName():
   s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
   try:
@@ -160,7 +164,6 @@ def hostName():
     return s.getsockname()[0]
   except socket.error:
     return "127.0.0.1"
-
 
 def _GETITEM( self, index ): 
   result = self._member( index )

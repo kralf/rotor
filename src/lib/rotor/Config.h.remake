@@ -1,0 +1,8 @@
+#ifndef ROTOR_CONFIG_H
+#define ROTOR_CONFIG_H
+
+
+#define ROTOR_LIBRARY_PREFIX "${ROTOR_LIBRARY_PREFIX}"
+
+
+#endif //ROTOR_CONFIG_H

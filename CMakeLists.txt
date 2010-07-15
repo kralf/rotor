@@ -20,22 +20,24 @@ remake_doc(
   html
 )
 
-remake_pack_deb()
 remake_pack_deb(
-  COMPONENT carmen
-  DESCRIPTION "CARMEN driver"
-  "rotor (>= 0.2)" carmen-core
-)
-remake_pack_deb(
-  COMPONENT runner
-  DESCRIPTION "process runner"
-  rotor python-urwid
+  libboost-system
 )
 
 remake_pack_deb(
   COMPONENT python
   DESCRIPTION "Python modules"
   rotor
+)
+remake_pack_deb(
+  COMPONENT runner
+  DESCRIPTION "process runner"
+  rotor-python python-urwid
+)
+remake_pack_deb(
+  COMPONENT carmen
+  DESCRIPTION "CARMEN driver"
+  "rotor (>= 0.2)" rotor-python carmen-core
 )
 
 remake_pack_deb(

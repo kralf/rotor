@@ -1,9 +1,11 @@
+#include "Config.h"
 #include "RemoteRegistry.h"
 #include "BaseOptions.h"
 #include "Conversion.h"
 #include "CoreMessages.h"
 #include "FileUtils.h"
 #include "Logger.h"
+
 #include <dlfcn.h>
 
 using namespace Rotor;
@@ -221,12 +223,31 @@ RemoteRegistry::load(
   const string & searchPath )
 {
   size_t flags = RTLD_NOW | RTLD_GLOBAL;
-  void * handle = dlopen( findFile( "lib" + className + ".so", searchPath ).c_str(), flags );  
+
+  string libName;
+  bool wasUpper = true;
+  for ( size_t i = 0; i < className.size(); ++i ) {
+    if ( className[i] != tolower(className[i]) ) {
+      if ( !wasUpper )
+        libName += "_";
+      libName += tolower(className[i]);
+      wasUpper = true;
+    }
+    else {
+      libName += className[i];
+      wasUpper = false;
+    }
+  }
+  
+  void * handle = dlopen( findFile( "lib" ROTOR_LIBRARY_PREFIX + libName +
+    ".so", searchPath ).c_str(), flags );
   if( handle == 0 ) {
-    Logger::error( string( "Error: %s\n" ) + dlerror() );
-    handle = dlopen( findFile( className + ".so", searchPath ).c_str(), flags );  
+    Logger::error( string( "Error: " ) + dlerror() + "\n" );
+    handle = dlopen( findFile( ROTOR_LIBRARY_PREFIX + libName + ".so",
+      searchPath ).c_str(), flags );  
     if ( handle == 0 ) {
-      throw ClassLoadingError( "Unable to open class lib for registry: " + className + "\nError:" + dlerror() );
+      throw ClassLoadingError( "Unable to open class lib for registry: " +
+        className + "\nError: " + dlerror() );
     }
   }
   

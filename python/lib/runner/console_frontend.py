@@ -4,7 +4,7 @@ from memory_info     import *
 from output_list     import *
 from selectable_text import *
 
-from rotor.pycommand import *
+from rotor import pycommand
 
 import threading
 import urwid.curses_display

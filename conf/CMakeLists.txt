@@ -3,3 +3,7 @@ remake_add_directories(
   runner
   COMPONENT runner
 )
+remake_add_directories(
+  carmen
+  COMPONENT carmen
+)

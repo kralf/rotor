@@ -134,7 +134,7 @@ BaseRegistry::messageType( const string & messageName ) const
 {
   StringMap::const_iterator iName = _messages.find( messageName );
   if ( iName == _messages.end() ) {
-    throw MessagingError( "Message is is not defined: " + messageName );
+    throw MessagingError( "Message is not defined: " + messageName );
   }
   Types::const_iterator iType = _types.find( iName->second );
   return *( iType->second );

@@ -1,0 +1,1 @@
+remake_add_scripts(carmen_sender carmen_receiver)

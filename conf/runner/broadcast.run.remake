@@ -1,0 +1,3 @@
+"rotor server ${ROTOR_CONFIGURATION_DESTINATION}/broadcast.ini"
+"rotor-receiver ${ROTOR_CONFIGURATION_DESTINATION}/broadcast.ini"
+"rotor-sender ${ROTOR_CONFIGURATION_DESTINATION}/broadcast.ini"

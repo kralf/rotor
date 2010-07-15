@@ -1,1 +1,1 @@
-remake_add_configurations(*.run INSTALL runner)
+remake_add_configurations(*.remake INSTALL runner)
