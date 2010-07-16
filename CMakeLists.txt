@@ -21,7 +21,6 @@ remake_doc(
 )
 
 remake_add_package(
-  DEB
   libboost-system
 )
 
