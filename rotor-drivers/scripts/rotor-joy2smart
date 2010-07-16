@@ -1,3 +1,0 @@
-#! /usr/bin/python
-
-from rotor.joy2smart import *

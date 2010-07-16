@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-import rotorc
+from rotor.extensions import rotorc
+from rotor.extensions.rotorc import *
+
 import sys
 
 joystickDefinition = '''
@@ -14,8 +16,7 @@ joystickDefinition = '''
 
 name = sys.argv[1]
 options  = rotorc.BaseOptions()
-options.setString( "BOOTSTRAP", "server", "172.16.0.10" )
-#options.setString( "BOOTSTRAP", "server", "localhost" )
+options.setString( "BOOTSTRAP", "server", "localhost" )
 registry = rotorc.Registry.load( "CarmenRegistry", name, options, "/usr/lib" )
 
 registry.registerType( joystickDefinition )

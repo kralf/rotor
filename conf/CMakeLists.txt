@@ -8,6 +8,10 @@ remake_add_directories(
   COMPONENT carmen
 )
 remake_add_directories(
+  joystick
+  COMPONENT joystick
+)
+remake_add_directories(
   example
   COMPONENT example
 )

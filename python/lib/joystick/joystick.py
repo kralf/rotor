@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
+from rotor.extensions import rotorc
+from rotor.extensions.rotorc import *
+
 import pygame.joystick
-import rotorc
 import sys
 
 joystickDefinition = '''

@@ -41,6 +41,11 @@ remake_pack_deb(
   "rotor (>= 0.2)" rotor-python carmen-core
 )
 remake_pack_deb(
+  COMPONENT joystick
+  DESCRIPTION "CARMEN joystick driver"
+  rotor-carmen python-pygame
+)
+remake_pack_deb(
   COMPONENT example
   DESCRIPTION "CARMEN example"
   rotor-carmen rotor-runner
