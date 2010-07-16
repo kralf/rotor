@@ -67,7 +67,7 @@ remake_pack_deb(
   rotor-carmen "rotor-dev (>= 0.2)" carmen-core-dev
 )
 remake_pack_deb(
-  COMPONENT carmen-dev
+  COMPONENT yarp-dev
   DESCRIPTION "YARP driver development headers"
   rotor-yarp rotor-dev
 )
