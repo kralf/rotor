@@ -20,72 +20,81 @@ remake_doc(
   html
 )
 
-remake_pack_deb(
+remake_add_package(
+  DEB
   libboost-system
 )
 
-remake_pack_deb(
+remake_add_package(
   COMPONENT python
   DESCRIPTION "Python modules"
   rotor
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT runner
   DESCRIPTION "process runner"
   rotor-python python-urwid
 )
 
-remake_pack_deb(
+remake_add_package(
   COMPONENT carmen
   DESCRIPTION "CARMEN driver"
   "rotor (>= 0.2)" rotor-python carmen-core
+  IF CARMEN_FOUND
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT joystick
   DESCRIPTION "CARMEN joystick driver"
   rotor-carmen python-pygame
+  IF CARMEN_FOUND
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT example
   DESCRIPTION "CARMEN example"
   rotor-carmen rotor-runner
+  IF CARMEN_FOUND
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT yarp
   DESCRIPTION "YARP driver"
   rotor-python carmen-core
+  IF YARP_FOUND
 )
 
-remake_pack_deb(
+remake_add_package(
   COMPONENT dev
   DESCRIPTION "development headers"
   rotor libboost-system-dev
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT carmen-dev
   DESCRIPTION "CARMEN driver development headers"
   rotor-carmen "rotor-dev (>= 0.2)" carmen-core-dev
+  IF CARMEN_FOUND
 )
-remake_pack_deb(
+remake_add_package(
   COMPONENT yarp-dev
   DESCRIPTION "YARP driver development headers"
   rotor-yarp rotor-dev
+  IF YARP_FOUND
 )
 
-remake_pack_deb(
+remake_add_package(
   ARCH all
   COMPONENT doc
   DESCRIPTION "documentation"
 )
-remake_pack_deb(
+remake_add_package(
   ARCH all
   COMPONENT carmen-doc
   DESCRIPTION "CARMEN driver documentation"
   rotor-doc
+  IF CARMEN_FOUND
 )
-remake_pack_deb(
+remake_add_package(
   ARCH all
   COMPONENT yarp-doc
   DESCRIPTION "YARP driver documentation"
   rotor-doc
+  IF YARP_FOUND
 )
