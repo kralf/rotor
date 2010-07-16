@@ -1,4 +1,5 @@
-#include "Point.h"
+#include "example_types.h"
+
 #include <rotor/RemoteRegistry.h>
 #include <rotor/Serialization.h>
 #include <iostream>
@@ -9,10 +10,11 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 int main( int argc, char * argv[] ) {
-  RemoteRegistry registry( argv[1] );
-  registry.registerType( ROTOR_DEFINITION_STRING( elrob_point_6d_t ) );
-  registry.registerMessageType( "elrob_smart_pos_message", ROTOR_DEFINITION_STRING( elrob_smart_pos_message ) );
-  registry.subscribeToMessage( "elrob_smart_pos_message", true );
+  RemoteRegistry registry( "rotor_example_receiver" );
+  registry.registerType( ROTOR_DEFINITION_STRING( point_6d_t ) );
+  registry.registerMessageType( "pos_message",
+    ROTOR_DEFINITION_STRING( pos_message ) );
+  registry.subscribeToMessage( "pos_message", true );
 
   while ( true ) {
     Message m = registry.receiveMessage();

@@ -1,0 +1,4 @@
+"carmen-central"
+"rotor server ${ROTOR_CONFIGURATION_DESTINATION}/example.ini"
+"rotor-example_sender ${ROTOR_CONFIGURATION_DESTINATION}/example.ini"
+"rotor-example_receiver ${ROTOR_CONFIGURATION_DESTINATION}/example.ini"

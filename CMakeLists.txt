@@ -34,10 +34,16 @@ remake_pack_deb(
   DESCRIPTION "process runner"
   rotor-python python-urwid
 )
+
 remake_pack_deb(
   COMPONENT carmen
   DESCRIPTION "CARMEN driver"
   "rotor (>= 0.2)" rotor-python carmen-core
+)
+remake_pack_deb(
+  COMPONENT example
+  DESCRIPTION "CARMEN example"
+  rotor-carmen rotor-runner
 )
 
 remake_pack_deb(
