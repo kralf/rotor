@@ -1,4 +1,4 @@
-#include "Conversions.h"
+#include "Conversions.ipp"
 
 using namespace Rotor;
 using yarp::os::Bottle;

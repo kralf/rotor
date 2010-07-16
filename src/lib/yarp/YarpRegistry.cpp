@@ -1,5 +1,5 @@
-#include "UrusRegistry.h"
-#include <_urus/Conversions.h>
+#include "YarpRegistry.h"
+#include "Conversions.ipp"
 #include <rotor/Lock.h>
 #include <rotor/Logger.h>
 #include <rotor/Message.h>
@@ -19,11 +19,11 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-ROTOR_REGISTRY_FACTORY( UrusRegistry )
+ROTOR_REGISTRY_FACTORY( YarpRegistry )
 
 //------------------------------------------------------------------------------
 
-UrusRegistry::UrusRegistry( const string & name, Options & options)
+YarpRegistry::YarpRegistry( const string & name, Options & options)
   : Registry( name, options ),
     _name( name ), 
     _options( options ),
@@ -33,14 +33,14 @@ UrusRegistry::UrusRegistry( const string & name, Options & options)
 
 //------------------------------------------------------------------------------
 
-UrusRegistry::~UrusRegistry()
+YarpRegistry::~YarpRegistry()
 {
 }
 
 //------------------------------------------------------------------------------
   
 const std::string & 
-UrusRegistry::name() const
+YarpRegistry::name() const
 {
   return _name;
 }
@@ -48,7 +48,7 @@ UrusRegistry::name() const
 //------------------------------------------------------------------------------
   
 Options & 
-UrusRegistry::options() const
+YarpRegistry::options() const
 {
   return _options;
 }
@@ -56,7 +56,7 @@ UrusRegistry::options() const
 //------------------------------------------------------------------------------
 
 const Type & 
-UrusRegistry::registerType( const string & definitionString )
+YarpRegistry::registerType( const string & definitionString )
 {
   return _registry.registerType( definitionString );
 }
@@ -64,7 +64,7 @@ UrusRegistry::registerType( const string & definitionString )
 //------------------------------------------------------------------------------
 
 const Type & 
-UrusRegistry::operator[]( const std::string & typeName ) const
+YarpRegistry::operator[]( const std::string & typeName ) const
 {
   return _registry[typeName];
 }
@@ -72,7 +72,7 @@ UrusRegistry::operator[]( const std::string & typeName ) const
 //------------------------------------------------------------------------------
 
 void 
-UrusRegistry::registerMessage( 
+YarpRegistry::registerMessage(
   const string & messageName, 
   const string & typeName )
 {
@@ -82,7 +82,19 @@ UrusRegistry::registerMessage(
 //------------------------------------------------------------------------------
 
 void
-UrusRegistry::subscribeToMessage( const string & messageName )
+YarpRegistry::subscribeToMessage(
+  const std::string &,
+  bool,
+  size_t,
+  QueuePolicy )
+{
+  throw NotImplementedError( "Not implemented" );
+}
+
+//------------------------------------------------------------------------------
+
+void
+YarpRegistry::subscribeToMessage( const string & messageName )
 {
   const Type & type = _registry.messageType( messageName );
   size_t splitPoint = messageName.rfind( "/" );
@@ -101,7 +113,7 @@ UrusRegistry::subscribeToMessage( const string & messageName )
 //------------------------------------------------------------------------------
 
 void
-UrusRegistry::subscribeToQuery( const string & messageName )
+YarpRegistry::subscribeToQuery( const string & messageName )
 {
   const Type & type = _registry.messageType( messageName );
   string completeName = _name + "/service-request/input";
@@ -114,7 +126,7 @@ UrusRegistry::subscribeToQuery( const string & messageName )
 //------------------------------------------------------------------------------
 
 const Type & 
-UrusRegistry::messageType( const string & messageName ) const
+YarpRegistry::messageType( const string & messageName ) const
 {
   return _registry.messageType( messageName );
 }
@@ -122,26 +134,26 @@ UrusRegistry::messageType( const string & messageName ) const
 //------------------------------------------------------------------------------
 
 void 
-UrusRegistry::sendMessage( const Message & message )
+YarpRegistry::sendMessage( const Message & message )
 {
-  const Type & type       = _registry.messageType( message.name );
-  size_t splitPoint       = message.name.rfind( "/" );
-  string serverString     = message.name.substr( 0, splitPoint );
-  string datafeedString   = message.name.substr( splitPoint );
+  const Type & type       = _registry.messageType( message.name() );
+  size_t splitPoint       = message.name().rfind( "/" );
+  string serverString     = message.name().substr( 0, splitPoint );
+  string datafeedString   = message.name().substr( splitPoint );
   string outputPort       = serverString + "/data-feed/output/" + datafeedString;
   
   PortTable::iterator it  = _ports.find( outputPort );
   yarp::os::Port & port   = _ports[outputPort];
   
   yarp::os::Bottle bottle;
-  appendToBottle( bottle, *( message.data ) );
+  appendToBottle( bottle, message.data() );
   port.write( bottle );
 }
 
 //------------------------------------------------------------------------------
 
 Message 
-UrusRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
+YarpRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 {
   try {
     Logger::spam( "Receiving message" );
@@ -154,8 +166,19 @@ UrusRegistry::receiveMessage( double timeout ) throw( MessagingTimeout )
 
 //------------------------------------------------------------------------------
 
-Structure *
-UrusRegistry::query( const Message & message, double timeout ) 
+Message
+YarpRegistry::receiveMessage(
+  const string &,
+  double )
+throw( MessagingTimeout )
+{
+  throw NotImplementedError( "Not implemented" );
+}
+
+//------------------------------------------------------------------------------
+
+Structure
+YarpRegistry::query( const Message & message, double timeout )
 throw( MessagingTimeout )
 {
   try {
@@ -168,7 +191,7 @@ throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 Message 
-UrusRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
+YarpRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 {
   try {
     Logger::spam( "ReceivingQuery" );
@@ -184,7 +207,7 @@ UrusRegistry::receiveQuery( double timeout ) throw( MessagingTimeout )
 //------------------------------------------------------------------------------
 
 void
-UrusRegistry::reply( const Message & message ) 
+YarpRegistry::reply( const Message & message )
 {
 //   _handler->reply( message );
 }

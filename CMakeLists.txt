@@ -50,6 +50,11 @@ remake_pack_deb(
   DESCRIPTION "CARMEN example"
   rotor-carmen rotor-runner
 )
+remake_pack_deb(
+  COMPONENT yarp
+  DESCRIPTION "YARP driver"
+  rotor-python carmen-core
+)
 
 remake_pack_deb(
   COMPONENT dev
@@ -59,7 +64,12 @@ remake_pack_deb(
 remake_pack_deb(
   COMPONENT carmen-dev
   DESCRIPTION "CARMEN driver development headers"
-  "rotor-dev (>= 0.2)" carmen-core-dev
+  rotor-carmen "rotor-dev (>= 0.2)" carmen-core-dev
+)
+remake_pack_deb(
+  COMPONENT carmen-dev
+  DESCRIPTION "YARP driver development headers"
+  rotor-yarp rotor-dev
 )
 
 remake_pack_deb(
@@ -71,5 +81,11 @@ remake_pack_deb(
   ARCH all
   COMPONENT carmen-doc
   DESCRIPTION "CARMEN driver documentation"
+  rotor-doc
+)
+remake_pack_deb(
+  ARCH all
+  COMPONENT yarp-doc
+  DESCRIPTION "YARP driver documentation"
   rotor-doc
 )

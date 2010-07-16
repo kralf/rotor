@@ -1,12 +1,12 @@
-#ifndef URUS_MESSAGE_HANDLER_H
-#define URUS_MESSAGE_HANDLER_H
+#ifndef ROTOR_YARP_HANDLER_H
+#define ROTOR_YARP_HANDLER_H
 
 
 namespace Rotor
 {
 
 
-class UrusMessageHandler : 
+class 3Handler :
 public yarp::os::TypedReaderCallback<yarp::os::Bottle>
 {
 public:
@@ -18,4 +18,4 @@ public:
 }
 
 
-#endif //URUS_MESSAGE_HANDLER_H
+#endif //ROTOR_YARP_HANDLER_H

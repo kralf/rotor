@@ -1,5 +1,0 @@
-"rotor server stuttgart.ini"
-"cd /home/avasquez/meeting_bacs && morsel cfg/stuttgart.cfg" 129.132.111.50 avasquez watusi
-#"morsel cfg/stuttgart.cfg"
-"rotor-joystick joystick"
-"rotor-joy2smart joy2smart"

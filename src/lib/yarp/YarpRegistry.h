@@ -1,5 +1,5 @@
-#ifndef ROTOR_URUS_REGISTRY_H
-#define ROTOR_URUS_REGISTRY_H
+#ifndef ROTOR_YARP_REGISTRY_H
+#define ROTOR_YARP_REGISTRY_H
 
 
 #include <rotor/BaseRegistry.h>
@@ -11,15 +11,15 @@
 namespace Rotor {
 
 
-class UrusHandler;
+class YarpHandler;
 
 
-class UrusRegistry : public Registry
+class YarpRegistry : public Registry
 {
 public:
-  UrusRegistry( const std::string & name, Options & options );
+  YarpRegistry( const std::string & name, Options & options );
   
-  virtual ~UrusRegistry();
+  virtual ~YarpRegistry();
   
   virtual const std::string & name() const;
   
@@ -36,6 +36,12 @@ public:
     const std::string & messageName, 
     const std::string & typeName );
 
+  virtual void subscribeToMessage(
+    const std::string & messageName,
+    bool queueOwner = false,
+    size_t queueCapacity = 0,
+    QueuePolicy queuePolicy = DISCARD_OLDEST );
+
   virtual void subscribeToMessage( const std::string & messageName );
 
   virtual void subscribeToQuery( const std::string & messageName );
@@ -47,7 +53,13 @@ public:
 
   virtual Message receiveMessage( double timeout = 0 ) throw( MessagingTimeout );
 
-  virtual Structure * query( const Message & message, double timeout = 0 ) throw( MessagingTimeout );
+  virtual Message receiveMessage(
+    const std::string & messageName,
+    double timeout = 0 )
+  throw( MessagingTimeout );
+
+  virtual Structure query( const Message & message, double timeout = 0 )
+    throw( MessagingTimeout );
 
   virtual Message receiveQuery( double timeout = 0 ) throw( MessagingTimeout );
 
@@ -60,12 +72,10 @@ private:
   BaseRegistry      _registry;
   yarp::os::Network _network;
   PortTable         _ports;
-  Message           _message;
-  Mutex             _ipcMutex;
 };
 
 
 }
 
 
-#endif //ROTOR_CARMEN_REGISTRY_H
+#endif //ROTOR_YARP_REGISTRY_H
