@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from rotor.types import pose
-from rotor.extensions import rotorc
+from rotor import rotorc
 
 import os
 import sys

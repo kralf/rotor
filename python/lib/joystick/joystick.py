@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from rotor.extensions import rotorc
-from rotor.extensions.rotorc import *
+from rotor import rotorc
+from rotor.rotorc import *
 
 import pygame.joystick
 import sys

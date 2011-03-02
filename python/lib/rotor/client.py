@@ -1,6 +1,6 @@
 from rotor import *
-from rotor.extensions import rotorc
-from rotor.extensions.rotorc import *
+from rotor import rotorc
+from rotor.rotorc import *
 
 from threading import *
 from time import *
