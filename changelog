@@ -1,0 +1,818 @@
+rotor (1.1-130) lucid; urgency=low
+
+  * Added changelog
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 03 May 2013 16:19:12 +0100
+
+rotor (1.1-129) unstable; urgency=low
+
+  * Modified some CMakeLists.txt file to comply with the revised ReMakePython
+    module
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 02 Mar 2011 18:45:56 +0100
+
+rotor (1.1-128) unstable; urgency=low
+
+  * Fixed bug in CMakeLists.txt file
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 17:29:46 +0200
+
+rotor (1.1-127) unstable; urgency=low
+
+  * Fixed bug in top-level CMakeLists.txt
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 14:37:07 +0200
+
+rotor (1.1-126) unstable; urgency=low
+
+  * Fixed install destination of YARP documentation
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 14:34:43 +0200
+
+rotor (1.1-125) unstable; urgency=low
+
+  * Fixed documentation install destinations
+  * First complete version of ported project
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 14:34:03 +0200
+
+rotor (1.1-124) unstable; urgency=low
+
+  * Fixed Doxygen warnings by adding appropriate input patterns
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 11:52:06 +0200
+
+rotor (1.1-123) unstable; urgency=low
+
+  * Ported URUS bindings to yarp driver package
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 11:41:44 +0200
+
+rotor (1.1-122) unstable; urgency=low
+
+  * Moved drivers to joystick package
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 11:04:39 +0200
+
+rotor (1.1-121) unstable; urgency=low
+
+  * Kept qtrunner.ui for now
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 10:45:49 +0200
+
+rotor (1.1-120) unstable; urgency=low
+
+  * Ported CARMEN example to example package
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 16 Jul 2010 10:35:33 +0200
+
+rotor (1.1-119) unstable; urgency=low
+
+  * Removed sandbox files
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 15 Jul 2010 18:10:10 +0200
+
+rotor (1.1-118) unstable; urgency=low
+
+  * rotor-carmen ported and tested
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 15 Jul 2010 18:08:41 +0200
+
+rotor (1.1-117) unstable; urgency=low
+
+  * Moved runner configuration to conf directory
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 14 Jul 2010 19:11:15 +0200
+
+rotor (1.1-116) unstable; urgency=low
+
+  * Rotor Runner working
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 14 Jul 2010 19:00:51 +0200
+
+rotor (1.1-115) unstable; urgency=low
+
+  * Ported SWIG bindings
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 14 Jul 2010 16:28:53 +0200
+
+rotor (1.1-114) unstable; urgency=low
+
+  * Ported CARMEN drivers to new structure
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 04 Jun 2010 13:28:49 +0200
+
+rotor (1.1-113) unstable; urgency=low
+
+  * Moved basic rotor classes into new structure
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 02 Jun 2010 11:31:28 +0200
+
+rotor (0.1) unstable; urgency=low
+
+  * Fixed crash in messageFrequency() that was caused by an unlocked mutex
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 21 May 2010 06:45:36 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Increased carmen queue lenghts.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 17 Mar 2010 18:33:44 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Neutral: Added ROTOR_VERSION definition in Rotor.h
+  * Neutral: Updated Rotor version number to 1.1.0
+  * Neutral: New rotor carmen also checks for standard version of
+    ipc.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 08 Mar 2010 19:14:31 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed passing of exceptions to python.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 17 Nov 2009 02:31:50 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Rotor CARMEN links against libcarmen-ipc
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 10 Nov 2009 13:51:52 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Added new-lines to prevent compiler warnings in Rotor CARMEN backports
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Mon, 09 Nov 2009 19:23:12 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Added new-lines to prevent compiler warnings in Rotor backports
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Sun, 08 Nov 2009 21:10:50 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * See last commit message
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 06 Nov 2009 10:27:17 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Changed ipc.h include in rotor-carmen to comply with libipc
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 05 Nov 2009 11:21:38 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Fixed unused parameter message in Rotor::Registry::messageFrequency()
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 05 Nov 2009 10:59:39 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Fixed bug in CarmenRegistry::messageFrequency()
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 05 Nov 2009 08:59:00 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Cleaned message frequency calculation in CARMEN registry
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Mon, 02 Nov 2009 20:04:49 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Carmen handler update
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Mon, 02 Nov 2009 17:43:46 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Removed ICP mutex lock from the CARMEN's registry messageFrequency()
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Mon, 02 Nov 2009 12:25:23 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Resolve Debian package architecture
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 30 Oct 2009 20:21:41 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * New Registry method returning the frequency of a message
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 30 Oct 2009 17:11:02 +0100
+
+rotor (0.1) unstable; urgency=low
+
+  * Message frequency measurement support in CarmenRegistry
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 30 Oct 2009 16:39:29 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Changed next and pop to popNext in CarmenHandler.
+    * Added exception workaround for nasty python error in CarmenRegistry.
+    * Rotor definition variables are now static to prevent linkage errors.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Sun, 04 Oct 2009 23:01:31 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Removed dependency on pycommand.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Sat, 19 Sep 2009 09:04:55 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Finished adding joystick controller.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 11 Sep 2009 16:37:42 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added Matthieu include corrections.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 27 Aug 2009 10:06:46 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Removed debug message.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 25 Aug 2009 16:22:03 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added default implementation of option virual destructor.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 25 Aug 2009 16:22:02 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed all warnings after setting Wall and Wextra.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 25 Aug 2009 16:22:01 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed flag error in asio timeout read in BroadcastRegistry
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 24 Aug 2009 21:43:17 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Modified asio stuff to be compatible with boost integrated version.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 24 Aug 2009 20:20:36 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Changed generic catches by TimeoutExceptions.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 17 Aug 2009 17:35:19 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Generated functions are now inline.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 17 Aug 2009 17:34:32 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated example to latest version of rotor.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 17 Aug 2009 17:34:02 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added a runner for the simplest example.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Sat, 01 Aug 2009 09:44:50 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Got correct central ip address from options.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 31 Jul 2009 23:33:53 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Moved urwid-patch from rotor to rotor-runner.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 31 Jul 2009 22:57:21 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added examples directory.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 31 Jul 2009 22:03:23 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added pycommand to dependency list.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 31 Jul 2009 17:53:25 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * First almost working version without libhapy or libpoco.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 31 Jul 2009 17:52:48 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed some bugs in rotor server.
+    * Added kill option to rotor-runner.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 22:43:00 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * First working version after Structure Refactoring
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 22:25:50 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Working now with pycommand.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 22:25:09 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * First working version after Structure refactoring.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 22:24:09 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Preparing to refactor structure stuff.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 17:45:39 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Removed paramiko dependency.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 14:07:45 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Now working with pycommand.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 29 Jul 2009 14:06:35 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Started debugging server.py
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 27 Jul 2009 22:42:05 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Took out hildon_test directory from python.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 27 Jul 2009 22:40:17 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added some tests for hildon.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 27 Jul 2009 22:39:26 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added project directory.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 27 Jul 2009 22:37:55 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Merged changes.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 17 Jul 2009 17:20:55 +0200
+
+rotor (0.1) unstable; urgency=low
+
+  * Too tired to think
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 17 Jul 2009 17:10:00 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added getHost function into NetUtils.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 17 Jul 2009 13:45:12 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added error messages in option parser.
+    * Fixed problem with empty lines in option parser.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 14 Jul 2009 18:56:02 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added find_library for hapy and pocolibs
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 14 Jul 2009 18:33:29 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added function in file utils to read into string.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 13 Jul 2009 18:41:38 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Modified color schemes to support default console background color.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 08 Jul 2009 15:44:23 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Modified message sending strategy: using a queue and sending in
+      dispatcher.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 08 Jul 2009 15:43:45 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added empty() method to Queue.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 08 Jul 2009 15:42:47 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * First working version.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 20:46:35 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Set version number to 1.0.0, backwards compatibility has been
+      broken.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:35:06 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Set version to 1.0.0, backwards compatibility has been broken.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:34:23 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Upgraded to be compatible with rotor_1.0.0.
+    * Set version series to 0.1.0.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:33:40 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Changed version series to 0.2.0
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:31:43 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Huge upgrade, removed all dangling pointer use.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:31:14 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added example runner scripts.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Fri, 03 Jul 2009 19:29:15 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Renamed runner directory to rotor_runner.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 11:16:38 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Removed runner stuff, moved to its own project.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 11:13:33 +0200
+
+rotor (0.1) unstable; urgency=low
+
+  * Moved runner to its own project
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 11:10:32 +0200
+
+rotor (0.1) unstable; urgency=low
+
+  * Moved runner to its own project
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 11:09:51 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Created rotor-runner project.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 11:07:17 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added support for fixed size arrays.
+    * Fixed exception mess when importing library.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 10:08:27 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added support for startup mode selection in runner (running/not running/commented).
+    * Fixed nasty exception problem in python bindings, changed ld flags
+      to global.
+    * Added adjust method to structure to setup all array sizes.
+    * Fixed performance problem in Array, arrays are not resized when the
+      size does not change.
+    * Added patched urwid canvas.py file.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 29 Jun 2009 10:03:31 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Configured python to new version of scmake.
+    * Added ROTOR_METHOD macro to Debug.h.
+    * Added clear method to runner.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 18 Jun 2009 15:23:38 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Suppressed warnings all around.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 16 Jun 2009 12:48:27 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added example for getting carmen laser messages.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 19 May 2009 09:29:07 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Corrected error in Structure.toString.
+    * Corrected allocation error for strings in Memory.cpp.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 11 May 2009 17:44:13 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed bug in dlopen and exceptions.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 04 May 2009 14:26:21 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed bug in registry, now dlopen works in global mode.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 04 May 2009 14:23:51 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated receiver example.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 22 Apr 2009 16:28:49 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated to use rotor::QueueHandler.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 22 Apr 2009 16:26:40 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * First working version of QueueHandler.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 22 Apr 2009 16:25:58 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Added doxygen documentation to Registry.h
+    * Added typed receiveMessage method in Registries.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 30 Mar 2009 11:56:10 +0200
+
+rotor (0.1) unstable; urgency=low
+
+    * Removed Carmen remains.
+    * Started work on UrusMessageHandler.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 23 Mar 2009 14:51:48 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Limited acceleration on joy2smart.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 23 Mar 2009 14:49:55 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Set listenClear timeout in dispatcher to 10 ms.
+    * Removed mutual exclusion from sendMessage.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 18 Mar 2009 14:09:45 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Changed default delay in command handler to 1 second.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 18 Mar 2009 14:03:39 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added project directory.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 16 Mar 2009 09:35:11 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Changed listen to listenClear in dispatch handler.
+    * Changed default ipc message queue size to 10.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 16 Mar 2009 09:34:50 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added implementation file for exceptions.
+    * Added simple test code for exception raising in python.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 16 Mar 2009 09:32:58 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Reorganized directory structure, directories now belong to
+      rotor.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 16 Mar 2009 09:31:40 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated broadcast examples.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 12 Mar 2009 15:52:46 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated for latest rotor version.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 10 Mar 2009 21:21:50 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added logging in broadcast registry.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 05 Mar 2009 23:58:33 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated examples and configuration files.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 05 Mar 2009 23:24:49 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Guarded IPC related functions with mutex.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 05 Mar 2009 23:24:16 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Guarded all IPC function with a mutex (is this necessary?).
+    * Converted server to avoid usage of threads with Rotor.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 05 Mar 2009 23:21:59 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed substructure and subarray bug in Structure.toString.
+    * Added marshall( AbstractVariable ) to serialization.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 23:35:51 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated configurations.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 23:34:40 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Updated examples to make use of RemoteRegistry.
+    * Added test configurations in cfg.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 22:35:19 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed severl bugs.
+    * Reply request is now working.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 22:34:07 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added logging facilities.
+    * Copied patched version of canvas.py from urwid to avoid memory leak
+      in runner.
+    * Python stuff now gets installed.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 22:33:21 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed bug in subdirectory specification.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 00:20:39 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Most stuff is working, except for replies.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 00:19:54 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Solved bugs in threading, and String.
+    * Factored carmen stuff in own project.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 04 Mar 2009 00:18:55 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added project directories.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 03 Mar 2009 09:15:04 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added cfg and testcfg directories.
+    * Added RemoteRegistry class.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 03 Mar 2009 09:12:04 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added python scripts for the carmen base and joystick.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Sun, 01 Mar 2009 20:21:36 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * First complete version of runner.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Sun, 01 Mar 2009 20:20:36 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Created project directory
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 25 Feb 2009 17:35:22 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Added runner an utility to run executables.
+    * Fixed format string construction in CarmenRegistry
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Wed, 25 Feb 2009 17:35:03 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Renamed Registry::sendReceiveMessage to query.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 17 Feb 2009 18:33:16 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed concurrency bug by adding mutex to IPC commands and main loop
+      in CarmenRegistry.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Mon, 16 Feb 2009 15:31:18 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Fixed a couple of valgrind errors.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 10 Feb 2009 15:11:33 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * Started chasing memory leaks.
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Tue, 10 Feb 2009 09:11:19 +0100
+
+rotor (0.1) unstable; urgency=low
+
+    * removed doc/.files directory
+
+ -- Dizan Vasquez <dichodaemon@gmail.com>  Thu, 17 Jul 2008 17:23:52 +0200

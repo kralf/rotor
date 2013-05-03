@@ -21,7 +21,7 @@ remake_doc(
 )
 
 remake_add_package(
-  libboost-system
+  libboost-system[0-9.]*
 )
 
 remake_add_package(
