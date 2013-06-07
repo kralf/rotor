@@ -1,3 +1,9 @@
+rotor (1.1-134) lucid; urgency=low
+
+  * Fixed multiple definitions of abs(int)
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 07 Jun 2013 22:13:00 +0100
+
 rotor (1.1-133) lucid; urgency=low
 
   * Added python-dev build dependencies

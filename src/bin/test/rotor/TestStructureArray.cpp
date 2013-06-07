@@ -9,10 +9,6 @@
 #include <cmath>
 #include <stdint.h>
 
-int abs( int num ) {
-  return ( num < 0 ) ? -num : num;
-}
-
 ROTOR_DEFINE_TYPE( Point,
   struct Point {
     double x;
