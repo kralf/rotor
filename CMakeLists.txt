@@ -105,7 +105,7 @@ remake_distribute_deb(
   SECTION libs
   UPLOAD ppa:kralf/asl
   DEPENDS remake libboost-system-dev python-urwid python-pygame
-    carmen-core-dev doxygen
+    carmen-core-dev libunittest++-dev pkg-config doxygen
   PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
 )
 remake_distribute_deb(
@@ -113,6 +113,6 @@ remake_distribute_deb(
   SECTION libs
   UPLOAD ppa:kralf/asl
   DEPENDS remake libboost-system-dev python-urwid python-pygame
-    carmen-core-dev doxygen
+    carmen-core-dev libunittest++-dev pkg-config doxygen
   PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
 )
