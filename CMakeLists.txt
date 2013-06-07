@@ -29,7 +29,7 @@ remake_add_package(
 remake_add_package(
   COMPONENT python
   DESCRIPTION "Python modules"
-  DEPENDS rotor
+  DEPENDS rotor python2.[6-7]-dev
 )
 remake_add_package(
   COMPONENT runner
@@ -105,7 +105,8 @@ remake_distribute_deb(
   SECTION libs
   UPLOAD ppa:kralf/asl
   DEPENDS remake libboost-system-dev python-urwid python-pygame
-    carmen-core-dev libunittest++-dev swig pkg-config doxygen
+    carmen-core-dev libunittest++-dev swig python2.6-dev pkg-config
+    doxygen
   PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
 )
 remake_distribute_deb(
@@ -113,6 +114,7 @@ remake_distribute_deb(
   SECTION libs
   UPLOAD ppa:kralf/asl
   DEPENDS remake libboost-system-dev python-urwid python-pygame
-    carmen-core-dev libunittest++-dev swig pkg-config doxygen
+    carmen-core-dev libunittest++-dev swig python2.7-dev pkg-config
+    doxygen
   PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
 )

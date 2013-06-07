@@ -1,3 +1,10 @@
+rotor (1.1-133) lucid; urgency=low
+
+  * Added python-dev build dependencies
+  * Fixed unresolved reference to abs(int) in precise by implementation
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Fri, 07 Jun 2013 16:53:00 +0100
+
 rotor (1.1-132) lucid; urgency=low
 
   * Added swig build dependency
