@@ -10,7 +10,7 @@ remake_project(
   AUTHOR "Ralf Kaestner"
   AUTHOR "Dizan Vasquez"
   CONTACT "ralf.kaestner@gmail.com"
-  HOME "http://aslforge.ethz.ch/projects/rotor"
+  HOME "http://github.com/kralf/rotor"
   LICENSE "GNU General Public License (GPL)"
   INSTALL /usr
 )
