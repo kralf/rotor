@@ -1,3 +1,9 @@
+rotor (1.1-136) lucid; urgency=low
+
+  * Fixed Boost find result
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 08 Aug 2013 10:30:00 +0100
+
 rotor (1.1-135) lucid; urgency=low
 
   * Changed project home to github

@@ -1,4 +1,4 @@
-remake_find_package(Boost COMPONENTS system)
+remake_find_package(Boost COMPONENTS system RESULT_VAR Boost_FOUND)
 remake_find_library(carmen-ipc ipc.h PACKAGE CARMEN OPTIONAL)
 remake_find_library(YARP_OS os/all.h PACKAGE YARP OPTIONAL)
 
