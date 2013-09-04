@@ -41,19 +41,19 @@ remake_add_package(
   COMPONENT carmen
   DESCRIPTION "CARMEN driver"
   DEPENDS "rotor (>= 0.2)" rotor-python carmen-core
-  IF CARMEN_FOUND
+  IF CARMEN_CORE_FOUND
 )
 remake_add_package(
   COMPONENT joystick
   DESCRIPTION "CARMEN joystick driver"
   DEPENDS rotor-carmen python-pygame
-  IF CARMEN_FOUND
+  IF CARMEN_CORE_FOUND
 )
 remake_add_package(
   COMPONENT example
   DESCRIPTION "CARMEN example"
   DEPENDS rotor-carmen rotor-runner
-  IF CARMEN_FOUND
+  IF CARMEN_CORE_FOUND
 )
 remake_add_package(
   COMPONENT yarp
@@ -71,7 +71,7 @@ remake_add_package(
   COMPONENT carmen-dev
   DESCRIPTION "CARMEN driver development headers"
   DEPENDS rotor-carmen "rotor-dev (>= 0.2)" carmen-core-dev
-  IF CARMEN_FOUND
+  IF CARMEN_CORE_FOUND
 )
 remake_add_package(
   COMPONENT yarp-dev
@@ -90,7 +90,7 @@ remake_add_package(
   COMPONENT carmen-doc
   DESCRIPTION "CARMEN driver documentation"
   DEPENDS rotor-doc
-  IF CARMEN_FOUND
+  IF CARMEN_CORE_FOUND
 )
 remake_add_package(
   ARCH all
