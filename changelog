@@ -1,3 +1,9 @@
+rotor (1.1-137) lucid; urgency=low
+
+  * Added pkg-config files
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 04 Sep 2013 13:33:00 +0100
+
 rotor (1.1-136) lucid; urgency=low
 
   * Fixed Boost find result
