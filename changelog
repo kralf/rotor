@@ -1,3 +1,9 @@
+rotor (1.1-138) lucid; urgency=low
+
+  * CARMEN is now found through pkg-config
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Wed, 04 Sep 2013 13:43:00 +0100
+
 rotor (1.1-137) lucid; urgency=low
 
   * Added pkg-config files
