@@ -18,7 +18,7 @@ RemoteRegistry::RemoteRegistry(
   const string & name, 
   Options & options, 
   const string & path
-) : _registry( load( className, name, options, path ) )
+) : _registry( load( className, name, options, path.empty() ? ROTOR_LIBRARY_PATH : path ) )
 {
 }
 

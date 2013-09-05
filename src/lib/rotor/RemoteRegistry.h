@@ -15,7 +15,7 @@ public:
     const std::string & className,
     const std::string & name,
     Options & options,
-    const std::string & path );
+    const std::string & path = "" );
 
   explicit RemoteRegistry( const std::string & name );
 
