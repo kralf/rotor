@@ -1,3 +1,9 @@
+rotor (1.1-141) lucid; urgency=low
+
+  * Added linkage of carmen_registry against CARMEN core libraries
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 05 Sep 2013 15:07:00 +0100
+
 rotor (1.1-140) lucid; urgency=low
 
   * Added ROTOR_LIBRARY_PATH to Config.h for having a default search path
