@@ -118,3 +118,12 @@ remake_distribute_deb(
     doxygen
   PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
 )
+remake_distribute_deb(
+  DISTRIBUTION trusty
+  SECTION libs
+  UPLOAD ppa:kralf/asl
+  DEPENDS remake libboost-system-dev python-urwid python-pygame
+    carmen-core-dev libunittest++-dev swig python2.7-dev pkg-config
+    doxygen
+  PASS CMAKE_BUILD_TYPE ROTOR_GIT_REVISION
+)

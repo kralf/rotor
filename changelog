@@ -1,3 +1,9 @@
+rotor (1.1-142) lucid; urgency=low
+
+  * Release distribution for Ubuntu Trusty Tahr
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 25 Sep 2014 16:57:00 +0100
+
 rotor (1.1-141) lucid; urgency=low
 
   * Added linkage of carmen_registry against CARMEN core libraries
