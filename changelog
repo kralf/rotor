@@ -1,3 +1,10 @@
+rotor (1.1-143) lucid; urgency=low
+
+  * Fixed use of deprecated io_socket() accessor in BroadcastRegistry
+    (compilation would fail for trusty)
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Mon, 29 Sep 2014 10:53:00 +0100
+
 rotor (1.1-142) lucid; urgency=low
 
   * Release distribution for Ubuntu Trusty Tahr

@@ -45,17 +45,17 @@ void readTimeout(
   double timeout )
 {
   optional<boost::system::error_code> timerResult;
-  deadline_timer timer( socket.io_service() );
+  deadline_timer timer( socket.get_io_service() );
   timer.expires_from_now( seconds( timeout ) );
   timer.async_wait( boost::bind( setResult, &timerResult, _1 ) );
 
   optional<boost::system::error_code> readResult;
   socket.async_receive_from( buffers, address, boost::bind( setResult, &readResult, _1 ) );
 
-  socket.io_service().reset();
+  socket.get_io_service().reset();
 
   bool timedOut = false;
-  while ( socket.io_service().run_one() ) {
+  while ( socket.get_io_service().run_one() ) {
     if ( readResult ) {
       timer.cancel();
     } else if ( timerResult ) {
